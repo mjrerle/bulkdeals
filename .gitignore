@@ -1,4 +1,3 @@
-**/connection.properties
 #
 # Standard Maven .gitignore
 #
@@ -44,4 +43,6 @@ log/
 .DS_Store
 
 # for custom plugins
-/pom.xml
+pom.xml
+server/src/main/resources/hibernate.cfg.xml
+
