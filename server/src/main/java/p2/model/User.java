@@ -1,6 +1,6 @@
 package p2.model;
 
-import java.util.Date;
+import java.util.Objects;
 
 public class User extends BaseModel {
 
@@ -8,7 +8,6 @@ public class User extends BaseModel {
 	private String lastName;
 	private String username;
 	private String password;
-	private String userRole;
 
 	public User() {
 		super();
@@ -18,18 +17,23 @@ public class User extends BaseModel {
 		super(insertId);
 	}
 
-	public User(int id, String firstName, String lastName, String username, String password, String userRole,
-			int insertId, Date insertDate, int updateId, Date updateDate, boolean isDeleted) {
-		super(id, insertId, insertDate, updateId, updateDate, isDeleted);
+	public User(int id, String firstName, String lastName, String username, String password) {
+		super(id);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = username;
 		this.password = password;
-		this.userRole = userRole;
+	}
+
+	public User(String firstName, String lastName, String username, String password) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.password = password;
 	}
 
 	public String getFirstName() {
-		return firstName;
+		return this.firstName;
 	}
 
 	public void setFirstName(String firstName) {
@@ -37,7 +41,7 @@ public class User extends BaseModel {
 	}
 
 	public String getLastName() {
-		return lastName;
+		return this.lastName;
 	}
 
 	public void setLastName(String lastName) {
@@ -45,7 +49,7 @@ public class User extends BaseModel {
 	}
 
 	public String getUsername() {
-		return username;
+		return this.username;
 	}
 
 	public void setUsername(String username) {
@@ -53,25 +57,54 @@ public class User extends BaseModel {
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getUserRole() {
-		return userRole;
+	public User firstName(String firstName) {
+		this.firstName = firstName;
+		return this;
 	}
 
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
+	public User lastName(String lastName) {
+		this.lastName = lastName;
+		return this;
+	}
+
+	public User username(String username) {
+		this.username = username;
+		return this;
+	}
+
+	public User password(String password) {
+		this.password = password;
+		return this;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof User)) {
+			return false;
+		}
+		User user = (User) o;
+		return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName)
+				&& Objects.equals(username, user.username) && Objects.equals(password, user.password);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(firstName, lastName, username, password);
 	}
 
 	@Override
 	public String toString() {
-		return "User [firstName=" + firstName + ", lastName=" + lastName + ", username=" + username + ", password="
-				+ password + ", userRole=" + userRole + ", toString()=" + super.toString() + "]";
+		return "{" + " firstName='" + getFirstName() + "'" + ", lastName='" + getLastName() + "'" + ", username='"
+				+ getUsername() + "'" + ", password='" + getPassword() + "'" + "}";
 	}
 
 }

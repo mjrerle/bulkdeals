@@ -1,6 +1,6 @@
 package p2.model;
 
-import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,87 +13,48 @@ public abstract class BaseModel {
 	@SequenceGenerator(sequenceName="seq", name="seq")
 	@GeneratedValue(generator="seq", strategy=GenerationType.SEQUENCE)
 	private int id;
-	private int insertId;
-	private Date insertDate;
-	private int updateId;
-	private Date updateDate; 
-	private boolean isDeleted; // 0 - Not Deleted, 1 - DELETED
-
+	
 	public BaseModel() {
-		super();
 	}
 
-	public BaseModel(int insertId) {
-		super();
-		this.insertId = insertId;
-	}
-
-	public BaseModel(int id, int insertId, Date insertDate, int updateId, Date updateDate, boolean isDeleted) {
-		super();
+	public BaseModel(int id) {
 		this.id = id;
-		this.insertId = insertId;
-		this.insertDate = insertDate;
-		this.updateId = updateId;
-		this.updateDate = updateDate;
-		this.isDeleted = isDeleted;
 	}
-	
-	
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	public int getInsertId() {
-		return insertId;
+	public BaseModel id(int id) {
+		this.id = id;
+		return this;
 	}
 
-	public void setInsertId(int insertId) {
-		this.insertId = insertId;
+	@Override
+		public boolean equals(Object o) {
+				if (o == this)
+						return true;
+				if (!(o instanceof BaseModel)) {
+						return false;
+				}
+				BaseModel baseModel = (BaseModel) o;
+				return id == baseModel.id;
 	}
 
-	public Date getInsertDate() {
-		return insertDate;
-	}
-
-	public void setInsertDate(Date insertDate) {
-		this.insertDate = insertDate;
-	}
-
-	public int getUpdateId() {
-		return updateId;
-	}
-
-	public void setUpdateId(int updateId) {
-		this.updateId = updateId;
-	}
-
-	public Date getUpdateDate() {
-		return updateDate;
-	}
-
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
-	}
-
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
 	}
 
 	@Override
 	public String toString() {
-		return "BaseModel [id=" + id + ", insertId=" + insertId + ", insertDate=" + insertDate + ", updateId="
-				+ updateId + ", updateDate=" + updateDate + ", isDeleted=" + isDeleted + "]";
+		return "{" +
+			" id='" + getId() + "'" +
+			"}";
 	}
 	
-	
-
 }
