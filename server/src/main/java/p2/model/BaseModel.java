@@ -2,8 +2,16 @@ package p2.model;
 
 import java.util.Date;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+
 public abstract class BaseModel {
 
+	@Id
+	@SequenceGenerator(sequenceName="seq", name="seq")
+	@GeneratedValue(generator="seq", strategy=GenerationType.SEQUENCE)
 	private int id;
 	private int insertId;
 	private Date insertDate;
@@ -14,8 +22,6 @@ public abstract class BaseModel {
 	public BaseModel() {
 		super();
 	}
-	
-	
 
 	public BaseModel(int insertId) {
 		super();
@@ -31,6 +37,8 @@ public abstract class BaseModel {
 		this.updateDate = updateDate;
 		this.isDeleted = isDeleted;
 	}
+	
+	
 
 	public int getId() {
 		return id;
