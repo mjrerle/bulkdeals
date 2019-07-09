@@ -44,4 +44,4 @@ log/
 .DS_Store
 
 # for custom plugins
-pom.xml
+/pom.xml
