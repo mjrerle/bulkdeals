@@ -19,7 +19,7 @@ public class Taxonomy extends BaseModel {
   private String type;
 
   @ManyToOne
-  @JoinColumn(name="product")
+  @JoinColumn(name="product_id")
   private Product product;
 
 

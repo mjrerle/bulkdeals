@@ -17,11 +17,11 @@ public class Purchase extends BaseModel {
   private Date datePurchased;
   
   @ManyToOne
-  @JoinColumn(name="paid_by")
+  @JoinColumn(name="user_id")
   private User user;
 
   @ManyToOne
-  @JoinColumn(name="product")
+  @JoinColumn(name="product_id")
   private Product product;
 
 
