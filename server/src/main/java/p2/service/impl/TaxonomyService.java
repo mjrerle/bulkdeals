@@ -4,34 +4,28 @@ import java.util.List;
 
 import p2.dao.impl.TaxonomyDAO;
 import p2.model.Taxonomy;
-import p2.service.ITaxonomyService;
 
-public class TaxonomyService implements ITaxonomyService {
+public class TaxonomyService {
 
-  TaxonomyDAO taxonomyDAO = new TaxonomyDAO();
+  private static TaxonomyDAO taxonomyDAO = new TaxonomyDAO();
 
-  @Override
-  public int insert(Taxonomy taxonomy) {
+  public static int insert(Taxonomy taxonomy) {
     return taxonomyDAO.insert(taxonomy);
   }
 
-  @Override
-  public void update(Taxonomy taxonomy) {
+  public static void update(Taxonomy taxonomy) {
     taxonomyDAO.update(taxonomy);
   }
 
-  @Override
-  public List<Taxonomy> findAll() {
+  public static List<Taxonomy> findAll() {
     return taxonomyDAO.findAll();
   }
 
-  @Override
-  public Taxonomy findById(int id) {
+  public static Taxonomy findById(int id) {
     return taxonomyDAO.findById(id);
   }
 
-  @Override
-  public void deleteById(int id) {
+  public static void deleteById(int id) {
     taxonomyDAO.deleteById(id);
   }
 	

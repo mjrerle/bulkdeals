@@ -4,34 +4,28 @@ import java.util.List;
 
 import p2.dao.impl.PurchaseDAO;
 import p2.model.Purchase;
-import p2.service.IPurchaseService;
 
-public class PurchaseService implements IPurchaseService {
+public class PurchaseService {
 
-  PurchaseDAO purchaseDAO = new PurchaseDAO();
+  private static PurchaseDAO purchaseDAO = new PurchaseDAO();
 
-  @Override
-  public int insert(Purchase purchase) {
+  public static int insert(Purchase purchase) {
     return purchaseDAO.insert(purchase);
   }
 
-  @Override
-  public void update(Purchase purchase) {
+  public static void update(Purchase purchase) {
     purchaseDAO.update(purchase);
   }
 
-  @Override
-  public List<Purchase> findAll() {
+  public static List<Purchase> findAll() {
     return purchaseDAO.findAll();
   }
 
-  @Override
-  public Purchase findById(int id) {
+  public static Purchase findById(int id) {
     return purchaseDAO.findById(id);
   }
 
-  @Override
-  public void deleteById(int id) {
+  public static void deleteById(int id) {
     purchaseDAO.deleteById(id);
   }
 

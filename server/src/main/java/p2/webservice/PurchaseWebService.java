@@ -1,6 +1,7 @@
 package p2.webservice;
 
 import java.io.IOException;
+import java.sql.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 
 import p2.model.Purchase;
+import p2.model.User;
+import p2.service.impl.UserService;
 import p2.util.Glogger;
 
 public class PurchaseWebService {
@@ -32,11 +35,13 @@ public class PurchaseWebService {
     String maybeUserId = request.getParameter("user_id");
     String maybeProductId = request.getParameter("product_id");
 
-
+    if(checkNullOrEmpty(maybeDate) && checkNullOrEmpty(maybeUserId) && checkNullOrEmpty(maybeProductId)) {
+      
+    }
     try {
       if(purchase != null) {
         ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(purchase);
+        String json = om.writeValueAsString(purchase.getId());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().append(json).close();
