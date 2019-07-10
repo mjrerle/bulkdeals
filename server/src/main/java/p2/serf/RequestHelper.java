@@ -17,9 +17,8 @@ public class RequestHelper {
   public static void Process(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String uri = request.getRequestURI();
-    logger.info(uri);
+    logger.info(request.getMethod() + " " + uri + " " + request.getQueryString());
     switch (uri) {
-
       // define routes here
     }
   }

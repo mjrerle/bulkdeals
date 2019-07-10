@@ -1,11 +1,12 @@
-package p2.dao;
+package p2.service;
 
 import java.util.List;
 
 import p2.model.Taxonomy;
 
-public interface ITaxonomyDAO {
-  public int insert(Taxonomy taxonomy);
+public interface ITaxonomyService {
+	
+	public int insert(Taxonomy taxonomy);
 
 	public void update(Taxonomy taxonomy);
 
@@ -14,5 +15,6 @@ public interface ITaxonomyDAO {
 	public Taxonomy findById(int id);
 
 	public void deleteById(int id);
+	
 
 }
