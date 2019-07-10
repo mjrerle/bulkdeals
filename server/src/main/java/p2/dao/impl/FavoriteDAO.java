@@ -4,6 +4,7 @@ import p2.model.Favorite;
 import p2.model.User;
 import p2.util.HibernateUtil;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -49,7 +50,7 @@ public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
 		List<Favorite> f = null;
 
 		try {
-			f = session.createQuery("FROM " + persistentClass.getSimpleName()).list();
+			f = session.createQuery("FROM favorites WHERE user.id = " + user.getId()).list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {
