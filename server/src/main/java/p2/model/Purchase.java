@@ -5,13 +5,22 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="purchases")
-public class Purchase extends BaseModel {
+public class Purchase {
+
+  @Id
+	@SequenceGenerator(sequenceName = "purchases_seq", name = "s_seq")
+	@GeneratedValue(generator = "s_seq", strategy = GenerationType.SEQUENCE)
+	private int id;
 
   @Column(name="date_purchased")
   private Date datePurchased;

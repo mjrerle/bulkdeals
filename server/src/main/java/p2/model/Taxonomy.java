@@ -4,13 +4,22 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="taxonomies")
-public class Taxonomy extends BaseModel {
+public class Taxonomy {
+
+  @Id
+	@SequenceGenerator(sequenceName = "taxonomies_seq", name = "t_seq")
+	@GeneratedValue(generator = "t_seq", strategy = GenerationType.SEQUENCE)
+	private int id;
 
   @Column(name="name")
   private String name;
