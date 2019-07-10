@@ -222,7 +222,7 @@ public class Product {
 	public String toString() {
 		return "Product [id=" + id + ", productName=" + productName + ", price=" + price + ", salePrice=" + salePrice
 				+ ", onSale=" + onSale + ", generatedInterest=" + generatedInterest + ", dateListed=" + dateListed
-				+ ", seller=" + seller + "]";
+				+ ", status=" + status + ", seller=" + seller + "]";
 	}
 	
 	
