@@ -25,7 +25,7 @@ public class Interest {
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
-	
+
 	private int quantity;
 
 	private int Status;
@@ -71,6 +71,14 @@ public class Interest {
 		this.product = product;
 	}
 
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
 	public int getStatus() {
 		return Status;
 	}
@@ -81,7 +89,8 @@ public class Interest {
 
 	@Override
 	public String toString() {
-		return "Interest [id=" + id + ", user=" + user + ", product=" + product + ", Status=" + Status + "]";
+		return "Interest [id=" + id + ", user=" + user + ", product=" + product + ", quantity=" + quantity + ", Status="
+				+ Status + "]";
 	}
 
 }
