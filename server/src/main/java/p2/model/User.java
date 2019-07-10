@@ -1,7 +1,7 @@
+package p2.model;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +14,7 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
-	private String userRole;
+	private String role;
 	private String address;
 	private int creditCardNumber;
 	private int cvv;
@@ -28,7 +28,7 @@ public class User {
 		this.id = id;
 	}
 
-	public User(int id, String firstName, String lastName, String email, String password, String address,
+	public User(int id, String firstName, String lastName, String email, String password, String role, String address,
 			int creditCardNumber, int cvv) {
 		super();
 		this.id = id;
@@ -36,6 +36,7 @@ public class User {
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
+		this.role = role;
 		this.address = address;
 		this.creditCardNumber = creditCardNumber;
 		this.cvv = cvv;
@@ -81,6 +82,14 @@ public class User {
 		this.password = password;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -108,8 +117,8 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", address=" + address + ", creditCardNumber=" + creditCardNumber
-				+ ", cvv=" + cvv + "]";
+				+ ", password=" + password + ", role=" + role + ", address=" + address + ", creditCardNumber="
+				+ creditCardNumber + ", cvv=" + cvv + "]";
 	}
 
 }

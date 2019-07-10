@@ -1,6 +1,6 @@
 package p2.util;
 
-public enum UserRoles {
+public enum Roles {
 	
 	ADMIN("ADMIN"),
 	USER("USER"),
@@ -8,7 +8,7 @@ public enum UserRoles {
 	
 	public final String value;
 	
-	private UserRoles( String value) {
+	private Roles( String value) {
 		this.value = value;
 	}
 

@@ -9,12 +9,12 @@ import org.hibernate.Transaction;
 
 import p2.util.HibernateUtil;
 
-public class GeneticDAO<T> {
+public class GenericDAO<T> {
 	
 	private Class<T> persistentClass;
 
 	@SuppressWarnings("unchecked")
-	public GeneticDAO() {
+	public GenericDAO() {
 		this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];
 	}
