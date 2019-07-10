@@ -14,25 +14,24 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="purchases")
+@Table(name = "purchases")
 public class Purchase {
 
   @Id
-	@SequenceGenerator(sequenceName = "purchases_seq", name = "s_seq")
-	@GeneratedValue(generator = "s_seq", strategy = GenerationType.SEQUENCE)
-	private int id;
+  @SequenceGenerator(sequenceName = "purchases_seq", name = "s_seq")
+  @GeneratedValue(generator = "s_seq", strategy = GenerationType.SEQUENCE)
+  private int id;
 
-  @Column(name="date_purchased")
+  @Column(name = "date_purchased")
   private Date datePurchased;
-  
+
   @ManyToOne
-  @JoinColumn(name="user_id")
+  @JoinColumn(name = "user_id")
   private User user;
 
   @ManyToOne
-  @JoinColumn(name="product_id")
+  @JoinColumn(name = "product_id")
   private Product product;
-
 
   public Purchase() {
   }
@@ -83,14 +82,15 @@ public class Purchase {
   }
 
   @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Purchase)) {
-            return false;
-        }
-        Purchase purchase = (Purchase) o;
-        return Objects.equals(datePurchased, purchase.datePurchased) && Objects.equals(user, purchase.user) && Objects.equals(product, purchase.product);
+  public boolean equals(Object o) {
+    if (o == this)
+      return true;
+    if (!(o instanceof Purchase)) {
+      return false;
+    }
+    Purchase purchase = (Purchase) o;
+    return Objects.equals(datePurchased, purchase.datePurchased) && Objects.equals(user, purchase.user)
+        && Objects.equals(product, purchase.product);
   }
 
   @Override
@@ -100,11 +100,8 @@ public class Purchase {
 
   @Override
   public String toString() {
-    return "{" +
-      " datePurchased='" + getDatePurchased() + "'" +
-      ", user='" + getUser() + "'" +
-      ", product='" + getProduct() + "'" +
-      "}";
+    return "{" + " datePurchased='" + getDatePurchased() + "'" + ", user='" + getUser() + "'" + ", product='"
+        + getProduct() + "'" + "}";
   }
 
 }
