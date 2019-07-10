@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "taxonomies")
+@Table(name = "Taxonomies")
 public class Taxonomy {
 
   @Id
