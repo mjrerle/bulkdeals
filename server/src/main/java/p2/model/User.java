@@ -1,7 +1,9 @@
-package p2.model;
+package p2.mode
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,8 +14,13 @@ public class User {
 	private int id;
 	private String firstName;
 	private String lastName;
-	private String username;
+	private String email;
 	private String password;
+	
+	@ManyToOne
+	@JoinColumn(name = "userRole_id")
+	private UserRole userRole;
+	
 	private String address;
 	private int creditCardNumber;
 	private int cvv;
@@ -27,13 +34,13 @@ public class User {
 		this.id = id;
 	}
 
-	public User(int id, String firstName, String lastName, String username, String password, String address,
+	public User(int id, String firstName, String lastName, String email, String password, String address,
 			int creditCardNumber, int cvv) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.address = address;
 		this.creditCardNumber = creditCardNumber;
@@ -64,12 +71,12 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -106,7 +113,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + ", address=" + address + ", creditCardNumber=" + creditCardNumber
 				+ ", cvv=" + cvv + "]";
 	}
