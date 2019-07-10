@@ -43,6 +43,8 @@ log/
 .DS_Store
 
 # for custom plugins
-pom.xml
-server/src/main/resources/hibernate.cfg.xml
+**/pom.xml
+**/hibernate.cfg.xml
 
+**/log.html
+**/log.log
