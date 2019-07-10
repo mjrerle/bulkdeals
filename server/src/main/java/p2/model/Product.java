@@ -14,11 +14,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "Products")
 public class Product {
 	@Id
-	@Column(name="p_id")
+	@Column(name="id")
 	@SequenceGenerator(sequenceName="product_seq", name="p_seq")
 	@GeneratedValue(generator="p_seq", strategy=GenerationType.SEQUENCE)
 	private int id;
