@@ -1,39 +1,55 @@
 package p2.model;
 
-import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class User extends BaseModel {
+@Entity
+@Table(name = "Users")
+public class User {
 
+	@Id
+	private int id;
 	private String firstName;
 	private String lastName;
 	private String username;
 	private String password;
+	private String address;
+	private int creditCardNumber;
+	private int cvv;
 
 	public User() {
 		super();
 	}
 
-	public User(int insertId) {
-		super(insertId);
+	public User(int id) {
+		super();
+		this.id = id;
 	}
 
-	public User(int id, String firstName, String lastName, String username, String password) {
-		super(id);
+	public User(int id, String firstName, String lastName, String username, String password, String address,
+			int creditCardNumber, int cvv) {
+		super();
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = username;
 		this.password = password;
+		this.address = address;
+		this.creditCardNumber = creditCardNumber;
+		this.cvv = cvv;
 	}
 
-	public User(String firstName, String lastName, String username, String password) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.username = username;
-		this.password = password;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getFirstName() {
-		return this.firstName;
+		return firstName;
 	}
 
 	public void setFirstName(String firstName) {
@@ -41,7 +57,7 @@ public class User extends BaseModel {
 	}
 
 	public String getLastName() {
-		return this.lastName;
+		return lastName;
 	}
 
 	public void setLastName(String lastName) {
@@ -49,7 +65,7 @@ public class User extends BaseModel {
 	}
 
 	public String getUsername() {
-		return this.username;
+		return username;
 	}
 
 	public void setUsername(String username) {
@@ -57,54 +73,42 @@ public class User extends BaseModel {
 	}
 
 	public String getPassword() {
-		return this.password;
+		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public User firstName(String firstName) {
-		this.firstName = firstName;
-		return this;
+	public String getAddress() {
+		return address;
 	}
 
-	public User lastName(String lastName) {
-		this.lastName = lastName;
-		return this;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public User username(String username) {
-		this.username = username;
-		return this;
+	public int getCreditCardNumber() {
+		return creditCardNumber;
 	}
 
-	public User password(String password) {
-		this.password = password;
-		return this;
+	public void setCreditCardNumber(int creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == this)
-			return true;
-		if (!(o instanceof User)) {
-			return false;
-		}
-		User user = (User) o;
-		return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName)
-				&& Objects.equals(username, user.username) && Objects.equals(password, user.password);
+	public int getCvv() {
+		return cvv;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(firstName, lastName, username, password);
+	public void setCvv(int cvv) {
+		this.cvv = cvv;
 	}
 
 	@Override
 	public String toString() {
-		return "{" + " firstName='" + getFirstName() + "'" + ", lastName='" + getLastName() + "'" + ", username='"
-				+ getUsername() + "'" + ", password='" + getPassword() + "'" + "}";
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+				+ ", password=" + password + ", address=" + address + ", creditCardNumber=" + creditCardNumber
+				+ ", cvv=" + cvv + "]";
 	}
 
 }
