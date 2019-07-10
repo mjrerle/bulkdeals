@@ -1,8 +1,5 @@
 package p2.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -13,45 +10,51 @@ import p2.model.User;
 public class SessionVariableManager {
 
 	private static Logger logger = Logger.getLogger(SessionVariableManager.class);
-	private static final String SESSION_NOT_EXIST = "Session doesn't exist";
+	private static HttpSession session;
 	private static int sessionInterval = 600;
-	private List<HttpSession> list = new ArrayList<HttpSession>();
 
-	public void addUserVariable(HttpServletRequest request, User user) {
-		HttpSession session = request.getSession();
-		session.setAttribute(SessionKey.SESSION_USER.toString(), user);
-		session.setMaxInactiveInterval(sessionInterval);
-		list.add(session);
-		logger.info("User ID: " + user.getId() + " Logged into the System");
+	public static void addLoggedInUser(HttpServletRequest request, User user) {
+		try {
+			removeLoggedInUser();
+			session = request.getSession();
+			session.setAttribute(SessionKey.LOGGEDIN_USER.toString(), user);
+			session.setMaxInactiveInterval(sessionInterval);
+			logger.info("User ID: " + user.getId() + " Loged into the System");
+		} catch (Exception e) {
+
+		}
+
 	}
 
-	private HttpSession findUserSession(User user) {
+	public static void removeLoggedInUser() {
+		try {
+			session.invalidate();
+		} catch (Exception e) {
 
-		for (HttpSession httpSession : list) {
-			if (((User) httpSession.getAttribute(SessionKey.SESSION_USER.toString())).getId() == user.getId()) {
-				return httpSession;
-			}
+		}
+	}
+
+	public static User getLoggedInUser() {
+		try {
+			return (User) session.getAttribute(SessionKey.LOGGEDIN_USER.toString());
+		} catch (Exception e) {
 		}
 		return null;
 	}
 
-	public void removeUserVariable(User user) {
-		HttpSession httpSession = findUserSession(user);
-		if (httpSession != null) {
-			list.remove(list.indexOf(httpSession));
-		} else {
-			logger.error(SESSION_NOT_EXIST);
-		}
-	}
+	public static boolean verifyLoggedInUser(int id) {
+		try {
+			User user = getLoggedInUser();
+			if ((user != null) && (id == user.getId())) {
+				return true;
+			} else {
+				return false;
+			}
 
-	public boolean verifySessionUser(User user) {
-		HttpSession httpSession = findUserSession(user);
-		if (httpSession != null) {
-			return true;
-		} else {
-			logger.error(SESSION_NOT_EXIST);
-			return false;
+		} catch (Exception e) {
+
 		}
+		return false;
 	}
 
 }
