@@ -1,5 +1,3 @@
-package p2.mode
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
