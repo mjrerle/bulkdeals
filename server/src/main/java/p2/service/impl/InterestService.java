@@ -2,13 +2,13 @@ package p2.service.impl;
 
 import java.util.List;
 
-import p2.dao.impl.InteresrDAO;
+import p2.dao.impl.InterestDAO;
 import p2.model.Interest;
-import p2.service.IInteresrService;
+import p2.service.IInterestService;
 
-public class InterestService implements IInteresrService {
+public class InterestService implements IInterestService {
 
-	private InteresrDAO interesrDAO = new InteresrDAO();
+	private InterestDAO interesrDAO = new InterestDAO();
 
 	@Override
 	public int insert(Interest interest) {

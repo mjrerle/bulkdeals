@@ -15,5 +15,6 @@ public interface IUserService {
 	public User findById(int id);
 
 	public void deleteById(int id);
+	
 
 }

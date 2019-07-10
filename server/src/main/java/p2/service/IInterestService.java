@@ -4,7 +4,7 @@ import java.util.List;
 
 import p2.model.Interest;
 
-public interface IInteresrService {
+public interface IInterestService {
 
 	public int insert(Interest interest);
 
