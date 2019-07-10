@@ -12,8 +12,9 @@ public class User {
 	private int id;
 	private String firstName;
 	private String lastName;
-	private String username;
+	private String email;
 	private String password;
+	private String role;
 	private String address;
 	private int creditCardNumber;
 	private int cvv;
@@ -27,14 +28,15 @@ public class User {
 		this.id = id;
 	}
 
-	public User(int id, String firstName, String lastName, String username, String password, String address,
+	public User(int id, String firstName, String lastName, String email, String password, String role, String address,
 			int creditCardNumber, int cvv) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.username = username;
+		this.email = email;
 		this.password = password;
+		this.role = role;
 		this.address = address;
 		this.creditCardNumber = creditCardNumber;
 		this.cvv = cvv;
@@ -64,12 +66,12 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -78,6 +80,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getAddress() {
@@ -106,9 +116,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", password=" + password + ", address=" + address + ", creditCardNumber=" + creditCardNumber
-				+ ", cvv=" + cvv + "]";
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", password=" + password + ", role=" + role + ", address=" + address + ", creditCardNumber="
+				+ creditCardNumber + ", cvv=" + cvv + "]";
 	}
 
 }

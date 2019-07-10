@@ -25,6 +25,8 @@ public class Interest {
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
+	
+	private int quantity;
 
 	private int Status;
 
