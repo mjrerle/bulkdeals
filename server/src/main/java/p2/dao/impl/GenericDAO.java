@@ -55,16 +55,16 @@ public class GenericDAO<T> {
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
 		Session session = HibernateUtil.getSession();
-		List<T> bees = null;
+		List<T> list = null;
 
 		try {
-			bees = session.createQuery("FROM " + persistentClass.getSimpleName()).list();
+			list = session.createQuery("FROM " + persistentClass.getSimpleName()).list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {
 			session.close();
 		}
-		return bees;
+		return list;
 	}
 
 	@SuppressWarnings("unchecked")
