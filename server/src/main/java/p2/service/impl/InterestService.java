@@ -8,32 +8,32 @@ import p2.service.IInterestService;
 
 public class InterestService implements IInterestService {
 
-	private InterestDAO interesrDAO = new InterestDAO();
+	private InterestDAO interestDAO = new InterestDAO();
 
 	@Override
 	public int insert(Interest interest) {
-		return interesrDAO.insert(interest);
+		return interestDAO.insert(interest);
 	}
 
 	@Override
 	public void update(Interest interest) {
-		interesrDAO.update(interest);
+		interestDAO.update(interest);
 
 	}
 
 	@Override
 	public List<Interest> findAll() {
-		return interesrDAO.findAll();
+		return interestDAO.findAll();
 	}
 
 	@Override
 	public Interest findById(int id) {
-		return interesrDAO.findById(id);
+		return interestDAO.findById(id);
 	}
 
 	@Override
 	public void deleteById(int id) {
-		interesrDAO.deleteById(id);
+		interestDAO.deleteById(id);
 
 	}
 
