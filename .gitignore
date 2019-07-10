@@ -42,8 +42,6 @@ log/
 *.launch
 .DS_Store
 
-# for custom plugins
-**/pom.xml
 **/hibernate.cfg.xml
 
 **/log.html

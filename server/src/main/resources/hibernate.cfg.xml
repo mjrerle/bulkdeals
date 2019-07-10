@@ -41,6 +41,13 @@
 		</property>
 		
 		<!-- Mappings -->
+		<mapping class="p2.model.Favorite" />
+		<mapping class="p2.model.Interest" />
+		<mapping class="p2.model.Product" />
+		<mapping class="p2.model.Purchase" />
+		<mapping class="p2.model.Taxonomy" />
+		<mapping class="p2.model.User" />
+		
 		
 	</session-factory>
 </hibernate-configuration>
