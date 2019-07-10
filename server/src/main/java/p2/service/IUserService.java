@@ -1,11 +1,11 @@
-package p2.dao;
+package p2.service;
 
 import java.util.List;
 
 import p2.model.User;
 
-public interface IUserDAO {
-
+public interface IUserService {
+	
 	public int insert(User user);
 
 	public void update(User user);

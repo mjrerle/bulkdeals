@@ -16,11 +16,7 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
-	
-	@ManyToOne
-	@JoinColumn(name = "userRole_id")
-	private UserRole userRole;
-	
+	private String userRole;
 	private String address;
 	private int creditCardNumber;
 	private int cvv;
