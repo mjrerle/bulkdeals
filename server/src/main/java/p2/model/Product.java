@@ -42,15 +42,15 @@ public class Product {
 	private Date dateListed;//note I pulled java.sql.Date for conversion purposes
 	
 	@ManyToOne
-	@JoinColumn(name="user")
-	private User user;
+	@JoinColumn(name="seller")
+	private User seller;
 
 	public Product() {
 		super();
 	}
 
 	public Product(String productName, double price, double salePrice, int onSale, int generatedInterest,
-			Date dateListed, User user) {
+			Date dateListed, User seller) {
 		super();
 		this.productName = productName;
 		this.price = price;
@@ -58,11 +58,11 @@ public class Product {
 		this.onSale = onSale;
 		this.generatedInterest = generatedInterest;
 		this.dateListed = dateListed;
-		this.user = user;
+		this.seller = seller;
 	}
 
 	public Product(int id, String productName, double price, double salePrice, int onSale, int generatedInterest,
-			Date dateListed, User user) {
+			Date dateListed, User seller) {
 		super();
 		this.id = id;
 		this.productName = productName;
@@ -71,7 +71,7 @@ public class Product {
 		this.onSale = onSale;
 		this.generatedInterest = generatedInterest;
 		this.dateListed = dateListed;
-		this.user = user;
+		this.seller = seller;
 	}
 
 	public int getId() {
@@ -130,19 +130,19 @@ public class Product {
 		this.dateListed = dateListed;
 	}
 
-	public User getUser() {
-		return user;
+	public User getSeller() {
+		return seller;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setSeller(User seller) {
+		this.seller = seller;
 	}
 
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", productName=" + productName + ", price=" + price + ", salePrice=" + salePrice
 				+ ", onSale=" + onSale + ", generatedInterest=" + generatedInterest + ", dateListed=" + dateListed
-				+ ", user=" + user + "]";
+				+ ", seller=" + seller + "]";
 	}
 	
 	
