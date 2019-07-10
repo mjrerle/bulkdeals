@@ -39,6 +39,9 @@ public class Product {
 	@Column(name="date_listed_for_interest")
 	private Date dateListed;//note I pulled java.sql.Date for conversion purposes
 	
+	@Column(name="status")
+	private String status;
+	
 	@ManyToOne
 	@JoinColumn(name="seller")
 	private User seller;
@@ -48,7 +51,7 @@ public class Product {
 	}
 
 	public Product(String productName, double price, double salePrice, int onSale, int generatedInterest,
-			Date dateListed, User seller) {
+			Date dateListed,String status, User seller) {
 		super();
 		this.productName = productName;
 		this.price = price;
@@ -57,10 +60,11 @@ public class Product {
 		this.generatedInterest = generatedInterest;
 		this.dateListed = dateListed;
 		this.seller = seller;
+		this.status = status;
 	}
 
 	public Product(int id, String productName, double price, double salePrice, int onSale, int generatedInterest,
-			Date dateListed, User seller) {
+			Date dateListed, String status, User seller) {
 		super();
 		this.id = id;
 		this.productName = productName;
@@ -70,6 +74,7 @@ public class Product {
 		this.generatedInterest = generatedInterest;
 		this.dateListed = dateListed;
 		this.seller = seller;
+		this.status = status;
 	}
 
 	public int getId() {
@@ -135,12 +140,85 @@ public class Product {
 	public void setSeller(User seller) {
 		this.seller = seller;
 	}
+	
+	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dateListed == null) ? 0 : dateListed.hashCode());
+		result = prime * result + generatedInterest;
+		result = prime * result + id;
+		result = prime * result + onSale;
+		long temp;
+		temp = Double.doubleToLongBits(price);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
+		temp = Double.doubleToLongBits(salePrice);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((seller == null) ? 0 : seller.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		if (dateListed == null) {
+			if (other.dateListed != null)
+				return false;
+		} else if (!dateListed.equals(other.dateListed))
+			return false;
+		if (generatedInterest != other.generatedInterest)
+			return false;
+		if (id != other.id)
+			return false;
+		if (onSale != other.onSale)
+			return false;
+		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+			return false;
+		if (productName == null) {
+			if (other.productName != null)
+				return false;
+		} else if (!productName.equals(other.productName))
+			return false;
+		if (Double.doubleToLongBits(salePrice) != Double.doubleToLongBits(other.salePrice))
+			return false;
+		if (seller == null) {
+			if (other.seller != null)
+				return false;
+		} else if (!seller.equals(other.seller))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", productName=" + productName + ", price=" + price + ", salePrice=" + salePrice
 				+ ", onSale=" + onSale + ", generatedInterest=" + generatedInterest + ", dateListed=" + dateListed
-				+ ", seller=" + seller + "]";
+				+ ", status=" + status + ", seller=" + seller + "]";
 	}
 	
 	
