@@ -25,18 +25,17 @@ public class FavoriteWebService {
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		int UID = Integer.parseInt(request.getParameter("customerid"));
 		int PID = Integer.parseInt(request.getParameter("productid"));
-		ProductService ps = new ProductService();
-		UserService us = new UserService();
-		User u = us.findById(UID);
-		Product p = ps.findById(PID);
+
+		User u = UserService.findById(UID);
+		Product p = ProductService.findById(PID);
 		
 		Favorite f = new Favorite();
 		f.setUser(u);
 		f.setProduct(p);
 		
 		
-		FavoriteService w = new FavoriteService();
-		w.insert(f);
+
+		FavoriteService.insert(f);
 		//will need to change some voids to booleans for a return value
 //		ObjectMapper om = new ObjectMapper();
 //		try {
@@ -53,18 +52,18 @@ public class FavoriteWebService {
 		int FID = Integer.parseInt(request.getParameter("favoriteid"));
 		int UID = Integer.parseInt(request.getParameter("customerid"));
 		int PID = Integer.parseInt(request.getParameter("productid"));
-		ProductService ps = new ProductService();
-		UserService us = new UserService();
-		User u = us.findById(UID);
-		Product p = ps.findById(PID);
-		FavoriteService w = new FavoriteService();
-		Favorite f = w.findById(FID);
+
+
+		User u = UserService.findById(UID);
+		Product p = ProductService.findById(PID);
+
+		Favorite f = FavoriteService.findById(FID);
 		f.setUser(u);
 		f.setProduct(p);
 		
 		
 
-		w.update(f);
+		FavoriteService.update(f);
 		//will need to change some voids to booleans for a return value
 //		ObjectMapper om = new ObjectMapper();
 //		try {
@@ -77,8 +76,8 @@ public class FavoriteWebService {
 
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
-		FavoriteService w = new FavoriteService();
-		List<Favorite> f = w.findAll();
+
+		List<Favorite> f = FavoriteService.findAll();
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
@@ -92,8 +91,8 @@ public class FavoriteWebService {
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
 		int id = Integer.parseInt(request.getParameter("id"));
-		FavoriteService w = new FavoriteService();
-		Favorite f = w.findById(id);
+
+		Favorite f = FavoriteService.findById(id);
 		
 		ObjectMapper om = new ObjectMapper();
 		
@@ -108,17 +107,17 @@ public class FavoriteWebService {
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
 		int FID = Integer.parseInt(request.getParameter("favoriteid"));
-		FavoriteService w = new FavoriteService();
-		w.deleteById(FID);
+
+		FavoriteService.deleteById(FID);
 	}
 	
 
 	public static void findByUser(HttpServletRequest request, HttpServletResponse response){
 		int UID = Integer.parseInt(request.getParameter("customerid"));
-		UserService us = new UserService();
-		User u = us.findById(UID);
-		FavoriteService w = new FavoriteService();
-		w.findByUser(u);
+
+		User u = UserService.findById(UID);
+
+		FavoriteService.findByUser(u);
 	}
 
 }

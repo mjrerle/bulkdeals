@@ -14,7 +14,7 @@ import p2.model.Favorite;
 import p2.model.Product;
 import p2.model.User;
 import p2.service.impl.ProductService;
-import p2.service.impl.ProductService;
+
 import p2.service.impl.UserService;
 
 public class ProductWebService {
@@ -23,9 +23,9 @@ public class ProductWebService {
 		int UID = Integer.parseInt(request.getParameter("sellerid"));
 		String pName = request.getParameter("name");
 		double price = Double.parseDouble(request.getParameter("price"));
-		ProductService ps = new ProductService();
-		UserService us = new UserService();
-		User s = us.findById(UID);
+
+
+		User s = UserService.findById(UID);
 
 		
 		Product p = new Product();
@@ -35,10 +35,7 @@ public class ProductWebService {
 		p.setOnSale(0);
 		p.setStatus("Standard Price");
 
-		
-		
-		ProductService w = new ProductService();
-		w.insert(p);
+		ProductService.insert(p);
 		//will need to change some voids to booleans for a return value
 //		ObjectMapper om = new ObjectMapper();
 //		try {
@@ -57,10 +54,10 @@ public class ProductWebService {
 		double saleprice = Double.parseDouble(request.getParameter("saleprice"));
 		String status = request.getParameter("status");
 		int PID = Integer.parseInt(request.getParameter("productid"));
-		ProductService ps = new ProductService();
 
-		Product p = ps.findById(PID);
-		ProductService w = new ProductService();
+
+		Product p = ProductService.findById(PID);
+
 
 		if (status.equals("Pending Interest") && p.getDateListed()!=null) {
 			LocalDate day = LocalDate.now();
@@ -72,7 +69,7 @@ public class ProductWebService {
 		p.setSalePrice(saleprice);
 		p.setStatus(status);
 
-		w.update(p);
+		ProductService.update(p);
 		//will need to change some voids to booleans for a return value
 //		ObjectMapper om = new ObjectMapper();
 //		try {
@@ -85,8 +82,8 @@ public class ProductWebService {
 
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
-		ProductService w = new ProductService();
-		List<Product> p = w.findAll();
+
+		List<Product> p = ProductService.findAll();
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
@@ -100,8 +97,8 @@ public class ProductWebService {
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
 		int PID = Integer.parseInt(request.getParameter("productid"));
-		ProductService w = new ProductService();
-		Product p = w.findById(PID);
+
+		Product p = ProductService.findById(PID);
 		
 		ObjectMapper om = new ObjectMapper();
 		
@@ -116,8 +113,8 @@ public class ProductWebService {
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
 		int PID = Integer.parseInt(request.getParameter("productid"));
-		ProductService w = new ProductService();
-		w.deleteById(PID);
+
+		ProductService.deleteById(PID);
 	}
 
 }
