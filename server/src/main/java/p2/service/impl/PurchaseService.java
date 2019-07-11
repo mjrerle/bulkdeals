@@ -13,8 +13,8 @@ public class PurchaseService {
     return purchaseDAO.insert(purchase);
   }
 
-  public static void update(Purchase purchase) {
-    purchaseDAO.update(purchase);
+  public static boolean update(Purchase purchase) {
+    return purchaseDAO.update(purchase);
   }
 
   public static List<Purchase> findAll() {
@@ -25,8 +25,8 @@ public class PurchaseService {
     return purchaseDAO.findById(id);
   }
 
-  public static void deleteById(int id) {
-    purchaseDAO.deleteById(id);
+  public static boolean deleteById(int id) {
+    return purchaseDAO.deleteById(id);
   }
 
 	
