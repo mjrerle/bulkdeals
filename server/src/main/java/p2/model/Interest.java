@@ -49,6 +49,13 @@ public class Interest {
 		this.product = product;
 		Status = status;
 	}
+	
+	public Interest(User user, Product product, int status) {
+		super();
+		this.user = user;
+		this.product = product;
+		Status = status;
+	}
 
 	public int getId() {
 		return id;

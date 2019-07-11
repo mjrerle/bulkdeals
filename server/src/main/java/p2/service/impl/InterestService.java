@@ -5,6 +5,7 @@ import java.util.List;
 
 import p2.dao.impl.InterestDAO;
 import p2.model.Interest;
+import p2.model.Product;
 
 public class InterestService {
 
@@ -16,7 +17,6 @@ public class InterestService {
 
 	public static void update(Interest interest) {
 		interestDAO.update(interest);
-
 	}
 
 	public static List<Interest> findAll() {
@@ -29,7 +29,10 @@ public class InterestService {
 
 	public static void deleteById(int id) {
 		interestDAO.deleteById(id);
+	}
 
+	public static List<Product> findByProductId(int productId) {
+		return interestDAO.findByProductId(productId);
 	}
 
 }
