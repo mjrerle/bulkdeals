@@ -13,38 +13,37 @@ import p2.dao.IFavoriteDAO;
 
 public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
 
-	@Override
+
 	public int insert(Favorite t) {
 		// TODO Auto-generated method stub
 		return super.insert(t);
 	}
 
-	@Override
+
 	public void update(Favorite t) {
 		// TODO Auto-generated method stub
 		super.update(t);
 	}
 
-	@Override
+
 	public List<Favorite> findAll() {
 		// TODO Auto-generated method stub
 		return super.findAll();
 	}
 
-	@Override
+
 	public Favorite findById(int id) {
 		// TODO Auto-generated method stub
 		return super.findById(id);
 	}
 
-	@Override
+
 	public void deleteById(int id) {
 		// TODO Auto-generated method stub
 		super.deleteById(id);
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
 	public List<Favorite> findByUser(User user){
 		Session session = HibernateUtil.getSession();
 		List<Favorite> f = null;
