@@ -1,6 +1,6 @@
 package p2.model;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -33,6 +33,7 @@ public class Purchase {
   @JoinColumn(name = "product_id")
   private Product product;
 
+
   public Purchase() {
   }
 
@@ -40,6 +41,21 @@ public class Purchase {
     this.datePurchased = datePurchased;
     this.user = user;
     this.product = product;
+  }
+
+  public Purchase(int id, Date datePurchased, User user, Product product) {
+    this.id = id;
+    this.datePurchased = datePurchased;
+    this.user = user;
+    this.product = product;
+  }
+
+  public int getId() {
+    return this.id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public Date getDatePurchased() {
@@ -66,6 +82,11 @@ public class Purchase {
     this.product = product;
   }
 
+  public Purchase id(int id) {
+    this.id = id;
+    return this;
+  }
+
   public Purchase datePurchased(Date datePurchased) {
     this.datePurchased = datePurchased;
     return this;
@@ -82,26 +103,29 @@ public class Purchase {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o == this)
-      return true;
-    if (!(o instanceof Purchase)) {
-      return false;
-    }
-    Purchase purchase = (Purchase) o;
-    return Objects.equals(datePurchased, purchase.datePurchased) && Objects.equals(user, purchase.user)
-        && Objects.equals(product, purchase.product);
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Purchase)) {
+            return false;
+        }
+        Purchase purchase = (Purchase) o;
+        return id == purchase.id && Objects.equals(datePurchased, purchase.datePurchased) && Objects.equals(user, purchase.user) && Objects.equals(product, purchase.product);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(datePurchased, user, product);
+    return Objects.hash(id, datePurchased, user, product);
   }
 
   @Override
   public String toString() {
-    return "{" + " datePurchased='" + getDatePurchased() + "'" + ", user='" + getUser() + "'" + ", product='"
-        + getProduct() + "'" + "}";
+    return "{" +
+      " id='" + getId() + "'" +
+      ", datePurchased='" + getDatePurchased() + "'" +
+      ", user='" + getUser() + "'" +
+      ", product='" + getProduct() + "'" +
+      "}";
   }
 
 }
