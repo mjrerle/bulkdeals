@@ -36,10 +36,10 @@ public class FavoriteWebService {
 		}
 
 		if (success == true) {
-			Favorite f = new Favorite();
-			f.setUser(u);
-			f.setProduct(p);
-			FavoriteService.insert(f);		
+			Favorite fav = new Favorite();
+			fav.setUser(u);
+			fav.setProduct(p);
+			FavoriteService.insert(fav);		
 
 			try {
 				response.getWriter().append("Favorite Added");
@@ -63,23 +63,23 @@ public class FavoriteWebService {
 		String UIDm = request.getParameter("customer_id");
 		String PIDm = request.getParameter("product_id");
 		boolean success = false;
-		User u = null;
-		Product p = null;
-		Favorite f = null;
+		User user = null;
+		Product product = null;
+		Favorite fav = null;
 		if(UIDm != null && PIDm != null && FIDm != null) {
 			int UID = Integer.parseInt(UIDm);
 			int PID = Integer.parseInt(PIDm);
 			int FID = Integer.parseInt(FIDm);
-			u = new User(UID);
-			p = new Product(PID);
-			f = FavoriteService.findById(FID);
-			f.setUser(u);
-			f.setProduct(p);
+			user = new User(UID);
+			product = new Product(PID);
+			fav = FavoriteService.findById(FID);
+			fav.setUser(user);
+			fav.setProduct(product);
 			success = true;
 		}
 
 		if (success == true) {
-			FavoriteService.update(f);		
+			FavoriteService.update(fav);		
 
 			try {
 				response.getWriter().append("Favorite Updated");
@@ -100,11 +100,11 @@ public class FavoriteWebService {
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Favorite> f = FavoriteService.findAll();
+		List<Favorite> fav = FavoriteService.findAll();
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(f);
+			String json = om.writeValueAsString(fav);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,10 +115,10 @@ public class FavoriteWebService {
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
 		String IDm = request.getParameter("id");
 		boolean success = false;
-		Favorite f = null;
+		Favorite fav = null;
 		if (IDm != null) {
 			int id = Integer.parseInt(IDm);
-			f = FavoriteService.findById(id);
+			fav = FavoriteService.findById(id);
 			success = true;
 		}
 		
@@ -127,7 +127,7 @@ public class FavoriteWebService {
 			ObjectMapper om = new ObjectMapper();
 			
 			try {
-				String json = om.writeValueAsString(f);
+				String json = om.writeValueAsString(fav);
 				response.getWriter().append(json).close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -173,22 +173,22 @@ public class FavoriteWebService {
 
 	public static void findByUser(HttpServletRequest request, HttpServletResponse response){
 		String UIDm = request.getParameter("customer_id");
-		User u = null;
+		User user = null;
 		boolean success = false;
 		
 		if (UIDm != null) {
 			int UID = Integer.parseInt(UIDm);
-			u = new User(UID);
+			user = new User(UID);
 			success = true;
 		}
 		
 		if (success == true) {
-			List<Favorite> f = FavoriteService.findByUser(u);
+			List<Favorite> fav = FavoriteService.findByUser(user);
 			
 			ObjectMapper om = new ObjectMapper();
 			
 			try {
-				String json = om.writeValueAsString(f);
+				String json = om.writeValueAsString(fav);
 				response.getWriter().append(json).close();
 			} catch (IOException e) {
 				e.printStackTrace();

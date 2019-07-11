@@ -24,8 +24,8 @@ public class ProductWebService {
 		String pName = request.getParameter("name");
 		String priceM = request.getParameter("price");
 		boolean success = false;
-		User s = null;
-		Product p = null;
+		User seller = null;
+		Product product = null;
 		int  UID = 0;
 		double price = 0;
 		if (UIDm != null && pName != null && priceM != null) {
@@ -35,14 +35,14 @@ public class ProductWebService {
 		}
 		
 		if (success == true) {
-			s = new User(UID);
-			p = new Product();
-			p.setSeller(s);
-			p.setProductName(pName);
-			p.setPrice(price);
-			p.setOnSale(0);
-			p.setStatus("Standard Price");
-			ProductService.insert(p);
+			seller = new User(UID);
+			product = new Product();
+			product.setSeller(seller);
+			product.setProductName(pName);
+			product.setPrice(price);
+			product.setOnSale(0);
+			product.setStatus("Standard Price");
+			ProductService.insert(product);
 			
 			try {
 				response.getWriter().append("Product Added");
@@ -69,36 +69,36 @@ public class ProductWebService {
 		String salepriceM = request.getParameter("sale_price");
 		String status = request.getParameter("status");
 		String PIDm = request.getParameter("product_id");
-		Product p = null;
+		Product product = null;
 		double price = 0;
 		double saleprice = 0;
 		int PID = 0;
 		boolean success = false;
 		if (PIDm != null) {
 			PID = Integer.parseInt(PIDm);
-			p = ProductService.findById(PID);
+			product = ProductService.findById(PID);
 			if (status != null) {
-				p.setStatus(status);
-				if (status.equals("Pending Interest") && p.getDateListed() != null) {
+				product.setStatus(status);
+				if (status.equals("Pending Interest") && product.getDateListed() != null) {
 					LocalDate day = LocalDate.now();
-					p.setDateListed(day);
+					product.setDateListed(day);
 				}
 			}
 			if (pName != null) {
-				p.setProductName(pName);
+				product.setProductName(pName);
 			}
 			if (priceM != null) {
 				price = Double.parseDouble(priceM);
-				p.setPrice(price);
+				product.setPrice(price);
 			}
 			if (salepriceM != null) {
 				saleprice = Double.parseDouble(salepriceM);
-				p.setSalePrice(saleprice);
+				product.setSalePrice(saleprice);
 			}
 			success = true;
 		}
 		if (success == true) {
-			ProductService.update(p);
+			ProductService.update(product);
 			try {
 				response.getWriter().append("Product Updated");
 			} catch (IOException e) {
@@ -118,11 +118,11 @@ public class ProductWebService {
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> p = ProductService.findAll();
+		List<Product> product = ProductService.findAll();
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(p);
+			String json = om.writeValueAsString(product);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -134,19 +134,19 @@ public class ProductWebService {
 		String PIDm = request.getParameter("product_id");
 		int PID = 0;
 		boolean success = false;
-		Product p = null;
+		Product product = null;
 		if (PIDm != null) {
 			PID = Integer.parseInt(PIDm);
 			success = true;
 		}
 		
 		if (success == true) {
-			p = ProductService.findById(PID);
+			product = ProductService.findById(PID);
 			
 			ObjectMapper om = new ObjectMapper();
 			
 			try {
-				String json = om.writeValueAsString(p);
+				String json = om.writeValueAsString(product);
 				response.getWriter().append(json).close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -192,18 +192,18 @@ public class ProductWebService {
 	
 	public static void findAllStandard(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> p1 = ProductService.findAll();
-		List<Product> p = new ArrayList<Product>();
+		List<Product> productOriginal = ProductService.findAll();
+		List<Product> productNew = new ArrayList<Product>();
 		//populating list of standard priced items being sold
-		for (int i = 0; i < p1.size(); i++) {
-			if (p1.get(i).getStatus().equals("Standard Price")){
-				p.add(p1.get(i));
+		for (int i = 0; i < productOriginal.size(); i++) {
+			if (productOriginal.get(i).getStatus().equals("Standard Price")){
+				productNew.add(productOriginal.get(i));
 			}
 		}
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(p);
+			String json = om.writeValueAsString(productNew);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -212,18 +212,18 @@ public class ProductWebService {
 	
 	public static void findAllSale(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> p1 = ProductService.findAll();
-		List<Product> p = new ArrayList<Product>();
+		List<Product> productOriginal = ProductService.findAll();
+		List<Product> productNew = new ArrayList<Product>();
 		//populating return list of those on sale
-		for (int i = 0; i < p1.size(); i++) {
-			if (p1.get(i).getStatus().equals("On Sale")){
-				p.add(p1.get(i));
+		for (int i = 0; i < productOriginal.size(); i++) {
+			if (productOriginal.get(i).getStatus().equals("On Sale")){
+				productNew.add(productOriginal.get(i));
 			}
 		}
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(p);
+			String json = om.writeValueAsString(productNew);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -232,34 +232,34 @@ public class ProductWebService {
 	
 	public static void findAllInterest(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> p1 = ProductService.findAll();
-		List<Product> p = new ArrayList<Product>();
+		List<Product> productOriginal = ProductService.findAll();
+		List<Product> productNew = new ArrayList<Product>();
 		LocalDate today = LocalDate.now();
 		//Populating list of those gaining interest
-		for (int i = 0; i < p1.size(); i++) {
-			if (p1.get(i).getStatus().equals("Gaining Interest")){
-				p.add(p1.get(i));
+		for (int i = 0; i < productOriginal.size(); i++) {
+			if (productOriginal.get(i).getStatus().equals("Gaining Interest")){
+				productNew.add(productOriginal.get(i));
 			}
 		}
 		//removing from list if interest not gained in one week and updating back to 
-		for (int i = 0; i < p.size(); i++) {
-			LocalDate dayMade = p.get(i).getDateListed();
+		for (int i = 0; i < productNew.size(); i++) {
+			LocalDate dayMade = productNew.get(i).getDateListed();
 			long difference = java.time.temporal.ChronoUnit.DAYS.between(dayMade,today);
 			if (difference > 7) {
-				p.get(i).setStatus("Standard Price");
-				p.get(i).setDateListed(null);
-				ProductService.update(p.get(i));
-				p.remove(i);
+				productNew.get(i).setStatus("Standard Price");
+				productNew.get(i).setDateListed(null);
+				ProductService.update(productNew.get(i));
+				productNew.remove(i);
 			}
 		}
 		
 		//removing from list if interest gained and setting on sale
-		for (int j = 0; j < p.size(); j++) {
-			Interest i = InterestService.findByProductId(p.get(j).getId());
+		for (int j = 0; j < productNew.size(); j++) {
+			Interest i = InterestService.findByProductId(productNew.get(j).getId());
 			if (i.getQuantity >= 10) {
-				p.get(j).setStatus("On Sale");
-				ProductService.update(p.get(j));
-				p.remove(j);
+				productNew.get(j).setStatus("On Sale");
+				ProductService.update(productNew.get(j));
+				productNew.remove(j);
 			}
 		}
 		
@@ -276,17 +276,17 @@ public class ProductWebService {
 		String PIDm = request.getParameter("product_id");
 		int PID = 0;
 		boolean success = false;
-		Product p = null;
+		Product product = null;
 		if (PIDm != null) {
 			PID = Integer.parseInt(PIDm);
 			success = true;
 		}
 		
 		if (success == true) {
-			p = ProductService.findById(PID);
-			p.setStatus("Standard Price");
-			p.setDateListed(null);
-			ProductService.update(p);
+			product = ProductService.findById(PID);
+			product.setStatus("Standard Price");
+			product.setDateListed(null);
+			ProductService.update(product);
 			try {
 				response.getWriter().append("Removed Product From Sale");
 			} catch (IOException e) {

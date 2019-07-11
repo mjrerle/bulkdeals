@@ -5,34 +5,34 @@ import p2.model.Product;
 
 
 public class ProductService{
-
+	private static ProductDAO productDAO = new ProductDAO();
 
 	public static int insert(Product t) {
-		ProductDAO p = new ProductDAO();
-		return p.insert(t);
+
+		return productDAO.insert(t);
 	}
 
 	public static void update(Product t) {
-		ProductDAO p = new ProductDAO();
-		p.update(t);
+
+		productDAO.update(t);
 	}
 
 
 	public static List<Product> findAll() {
-		ProductDAO p = new ProductDAO();
-		return p.findAll();
+
+		return productDAO.findAll();
 	}
 
 
 	public static Product findById(int id) {
-		ProductDAO p = new ProductDAO();
-		return p.findById(id);
+
+		return productDAO.findById(id);
 	}
 
 
 	public static void deleteById(int id) {
-		ProductDAO p = new ProductDAO();
-		p.deleteById(id);
+
+		productDAO.deleteById(id);
 	}
 	
 

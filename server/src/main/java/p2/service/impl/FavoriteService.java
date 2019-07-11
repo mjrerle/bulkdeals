@@ -8,41 +8,41 @@ import p2.model.User;
 import p2.dao.impl.FavoriteDAO;
 
 public class FavoriteService{
-	
+	private static FavoriteDAO favoriteDAO= new FavoriteDAO();
 
 	public static int insert(Favorite t) {
-		FavoriteDAO f = new FavoriteDAO();
-		return f.insert(t);
+
+		return favoriteDAO.insert(t);
 	}
 
 
 	public static void update(Favorite t) {
-		FavoriteDAO f = new FavoriteDAO();
-		f.update(t);
+
+		favoriteDAO.update(t);
 	}
 
 
 	public static List<Favorite> findAll() {
-		FavoriteDAO f = new FavoriteDAO();
-		return f.findAll();
+
+		return favoriteDAO.findAll();
 	}
 
 
 	public static Favorite findById(int id) {
-		FavoriteDAO f = new FavoriteDAO();
-		return f.findById(id);
+
+		return favoriteDAO.findById(id);
 	}
 
 
 	public static void deleteById(int id) {
-		FavoriteDAO f = new FavoriteDAO();
-		f.deleteById(id);
+
+		favoriteDAO.deleteById(id);
 	}
 	
 
 	public static List<Favorite> findByUser(User user){
-		FavoriteDAO f = new FavoriteDAO();
-		return f.findByUser(user);
+
+		return favoriteDAO.findByUser(user);
 	}
 
 }
