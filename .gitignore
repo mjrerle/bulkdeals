@@ -46,3 +46,5 @@ log/
 
 **/log.html
 **/log.log
+
+**/log4j.properties
