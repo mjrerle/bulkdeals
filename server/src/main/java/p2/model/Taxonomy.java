@@ -28,28 +28,33 @@ public class Taxonomy {
   private String type;
 
   @Column(name = "sub_type")
-  private String sub_type;
+  private String subType;
 
   @ManyToOne
   @JoinColumn(name = "product_id")
   private Product product;
 
 
+
   public Taxonomy() {
   }
 
-  public Taxonomy(String name, String type, String sub_type, Product product) {
+  public Taxonomy(int id) {
+    this.id = id;
+  }
+
+  public Taxonomy(String name, String type, String subType, Product product) {
     this.name = name;
     this.type = type;
-    this.sub_type = sub_type;
+    this.subType = subType;
     this.product = product;
   }
 
-  public Taxonomy(int id, String name, String type, String sub_type, Product product) {
+  public Taxonomy(int id, String name, String type, String subType, Product product) {
     this.id = id;
     this.name = name;
     this.type = type;
-    this.sub_type = sub_type;
+    this.subType = subType;
     this.product = product;
   }
 
@@ -77,12 +82,12 @@ public class Taxonomy {
     this.type = type;
   }
 
-  public String getSub_type() {
-    return this.sub_type;
+  public String getSubType() {
+    return this.subType;
   }
 
-  public void setSub_type(String sub_type) {
-    this.sub_type = sub_type;
+  public void setSubType(String subType) {
+    this.subType = subType;
   }
 
   public Product getProduct() {
@@ -108,8 +113,8 @@ public class Taxonomy {
     return this;
   }
 
-  public Taxonomy sub_type(String sub_type) {
-    this.sub_type = sub_type;
+  public Taxonomy subType(String subType) {
+    this.subType = subType;
     return this;
   }
 
@@ -126,12 +131,12 @@ public class Taxonomy {
             return false;
         }
         Taxonomy taxonomy = (Taxonomy) o;
-        return id == taxonomy.id && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type) && Objects.equals(sub_type, taxonomy.sub_type) && Objects.equals(product, taxonomy.product);
+        return id == taxonomy.id && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type) && Objects.equals(subType, taxonomy.subType) && Objects.equals(product, taxonomy.product);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, type, sub_type, product);
+    return Objects.hash(id, name, type, subType, product);
   }
 
   @Override
@@ -140,10 +145,10 @@ public class Taxonomy {
       " id='" + getId() + "'" +
       ", name='" + getName() + "'" +
       ", type='" + getType() + "'" +
-      ", sub_type='" + getSub_type() + "'" +
+      ", subType='" + getSubType() + "'" +
       ", product='" + getProduct() + "'" +
       "}";
   }
-
+  
 
 }

@@ -37,6 +37,10 @@ public class Purchase {
   public Purchase() {
   }
 
+  public Purchase(int id) {
+    this.id = id;
+  }
+
   public Purchase(Date datePurchased, User user, Product product) {
     this.datePurchased = datePurchased;
     this.user = user;

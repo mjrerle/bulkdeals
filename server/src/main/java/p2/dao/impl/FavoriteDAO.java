@@ -12,36 +12,6 @@ import org.hibernate.Session;
 import p2.dao.IFavoriteDAO;
 
 public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
-
-
-	public int insert(Favorite t) {
-		// TODO Auto-generated method stub
-		return super.insert(t);
-	}
-
-
-	public boolean update(Favorite t) {
-		// TODO Auto-generated method stub
-		super.update(t);
-	}
-
-
-	public List<Favorite> findAll() {
-		// TODO Auto-generated method stub
-		return super.findAll();
-	}
-
-
-	public Favorite findById(int id) {
-		// TODO Auto-generated method stub
-		return super.findById(id);
-	}
-
-
-	public boolean deleteById(int id) {
-		// TODO Auto-generated method stub
-		super.deleteById(id);
-	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Favorite> findByUser(User user){
