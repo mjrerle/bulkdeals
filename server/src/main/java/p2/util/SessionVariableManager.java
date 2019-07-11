@@ -19,7 +19,7 @@ public class SessionVariableManager {
 			session = request.getSession();
 			session.setAttribute(SessionKey.LOGGEDIN_USER.toString(), user);
 			session.setMaxInactiveInterval(sessionInterval);
-			logger.info("User ID: " + user.getId() + " Loged into the System");
+			logger.info("User ID: " + user.getId() + " Logged into the System");
 		} catch (Exception e) {
 
 		}
