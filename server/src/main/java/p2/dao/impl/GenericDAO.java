@@ -22,7 +22,7 @@ public class GenericDAO<T> {
 	public int insert(T t) {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
-		int id = 0;
+		int id = -1;
 
 		try {
 			tx = session.beginTransaction();
@@ -37,18 +37,21 @@ public class GenericDAO<T> {
 		return id;
 	}
 
-	public void update(T t) {
-
+	public boolean update(T t) {
+		boolean success = false;
 		Session session = HibernateUtil.getSession();
 		try {
 			session.beginTransaction();
 			session.merge(t);
 			session.getTransaction().commit();
+			success = true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
+			success = false;
 		} finally {
 			session.close();
+			return success;
 		}
 	}
 
@@ -82,17 +85,21 @@ public class GenericDAO<T> {
 		return t;
 	}
 
-	public void deleteById(int id) {
+	public boolean deleteById(int id) {
+		boolean success = false;
 		Session session = HibernateUtil.getSession();
 		try {
 			session.beginTransaction();
 			session.delete( session.get(persistentClass, id));
 			session.getTransaction().commit();
+			success = true;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
+			success = false;
 		} finally {
 			session.close();
+			return success;
 		}
 	}
 }

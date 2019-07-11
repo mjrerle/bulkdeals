@@ -255,8 +255,8 @@ public class ProductWebService {
 		
 		//removing from list if interest gained and setting on sale
 		for (int j = 0; j < productNew.size(); j++) {
-			Interest i = InterestService.findByProductId(productNew.get(j).getId());
-			if (i.getQuantity >= 10) {
+			int interest = InterestService.getNumberOfInterestByProductId(productNew.get(j).getId());
+			if (interest >= 10) {
 				productNew.get(j).setStatus("On Sale");
 				ProductService.update(productNew.get(j));
 				productNew.remove(j);
@@ -265,7 +265,7 @@ public class ProductWebService {
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(p);
+			String json = om.writeValueAsString(productNew);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			e.printStackTrace();

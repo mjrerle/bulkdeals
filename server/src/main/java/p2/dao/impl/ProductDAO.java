@@ -15,7 +15,7 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
 	}
 
 
-	public void update(Product t) {
+	public boolean update(Product t) {
 		// TODO Auto-generated method stub
 		super.update(t);
 	}
@@ -33,7 +33,7 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
 	}
 
 
-	public void deleteById(int id) {
+	public boolean deleteById(int id) {
 		// TODO Auto-generated method stub
 		super.deleteById(id);
 	}

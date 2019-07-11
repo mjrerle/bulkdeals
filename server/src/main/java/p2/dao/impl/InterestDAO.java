@@ -7,19 +7,18 @@ import org.hibernate.Session;
 
 import p2.dao.IInterestDAO;
 import p2.model.Interest;
-import p2.model.Product;
 import p2.util.HibernateUtil;
 
 public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Product> findByProductId(int productId) {
+	public List<Interest> findByProductId(int productId) {
 		Session session = HibernateUtil.getSession();
-		List<Product> list = null;
+		List<Interest> list = null;
 
 		try {
-			list = session.createQuery("FROM Product WHERE product_id = " + productId).list();
+			list = session.createQuery("FROM Interest WHERE product_id = " + productId).list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {

@@ -17,6 +17,6 @@ public interface IInterestDAO {
 
 	public void deleteById(int id);
 	
-	public List<Product> findByProductId(int productId);
+	public List<Interest> findByProductId(int productId);
 
 }
