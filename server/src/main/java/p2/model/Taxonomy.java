@@ -34,7 +34,15 @@ public class Taxonomy {
   @JoinColumn(name = "product_id")
   private Product product;
 
+
   public Taxonomy() {
+  }
+
+  public Taxonomy(String name, String type, String sub_type, Product product) {
+    this.name = name;
+    this.type = type;
+    this.sub_type = sub_type;
+    this.product = product;
   }
 
   public Taxonomy(int id, String name, String type, String sub_type, Product product) {
@@ -111,15 +119,14 @@ public class Taxonomy {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o == this)
-      return true;
-    if (!(o instanceof Taxonomy)) {
-      return false;
-    }
-    Taxonomy taxonomy = (Taxonomy) o;
-    return id == taxonomy.id && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type)
-        && Objects.equals(sub_type, taxonomy.sub_type) && Objects.equals(product, taxonomy.product);
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Taxonomy)) {
+            return false;
+        }
+        Taxonomy taxonomy = (Taxonomy) o;
+        return id == taxonomy.id && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type) && Objects.equals(sub_type, taxonomy.sub_type) && Objects.equals(product, taxonomy.product);
   }
 
   @Override
@@ -129,8 +136,14 @@ public class Taxonomy {
 
   @Override
   public String toString() {
-    return "{" + " id='" + getId() + "'" + ", name='" + getName() + "'" + ", type='" + getType() + "'" + ", sub_type='"
-        + getSub_type() + "'" + ", product='" + getProduct() + "'" + "}";
+    return "{" +
+      " id='" + getId() + "'" +
+      ", name='" + getName() + "'" +
+      ", type='" + getType() + "'" +
+      ", sub_type='" + getSub_type() + "'" +
+      ", product='" + getProduct() + "'" +
+      "}";
   }
+
 
 }
