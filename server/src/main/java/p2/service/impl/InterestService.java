@@ -4,7 +4,6 @@ import java.util.List;
 
 import p2.dao.impl.InterestDAO;
 import p2.model.Interest;
-import p2.model.Product;
 
 public class InterestService {
 
@@ -30,8 +29,16 @@ public class InterestService {
 		interestDAO.deleteById(id);
 	}
 
-	public static List<Product> findByProductId(int productId) {
+	public static List<Interest> findByProductId(int productId) {
 		return interestDAO.findByProductId(productId);
+	}
+
+	public static int getNumberOfInterest_ByProductId(int productId) {
+		int count = 0;
+		for (Interest interest : findByProductId(productId))
+			count += interest.getQuantity();
+		return count;
+
 	}
 
 }
