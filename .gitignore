@@ -46,3 +46,4 @@ log/
 pom.xml
 server/src/main/resources/hibernate.cfg.xml
 
+server/src/main/resources/hibernate.cfg.xml

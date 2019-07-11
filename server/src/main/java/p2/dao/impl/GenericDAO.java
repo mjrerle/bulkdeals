@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import p2.util.HibernateUtil;
 
 public class GenericDAO<T> {
-	
+
 	private Class<T> persistentClass;
 
 	@SuppressWarnings("unchecked")

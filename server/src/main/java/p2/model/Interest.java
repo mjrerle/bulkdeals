@@ -1,5 +1,7 @@
 package p2.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,16 +20,17 @@ public class Interest {
 	@GeneratedValue(generator = "i_seq", strategy = GenerationType.SEQUENCE)
 	private int id;
 
-	@ManyToOne
+	@ManyToOne (cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne
+	@ManyToOne (cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "product_id")
 	private Product product;
 
 	private int quantity;
 
+	@Column(nullable = false, columnDefinition = "int default 0")
 	private int Status;
 
 	public Interest() {
