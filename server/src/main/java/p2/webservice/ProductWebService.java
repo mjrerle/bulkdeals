@@ -255,7 +255,7 @@ public class ProductWebService {
 		
 		//removing from list if interest gained and setting on sale
 		for (int j = 0; j < productNew.size(); j++) {
-			int interest = InterestService.getNumberOfInterest_ByProductId(productNew.get(j).getId());
+			int interest = InterestService.getNumberOfInterestByProductId(productNew.get(j).getId());
 			if (interest >= 10) {
 				productNew.get(j).setStatus("On Sale");
 				ProductService.update(productNew.get(j));
