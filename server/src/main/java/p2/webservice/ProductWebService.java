@@ -265,7 +265,7 @@ public class ProductWebService {
 		
 		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(p);
+			String json = om.writeValueAsString(productNew);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			e.printStackTrace();
