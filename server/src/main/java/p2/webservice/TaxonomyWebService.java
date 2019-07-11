@@ -1,7 +1,6 @@
 package p2.webservice;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,12 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 
 import p2.model.Product;
-import p2.model.Purchase;
-import p2.model.User;
-import p2.service.impl.PurchaseService;
+import p2.model.Taxonomy;
+import p2.service.impl.TaxonomyService;
 import p2.util.Glogger;
 
-public class PurchaseWebService {
+public class TaxonomyWebService {
   public static Logger logger = Glogger.logger;
 
   private static boolean checkNullOrEmpty(String parameter) {
@@ -26,29 +24,29 @@ public class PurchaseWebService {
 
   public static void insert(HttpServletRequest request, HttpServletResponse response) {
 
-    Purchase purchase = null;
-    int purchaseId = -1;
+    Taxonomy taxonomy = null;
+    int taxonomyId = -1;
 
-    String maybeDate = request.getParameter("date_purchased");
-    String maybeUserId = request.getParameter("user_id");
+    String maybeName = request.getParameter("name");
+    String maybeType = request.getParameter("type");
+    String maybeSubType = request.getParameter("sub_type");
     String maybeProductId = request.getParameter("product_id");
 
-    if (checkNullOrEmpty(maybeDate) && checkNullOrEmpty(maybeUserId) && checkNullOrEmpty(maybeProductId)) {
-      Date datePurchased = new Date(Long.parseLong(maybeDate));
-      int userId = Integer.parseInt(maybeUserId);
+    if (checkNullOrEmpty(maybeName) && checkNullOrEmpty(maybeType)
+        && checkNullOrEmpty(maybeSubType) && checkNullOrEmpty(maybeProductId)) {
+      
       int productId = Integer.parseInt(maybeProductId);
-      User user = new User(userId);
-      Product product = new Product(productId);
-      purchase = new Purchase(datePurchased, user, product);
-      purchaseId = PurchaseService.insert(purchase);
+      taxonomy = new Taxonomy(maybeName, maybeType, maybeSubType, new Product(productId));
+      taxonomyId = TaxonomyService.insert(taxonomy);
+
     }
     try {
       response.setContentType("text/html");
       response.setCharacterEncoding("UTF-8");
-      if (purchaseId >= 0) {
-        response.getWriter().append("Purchase Added").close();
+      if (taxonomyId >= 0) {
+        response.getWriter().append("Taxonomy Added").close();
       } else {
-        response.getWriter().append("Purchase Add Failed").close();
+        response.getWriter().append("Taxonomy Add Failed").close();
       }
 
     } catch (IOException e) {
@@ -59,28 +57,33 @@ public class PurchaseWebService {
 
   public static void update(HttpServletRequest request, HttpServletResponse response) {
 
-    String maybeDate = request.getParameter("date_purchased");
-    String maybeUserId = request.getParameter("user_id");
+    String maybeName = request.getParameter("name");
+    String maybeType = request.getParameter("type");
+    String maybeSubType = request.getParameter("sub_type");
     String maybeProductId = request.getParameter("product_id");
-    String maybePurchaseId = request.getParameter("purchase_id");
-    boolean success = false;
-    if (checkNullOrEmpty(maybePurchaseId)) {
-      Purchase purchase = new Purchase(Integer.parseInt(maybePurchaseId));
+    String maybeTaxonomyId = request.getParameter("taxonomy_id");
 
-      if (checkNullOrEmpty(maybeDate)) {
-        Date datePurchased = new Date(Long.parseLong(maybeDate));
-        purchase.setDatePurchased(datePurchased);
+    boolean success = false;
+    if (checkNullOrEmpty(maybeTaxonomyId)) {
+      Taxonomy taxonomy = new Taxonomy(Integer.parseInt(maybeTaxonomyId));
+
+      if (checkNullOrEmpty(maybeName)) {
+        taxonomy.setName(maybeName);
       }
       if (checkNullOrEmpty(maybeProductId)) {
         int productId = Integer.parseInt(maybeProductId);
         Product product = new Product(productId);
-        purchase.setProduct(product);
+        taxonomy.setProduct(product);
       }
-      if (checkNullOrEmpty(maybeUserId)) {
-        int userId = Integer.parseInt(maybeUserId);
-        User user = new User(userId);
-        purchase.setUser(user);
+      if (checkNullOrEmpty(maybeType)) {
+        taxonomy.setType(maybeType);
       }
+
+      if(checkNullOrEmpty(maybeSubType)) {
+        taxonomy.setSubType(maybeSubType);
+      }
+      TaxonomyService.update(taxonomy);
+      success = true;
     }
 
     try {
@@ -98,22 +101,22 @@ public class PurchaseWebService {
   }
 
   public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-    int purchaseId = -1;
-    String maybePurchaseId = request.getParameter("purchase_id");
+    int taxonomyId = -1;
+    String maybeTaxonomyId = request.getParameter("taxonomy_id");
     boolean success = false;
 
-    if (checkNullOrEmpty(maybePurchaseId)) {
-      purchaseId = Integer.parseInt(maybePurchaseId);
-      success = PurchaseService.deleteById(purchaseId);
+    if (checkNullOrEmpty(maybeTaxonomyId)) {
+      taxonomyId = Integer.parseInt(maybeTaxonomyId);
+      success = TaxonomyService.deleteById(taxonomyId);
     }
 
     try {
       response.setContentType("text/html");
       response.setCharacterEncoding("UTF-8");
       if (success) {
-        response.getWriter().append("Purchase Deleted").close();
+        response.getWriter().append("Taxonomy Deleted").close();
       } else {
-        response.getWriter().append("Purchase Delete Failed").close();
+        response.getWriter().append("Taxonomy Delete Failed").close();
       }
     } catch (IOException e) {
       logger.warn(e.getMessage());
@@ -123,11 +126,11 @@ public class PurchaseWebService {
 
   public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
-    List<Purchase> purchases = PurchaseService.findAll();
+    List<Taxonomy> taxonomies = TaxonomyService.findAll();
 
     try {
       ObjectMapper om = new ObjectMapper();
-      String json = om.writeValueAsString(purchases);
+      String json = om.writeValueAsString(taxonomies);
       response.setContentType("application/json");
       response.setCharacterEncoding("UTF-8");
       response.getWriter().append(json).close();
@@ -139,18 +142,18 @@ public class PurchaseWebService {
 
   public static void findById(HttpServletRequest request, HttpServletResponse response) {
 
-    int purchaseId = -1;
-    String maybePurchaseId = request.getParameter("purchase_id");
-    Purchase purchase = null;
+    int taxonomyId = -1;
+    String maybeTaxonomyId = request.getParameter("taxonomy_id");
+    Taxonomy taxonomy = null;
 
-    if (checkNullOrEmpty(maybePurchaseId)) {
-      purchaseId = Integer.parseInt(maybePurchaseId);
-      purchase = PurchaseService.findById(purchaseId);
+    if (checkNullOrEmpty(maybeTaxonomyId)) {
+      taxonomyId = Integer.parseInt(maybeTaxonomyId);
+      taxonomy = TaxonomyService.findById(taxonomyId);
     }
 
     try {
       ObjectMapper om = new ObjectMapper();
-      String json = om.writeValueAsString(purchase);
+      String json = om.writeValueAsString(taxonomy);
       response.setContentType("application/json");
       response.setCharacterEncoding("UTF-8");
       response.getWriter().append(json).close();
@@ -159,5 +162,4 @@ public class PurchaseWebService {
       e.printStackTrace();
     }
   }
-
 }

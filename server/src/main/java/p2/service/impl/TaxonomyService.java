@@ -13,8 +13,8 @@ public class TaxonomyService {
     return taxonomyDAO.insert(taxonomy);
   }
 
-  public static void update(Taxonomy taxonomy) {
-    taxonomyDAO.update(taxonomy);
+  public static boolean update(Taxonomy taxonomy) {
+    return taxonomyDAO.update(taxonomy);
   }
 
   public static List<Taxonomy> findAll() {
@@ -25,8 +25,8 @@ public class TaxonomyService {
     return taxonomyDAO.findById(id);
   }
 
-  public static void deleteById(int id) {
-    taxonomyDAO.deleteById(id);
+  public static boolean deleteById(int id) {
+    return taxonomyDAO.deleteById(id);
   }
 	
 
