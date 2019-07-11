@@ -20,7 +20,7 @@ public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
 	}
 
 
-	public void update(Favorite t) {
+	public boolean update(Favorite t) {
 		// TODO Auto-generated method stub
 		super.update(t);
 	}
@@ -38,7 +38,7 @@ public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
 	}
 
 
-	public void deleteById(int id) {
+	public boolean deleteById(int id) {
 		// TODO Auto-generated method stub
 		super.deleteById(id);
 	}
