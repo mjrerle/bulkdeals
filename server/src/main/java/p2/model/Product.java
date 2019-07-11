@@ -1,6 +1,7 @@
 package p2.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,7 +38,7 @@ public class Product {
 	private int generatedInterest;//I figure well set an integer limit that correlates to user quantity and set an if threshold.
 	
 	@Column(name="date_listed_for_interest")
-	private Date dateListed;//note I pulled java.sql.Date for conversion purposes
+	private java.time.LocalDate dateListed;//note I pulled java.sql.Date for conversion purposes
 	
 	@Column(name="status")
 	private String status;
@@ -49,9 +50,18 @@ public class Product {
 	public Product() {
 		super();
 	}
+	
+
+
+	public Product(int id) {
+		super();
+		this.id = id;
+	}
+
+
 
 	public Product(String productName, double price, double salePrice, int onSale, int generatedInterest,
-			Date dateListed,String status, User seller) {
+			LocalDate dateListed,String status, User seller) {
 		super();
 		this.productName = productName;
 		this.price = price;
@@ -64,7 +74,7 @@ public class Product {
 	}
 
 	public Product(int id, String productName, double price, double salePrice, int onSale, int generatedInterest,
-			Date dateListed, String status, User seller) {
+			LocalDate dateListed, String status, User seller) {
 		super();
 		this.id = id;
 		this.productName = productName;
@@ -125,12 +135,12 @@ public class Product {
 		this.generatedInterest = generatedInterest;
 	}
 
-	public Date getDateListed() {
+	public LocalDate getDateListed() {
 		return dateListed;
 	}
 
-	public void setDateListed(Date dateListed) {
-		this.dateListed = dateListed;
+	public void setDateListed(LocalDate date) {
+		this.dateListed = date;
 	}
 
 	public User getSeller() {
