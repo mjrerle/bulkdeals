@@ -51,8 +51,8 @@ public class GenericDAO<T> {
 			success = false;
 		} finally {
 			session.close();
-			return success;
 		}
+		return success;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -90,7 +90,7 @@ public class GenericDAO<T> {
 		Session session = HibernateUtil.getSession();
 		try {
 			session.beginTransaction();
-			session.delete( session.get(persistentClass, id));
+			session.delete(session.get(persistentClass, id));
 			session.getTransaction().commit();
 			success = true;
 		} catch (HibernateException e) {
@@ -99,7 +99,8 @@ public class GenericDAO<T> {
 			success = false;
 		} finally {
 			session.close();
-			return success;
 		}
+		return success;
+
 	}
 }
