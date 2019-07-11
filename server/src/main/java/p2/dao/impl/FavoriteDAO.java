@@ -4,7 +4,6 @@ import p2.model.Favorite;
 import p2.model.User;
 import p2.util.HibernateUtil;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -13,7 +12,7 @@ import org.hibernate.Session;
 import p2.dao.IFavoriteDAO;
 
 public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
-	private Class<Favorite> persistentClass;
+
 	@Override
 	public int insert(Favorite t) {
 		// TODO Auto-generated method stub
@@ -44,6 +43,7 @@ public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
 		super.deleteById(id);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Favorite> findByUser(User user){
 		Session session = HibernateUtil.getSession();

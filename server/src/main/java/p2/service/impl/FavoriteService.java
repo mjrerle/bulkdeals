@@ -2,12 +2,9 @@ package p2.service.impl;
 
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-
 import p2.model.Favorite;
 import p2.model.User;
-import p2.util.HibernateUtil;
+
 import p2.dao.impl.FavoriteDAO;
 
 public class FavoriteService{
