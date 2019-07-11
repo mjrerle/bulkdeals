@@ -82,18 +82,15 @@ public class GenericDAO<T> {
 		return t;
 	}
 
-	@SuppressWarnings("null")
 	public void deleteById(int id) {
 		Session session = HibernateUtil.getSession();
-		Transaction tx = null;
-
 		try {
 			session.beginTransaction();
-			session.delete(session.get(persistentClass, id));
-			tx.commit();
+			session.delete( session.get(persistentClass, id));
+			session.getTransaction().commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-			tx.rollback();
+			session.getTransaction().rollback();
 		} finally {
 			session.close();
 		}
