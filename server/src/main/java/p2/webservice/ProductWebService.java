@@ -271,5 +271,34 @@ public class ProductWebService {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public static void removeFromSale(HttpServletRequest request, HttpServletResponse response) {
+		String PIDm = request.getParameter("product_id");
+		int PID = 0;
+		boolean success = false;
+		Product p = null;
+		if (PIDm != null) {
+			PID = Integer.parseInt(PIDm);
+			success = true;
+		}
+		
+		if (success == true) {
+			p = ProductService.findById(PID);
+			p.setStatus("Standard Price");
+			p.setDateListed(null);
+			ProductService.update(p);
+			try {
+				response.getWriter().append("Removed Product From Sale");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			try {
+				response.getWriter().append("Failed to Remove Product From Sale");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
