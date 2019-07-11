@@ -36,7 +36,10 @@ public class PurchaseWebService {
     String maybeProductId = request.getParameter("product_id");
 
     if(checkNullOrEmpty(maybeDate) && checkNullOrEmpty(maybeUserId) && checkNullOrEmpty(maybeProductId)) {
-      
+      Date datePurchased = new Date(Long.parseLong(maybeDate));
+      int userId = Integer.parseInt(maybeUserId);
+      int productId = Integer.parseInt(maybeProductId);
+      User user = new User(userId);
     }
     try {
       if(purchase != null) {
