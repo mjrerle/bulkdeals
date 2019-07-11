@@ -3,6 +3,7 @@ package p2.dao;
 import java.util.List;
 
 import p2.model.Interest;
+import p2.model.Product;
 
 public interface IInterestDAO {
 
@@ -15,5 +16,7 @@ public interface IInterestDAO {
 	public Interest findById(int id);
 
 	public void deleteById(int id);
+	
+	public List<Product> findByProductId(int productId);
 
 }
