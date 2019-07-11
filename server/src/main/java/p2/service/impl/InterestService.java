@@ -4,35 +4,29 @@ import java.util.List;
 
 import p2.dao.impl.InterestDAO;
 import p2.model.Interest;
-import p2.service.IInterestService;
 
-public class InterestService implements IInterestService {
+public class InterestService {
 
-	private InterestDAO interestDAO = new InterestDAO();
+	private static InterestDAO interestDAO = new InterestDAO();
 
-	@Override
-	public int insert(Interest interest) {
+	public static int insert(Interest interest) {
 		return interestDAO.insert(interest);
 	}
 
-	@Override
-	public void update(Interest interest) {
+	public static void update(Interest interest) {
 		interestDAO.update(interest);
 
 	}
 
-	@Override
-	public List<Interest> findAll() {
+	public static List<Interest> findAll() {
 		return interestDAO.findAll();
 	}
 
-	@Override
-	public Interest findById(int id) {
+	public static Interest findById(int id) {
 		return interestDAO.findById(id);
 	}
 
-	@Override
-	public void deleteById(int id) {
+	public static void deleteById(int id) {
 		interestDAO.deleteById(id);
 
 	}

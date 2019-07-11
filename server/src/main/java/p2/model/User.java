@@ -1,7 +1,11 @@
 package p2.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -9,11 +13,23 @@ import javax.persistence.Table;
 public class User {
 
 	@Id
+	@SequenceGenerator(sequenceName = "user_seq", name = "u_seq")
+	@GeneratedValue(generator = "u_seq", strategy = GenerationType.SEQUENCE)
 	private int id;
+	
+	@Column(nullable = false)
 	private String firstName;
+	
+	@Column(nullable = false)
 	private String lastName;
+	
+	@Column(unique = true)
 	private String email;
+	
+	@Column(nullable = false)
 	private String password;
+	
+	@Column(nullable = false)
 	private String role;
 	private String address;
 	private int creditCardNumber;
@@ -32,6 +48,19 @@ public class User {
 			int creditCardNumber, int cvv) {
 		super();
 		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.address = address;
+		this.creditCardNumber = creditCardNumber;
+		this.cvv = cvv;
+	}
+	
+	public User(String firstName, String lastName, String email, String password, String role, String address,
+			int creditCardNumber, int cvv) {
+		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
