@@ -26,7 +26,7 @@ public class ProductWebService {
 		boolean success = false;
 		User seller = null;
 		Product product = null;
-		int  UID = 0;
+		int UID = 0;
 		double price = 0;
 		if (UIDm != null && pName != null && priceM != null) {
 			UID = Integer.parseInt(UIDm);
