@@ -34,7 +34,7 @@ public class InterestService {
 		return interestDAO.findByProductId(productId);
 	}
 
-	public static int getNumberOfInterest_ByProductId(int productId) {
+	public static int getNumberOfInterestByProductId(int productId) {
 		int count = 0;
 		for (Interest interest : findByProductId(productId))
 			count += interest.getQuantity();
