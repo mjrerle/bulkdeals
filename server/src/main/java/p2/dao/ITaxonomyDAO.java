@@ -2,6 +2,7 @@ package p2.dao;
 
 import java.util.List;
 
+import p2.model.Product;
 import p2.model.Taxonomy;
 
 public interface ITaxonomyDAO {
@@ -14,5 +15,11 @@ public interface ITaxonomyDAO {
 	public Taxonomy findById(int id);
 
 	public boolean deleteById(int id);
+
+	public List<Product> findAllProductsByType(String type);
+
+	public List<Product> findAllProductsBySubType(String subType);
+
+	public List<Product> findAllProductsByTaxonomyName(String name);
 
 }

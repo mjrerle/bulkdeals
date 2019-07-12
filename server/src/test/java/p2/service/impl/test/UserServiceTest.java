@@ -1,10 +1,7 @@
 package p2.service.impl.test;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import p2.model.User;
 import p2.service.impl.UserService;
@@ -14,7 +11,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void insert() {
-		assertNull(UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322)));
+		Assert.assertNull(UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322)));
 	}
 	
 	@Test

@@ -3,14 +3,17 @@ package p2.dao.impl;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import p2.util.Glogger;
 import p2.util.HibernateUtil;
 
 public class GenericDAO<T> {
 
+	private static Logger logger = Glogger.logger;
 	private Class<T> persistentClass;
 
 	@SuppressWarnings("unchecked")
@@ -21,16 +24,16 @@ public class GenericDAO<T> {
 
 	public int insert(T t) {
 		Session session = HibernateUtil.getSession();
-		Transaction tx = null;
 		int id = -1;
 
 		try {
-			tx = session.beginTransaction();
+			session.beginTransaction();
 			id = Integer.parseInt(session.save(t).toString());
-			tx.commit();
+			session.getTransaction().commit();
 		} catch (HibernateException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
-			tx.rollback();
+			session.getTransaction().rollback();
 		} finally {
 			session.close();
 		}
@@ -46,6 +49,7 @@ public class GenericDAO<T> {
 			session.getTransaction().commit();
 			success = true;
 		} catch (HibernateException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			success = false;
@@ -63,6 +67,7 @@ public class GenericDAO<T> {
 		try {
 			list = session.createQuery("FROM " + persistentClass.getSimpleName()).list();
 		} catch (HibernateException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			session.close();
@@ -78,6 +83,7 @@ public class GenericDAO<T> {
 		try {
 			t = (T) session.get(persistentClass, id);
 		} catch (HibernateException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			session.close();
@@ -94,6 +100,7 @@ public class GenericDAO<T> {
 			session.getTransaction().commit();
 			success = true;
 		} catch (HibernateException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 			session.getTransaction().rollback();
 			success = false;
