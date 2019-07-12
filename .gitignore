@@ -44,7 +44,7 @@ log/
 .DS_Store
 
 **/hibernate.cfg.xml
-
+server/test-output
 server/src/main/resources/hibernate.cfg.xml
 **/log.html
 **/log.log
