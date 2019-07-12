@@ -10,9 +10,11 @@ import org.apache.log4j.Logger;
 
 import p2.util.Glogger;
 import p2.webservice.FavoriteWebService;
+import p2.webservice.InterestWebService;
 import p2.webservice.ProductWebService;
 import p2.webservice.PurchaseWebService;
 import p2.webservice.TaxonomyWebService;
+import p2.webservice.UserWebService;
 
 public class RequestHelper {
   public static Logger logger = Glogger.logger;
@@ -33,12 +35,20 @@ public class RequestHelper {
     String meth = request.getMethod();
     // switch on the method first, then look at the uri
     switch (meth) {
+    
     case "GET":
       switch (uri) {
-      case userAPI:
+      case userAPI :
+          break;
+      case userAPI + "/login":
+    	UserWebService.login(request, response);
         break;
-      case userAPI + "s":
-        break;
+      case userAPI + "/logout":
+      	UserWebService.logout(request, response);
+          break;
+      case userAPI + "/getLoggedInUser":
+      	UserWebService.getLoggedInUser(request, response);
+          break;
       case favoriteAPI:
         FavoriteWebService.findById(request, response);
         break;
@@ -82,9 +92,11 @@ public class RequestHelper {
         break;
       }
       break;
+      
     case "POST":
       switch (uri) {
       case userAPI:
+    	UserWebService.insert(request, response);
         break;
       case favoriteAPI:
         FavoriteWebService.insert(request, response);
@@ -93,6 +105,7 @@ public class RequestHelper {
         ProductWebService.insert(request, response);
         break;
       case interestAPI:
+    	  InterestWebService.insert(request, response);
         break;
       case purchaseAPI:
         PurchaseWebService.insert(request, response);
@@ -102,9 +115,11 @@ public class RequestHelper {
         break;
       }
       break;
+      
     case "PUT":
       switch (uri) {
       case userAPI:
+    	  UserWebService.update(request, response);
         break;
       case favoriteAPI:
         FavoriteWebService.update(request, response);
@@ -124,8 +139,8 @@ public class RequestHelper {
       break;
     case "DELETE":
       switch (uri) {
-      case userAPI:
-        break;
+      case userAPI :
+          break;
       case favoriteAPI:
         FavoriteWebService.deleteById(request, response);
         break;

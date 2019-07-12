@@ -13,8 +13,8 @@ public class UserService {
 		return userDAO.insert(user);
 	}
 
-	public static void update(User user) {
-		userDAO.update(user);
+	public static boolean update(User user) {
+		return userDAO.update(user);
 	}
 
 	public static List<User> findAll() {
@@ -25,9 +25,12 @@ public class UserService {
 		return userDAO.findById(id);
 	}
 
-	public static void deleteById(int id) {
-		userDAO.deleteById(id);
+	public static boolean deleteById(int id) {
+		return userDAO.deleteById(id);
 
 	}
 
+	public static User findByEmailANDPassword(String email, String password) {
+		return userDAO.findByEmailANDPassword(email, password);
+	}
 }

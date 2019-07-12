@@ -8,12 +8,13 @@ public interface IUserDAO {
 
 	public int insert(User user);
 
-	public void update(User user);
+	public boolean update(User user);
 
 	public List<User> findAll();
 
 	public User findById(int id);
 
-	public void deleteById(int id);
+	public boolean deleteById(int id);
 
+	public User findByEmailANDPassword(String email, String password);
 }

@@ -9,14 +9,16 @@ public interface IInterestDAO {
 
 	public int insert(Interest interest);
 
-	public void update(Interest interest);
+	public boolean update(Interest interest);
 
 	public List<Interest> findAll();
 
 	public Interest findById(int id);
 
-	public void deleteById(int id);
+	public boolean deleteById(int id);
 	
 	public List<Interest> findByProductId(int productId);
+
+	public int changeStatus(int productId, int status);
 
 }

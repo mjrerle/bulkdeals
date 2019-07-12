@@ -1,10 +1,10 @@
 package p2.service.impl;
 
-
 import java.util.List;
 
 import p2.dao.impl.InterestDAO;
 import p2.model.Interest;
+import p2.util.InterestStatus;
 
 public class InterestService {
 
@@ -14,8 +14,8 @@ public class InterestService {
 		return interestDAO.insert(interest);
 	}
 
-	public static void update(Interest interest) {
-		interestDAO.update(interest);
+	public static boolean update(Interest interest) {
+		return interestDAO.update(interest);
 	}
 
 	public static List<Interest> findAll() {
@@ -26,8 +26,8 @@ public class InterestService {
 		return interestDAO.findById(id);
 	}
 
-	public static void deleteById(int id) {
-		interestDAO.deleteById(id);
+	public static boolean deleteById(int id) {
+		return interestDAO.deleteById(id);
 	}
 
 	public static List<Interest> findByProductId(int productId) {
@@ -42,4 +42,15 @@ public class InterestService {
 
 	}
 
+	public static int changeStatusNotEnoughInterest(int productId) {
+		return interestDAO.changeStatus(productId, InterestStatus.NOT_ENOUGH_INTEREST.value);
+	}
+
+	public static int changeStatusCancelledBySeller(int productId) {
+		return interestDAO.changeStatus(productId, InterestStatus.CANCELLED_BY_SELLER.value);
+	}
+
+	public static int changeStatusDealComplted(int productId) {
+		return interestDAO.changeStatus(productId, InterestStatus.DEAL_COMPLETED.value);
+	}
 }
