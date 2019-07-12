@@ -30,7 +30,7 @@ public class UserService {
 
 	}
 
-	public static User findByEmailANDPassword(String email, String password) {
-		return userDAO.findByEmailANDPassword(email, password);
+	public static User findByEmailAndPassword(String email, String password) {
+		return userDAO.findByEmailAndPassword(email, password);
 	}
 }

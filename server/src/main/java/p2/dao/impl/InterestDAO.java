@@ -20,7 +20,7 @@ public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 		List<Interest> list = null;
 
 		try {
-			Query query = session.createQuery("FROM Interest WHERE product_id = :productId");
+			Query query = session.createQuery("FROM Interest WHERE product.id = :productId");
 			query.setParameter("productId", productId);
 			list = query.list();
 		} catch (HibernateException e) {
@@ -37,7 +37,7 @@ public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 		int numberOfEntities = 0;
 
 		try {
-			Query query  = session.createQuery("UPDATE Interest SET Status = :statusValue" + "WHERE product_id = :productId");
+			Query query  = session.createQuery("UPDATE Interest SET Status = :statusValue" + "WHERE product.id = :productId");
 			query.setParameter("statusValue", status);
 			query.setParameter("productId", productId);
 			numberOfEntities = query.executeUpdate();

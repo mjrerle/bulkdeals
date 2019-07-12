@@ -42,15 +42,15 @@ public class InterestService {
 
 	}
 
-	public static int changeStatusNotEnoughInterest(int productId) {
+	public static int changeStatusToNotEnoughInterest(int productId) {
 		return interestDAO.changeStatus(productId, InterestStatus.NOT_ENOUGH_INTEREST.value);
 	}
 
-	public static int changeStatusCancelledBySeller(int productId) {
+	public static int changeStatusToCancelledBySeller(int productId) {
 		return interestDAO.changeStatus(productId, InterestStatus.CANCELLED_BY_SELLER.value);
 	}
 
-	public static int changeStatusDealComplted(int productId) {
+	public static int changeStatusToDealCompleted(int productId) {
 		return interestDAO.changeStatus(productId, InterestStatus.DEAL_COMPLETED.value);
 	}
 }

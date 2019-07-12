@@ -22,12 +22,12 @@ public class UserWebService {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 
-		User user = UserService.findByEmailANDPassword(email, password);
+		User user = UserService.findByEmailAndPassword(email, password);
 		try {
 			if (user != null) {
 				SessionVariableManager.addLoggedInUser(request, user);
-				logger.info("User Id: " + user.getId() + " Logged to the sysytem");
-				response.getWriter().append("Successfully Logged to the system").close();
+				logger.info("User Id: " + user.getId() + " Logged into the sysytem");
+				response.getWriter().append("Successfully Logged in").close();
 
 			} else {
 				response.getWriter().close();

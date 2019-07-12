@@ -16,5 +16,5 @@ public interface IUserDAO {
 
 	public boolean deleteById(int id);
 
-	public User findByEmailANDPassword(String email, String password);
+	public User findByEmailAndPassword(String email, String password);
 }
