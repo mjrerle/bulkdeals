@@ -1,7 +1,6 @@
 package p2.webservice;
 
 import java.io.IOException;
-import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import p2.model.Interest;
 import p2.model.Product;
 import p2.model.User;
+import p2.service.impl.InterestService;
 import p2.service.impl.ProductService;
 
-
 public class ProductWebService {
-	
+
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		String UIDm = request.getParameter("seller_id");
 		String pName = request.getParameter("name");
@@ -33,7 +31,7 @@ public class ProductWebService {
 			price = Double.parseDouble(priceM);
 			success = true;
 		}
-		
+
 		if (success == true) {
 			seller = new User(UID);
 			product = new Product();
@@ -43,25 +41,20 @@ public class ProductWebService {
 			product.setOnSale(0);
 			product.setStatus("Standard Price");
 			ProductService.insert(product);
-			
+
 			try {
 				response.getWriter().append("Product Added");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			try {
 				response.getWriter().append("Product Add Failed");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
-
-		
 	}
-
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
 		String pName = request.getParameter("name");
@@ -104,8 +97,7 @@ public class ProductWebService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			try {
 				response.getWriter().append("Product Update Failed");
 			} catch (IOException e) {
@@ -115,11 +107,10 @@ public class ProductWebService {
 
 	}
 
-
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> product = ProductService.findAll();
-		
+
 		ObjectMapper om = new ObjectMapper();
 		try {
 			String json = om.writeValueAsString(product);
@@ -128,7 +119,6 @@ public class ProductWebService {
 			e.printStackTrace();
 		}
 	}
-
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
 		String PIDm = request.getParameter("product_id");
@@ -139,20 +129,19 @@ public class ProductWebService {
 			PID = Integer.parseInt(PIDm);
 			success = true;
 		}
-		
+
 		if (success == true) {
 			product = ProductService.findById(PID);
-			
+
 			ObjectMapper om = new ObjectMapper();
-			
+
 			try {
 				String json = om.writeValueAsString(product);
 				response.getWriter().append(json).close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			try {
 				response.getWriter().append("Failed to Find Product");
 			} catch (IOException e) {
@@ -162,7 +151,6 @@ public class ProductWebService {
 
 	}
 
-
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
 		String PIDm = request.getParameter("product_id");
 		int PID = 0;
@@ -171,7 +159,7 @@ public class ProductWebService {
 			PID = Integer.parseInt(PIDm);
 			success = true;
 		}
-		
+
 		if (success == true) {
 			ProductService.deleteById(PID);
 			try {
@@ -179,8 +167,7 @@ public class ProductWebService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			try {
 				response.getWriter().append("Failed to Delete Product");
 			} catch (IOException e) {
@@ -189,18 +176,18 @@ public class ProductWebService {
 		}
 
 	}
-	
+
 	public static void findAllStandard(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> productOriginal = ProductService.findAll();
 		List<Product> productNew = new ArrayList<Product>();
-		//populating list of standard priced items being sold
+		// populating list of standard priced items being sold
 		for (int i = 0; i < productOriginal.size(); i++) {
-			if (productOriginal.get(i).getStatus().equals("Standard Price")){
+			if (productOriginal.get(i).getStatus().equals("Standard Price")) {
 				productNew.add(productOriginal.get(i));
 			}
 		}
-		
+
 		ObjectMapper om = new ObjectMapper();
 		try {
 			String json = om.writeValueAsString(productNew);
@@ -209,18 +196,18 @@ public class ProductWebService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void findAllSale(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> productOriginal = ProductService.findAll();
 		List<Product> productNew = new ArrayList<Product>();
-		//populating return list of those on sale
+		// populating return list of those on sale
 		for (int i = 0; i < productOriginal.size(); i++) {
-			if (productOriginal.get(i).getStatus().equals("On Sale")){
+			if (productOriginal.get(i).getStatus().equals("On Sale")) {
 				productNew.add(productOriginal.get(i));
 			}
 		}
-		
+
 		ObjectMapper om = new ObjectMapper();
 		try {
 			String json = om.writeValueAsString(productNew);
@@ -229,22 +216,22 @@ public class ProductWebService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void findAllInterest(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> productOriginal = ProductService.findAll();
 		List<Product> productNew = new ArrayList<Product>();
 		LocalDate today = LocalDate.now();
-		//Populating list of those gaining interest
+		// Populating list of those gaining interest
 		for (int i = 0; i < productOriginal.size(); i++) {
-			if (productOriginal.get(i).getStatus().equals("Gaining Interest")){
+			if (productOriginal.get(i).getStatus().equals("Gaining Interest")) {
 				productNew.add(productOriginal.get(i));
 			}
 		}
-		//removing from list if interest not gained in one week and updating back to 
+		// removing from list if interest not gained in one week and updating back to
 		for (int i = 0; i < productNew.size(); i++) {
 			LocalDate dayMade = productNew.get(i).getDateListed();
-			long difference = java.time.temporal.ChronoUnit.DAYS.between(dayMade,today);
+			long difference = java.time.temporal.ChronoUnit.DAYS.between(dayMade, today);
 			if (difference > 7) {
 				productNew.get(i).setStatus("Standard Price");
 				productNew.get(i).setDateListed(null);
@@ -252,8 +239,8 @@ public class ProductWebService {
 				productNew.remove(i);
 			}
 		}
-		
-		//removing from list if interest gained and setting on sale
+
+		// removing from list if interest gained and setting on sale
 		for (int j = 0; j < productNew.size(); j++) {
 			int interest = InterestService.getNumberOfInterestByProductId(productNew.get(j).getId());
 			if (interest >= 10) {
@@ -262,7 +249,7 @@ public class ProductWebService {
 				productNew.remove(j);
 			}
 		}
-		
+
 		ObjectMapper om = new ObjectMapper();
 		try {
 			String json = om.writeValueAsString(productNew);
@@ -271,7 +258,7 @@ public class ProductWebService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void removeFromSale(HttpServletRequest request, HttpServletResponse response) {
 		String PIDm = request.getParameter("product_id");
 		int PID = 0;
@@ -281,7 +268,7 @@ public class ProductWebService {
 			PID = Integer.parseInt(PIDm);
 			success = true;
 		}
-		
+
 		if (success == true) {
 			product = ProductService.findById(PID);
 			product.setStatus("Standard Price");
@@ -292,8 +279,7 @@ public class ProductWebService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			try {
 				response.getWriter().append("Failed to Remove Product From Sale");
 			} catch (IOException e) {
