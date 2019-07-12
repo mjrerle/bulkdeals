@@ -42,21 +42,24 @@ public class Interest {
 		this.id = id;
 	}
 
-	public Interest(int id, User user, Product product, int status) {
+
+	
+	public Interest(int id, User user, Product product, int quantity, int status) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.product = product;
-		Status = status;
-	}
-	
-	public Interest(User user, Product product, int status) {
-		super();
-		this.user = user;
-		this.product = product;
+		this.quantity = quantity;
 		Status = status;
 	}
 
+	public Interest(User user, Product product, int quantity, int status) {
+		super();
+		this.user = user;
+		this.product = product;
+		this.quantity = quantity;
+		Status = status;
+	}
 	public int getId() {
 		return id;
 	}
