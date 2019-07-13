@@ -26,8 +26,8 @@ public class PurchaseWebService {
     Purchase purchase = null;
     int purchaseId = -1;
 
-    String maybeUserId = request.getParameter("user_id");
-    String maybeProductId = request.getParameter("product_id");
+    String maybeUserId = request.getParameter("userId");
+    String maybeProductId = request.getParameter("productId");
 
     if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
       LocalDate datePurchased = LocalDate.now();
@@ -56,9 +56,9 @@ public class PurchaseWebService {
   public static void update(HttpServletRequest request, HttpServletResponse response) {
 
     String maybeDate = request.getParameter("date_purchased");
-    String maybeUserId = request.getParameter("user_id");
-    String maybeProductId = request.getParameter("product_id");
-    String maybePurchaseId = request.getParameter("purchase_id");
+    String maybeUserId = request.getParameter("userId");
+    String maybeProductId = request.getParameter("productId");
+    String maybePurchaseId = request.getParameter("purchaseId");
     boolean success = false;
     if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
       Purchase purchase = PurchaseService.findById(Integer.parseInt(maybePurchaseId));
@@ -96,7 +96,7 @@ public class PurchaseWebService {
 
   public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
     int purchaseId = -1;
-    String maybePurchaseId = request.getParameter("purchase_id");
+    String maybePurchaseId = request.getParameter("purchaseId");
     boolean success = false;
 
     if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
@@ -137,7 +137,7 @@ public class PurchaseWebService {
   public static void findById(HttpServletRequest request, HttpServletResponse response) {
 
     int purchaseId = -1;
-    String maybePurchaseId = request.getParameter("purchase_id");
+    String maybePurchaseId = request.getParameter("purchaseId");
     Purchase purchase = null;
 
     if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {

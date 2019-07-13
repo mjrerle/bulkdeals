@@ -22,8 +22,8 @@ public class InterestWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("user_id");
-		String maybeProductId = request.getParameter("product_id");
+		String maybeUserId = request.getParameter("userId");
+		String maybeProductId = request.getParameter("productId");
 		String maybeQuantity = request.getParameter("quantity");
 		Interest interest = null;
 		int interestId = -1;
@@ -51,10 +51,10 @@ public class InterestWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("user_id");
-		String maybeProductId = request.getParameter("product_id");
+		String maybeUserId = request.getParameter("userId");
+		String maybeProductId = request.getParameter("productId");
 		String maybeQuantity = request.getParameter("quantity");
-		String maybeInterestId = request.getParameter("interest_id");
+		String maybeInterestId = request.getParameter("interestId");
 		Interest interest = null;
 		boolean success = false;
 		if (ValidationUtilities.checkNullOrEmpty(maybeInterestId)) {
@@ -108,7 +108,7 @@ public class InterestWebService {
 	}
 
 	public static void findByProductId(HttpServletRequest request, HttpServletResponse response) {
-		String maybeProductId = request.getParameter("product_id");
+		String maybeProductId = request.getParameter("productId");
 		List<Interest> interests = null;
 		if(ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
 			interests = InterestService.findByProductId(Integer.parseInt(maybeProductId));
@@ -126,7 +126,7 @@ public class InterestWebService {
 	}
 
 	public static void findByUserId(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("user_id");
+		String maybeUserId = request.getParameter("userId");
 		List<Interest> interests = null;
 		if(ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
 			interests = InterestService.findByUserId(Integer.parseInt(maybeUserId));
@@ -144,7 +144,7 @@ public class InterestWebService {
 	}
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeInterestId = request.getParameter("interest_id");
+		String maybeInterestId = request.getParameter("interestId");
 		Interest interest = null;
 		if (ValidationUtilities.checkNullOrEmpty(maybeInterestId)) {
 			int interestId = Integer.parseInt(maybeInterestId);
@@ -169,7 +169,7 @@ public class InterestWebService {
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeInterestId = request.getParameter("interest_id");
+		String maybeInterestId = request.getParameter("interestId");
 		boolean success = false;
 		if (ValidationUtilities.checkNullOrEmpty(maybeInterestId)) {
 			int interestId = Integer.parseInt(maybeInterestId);

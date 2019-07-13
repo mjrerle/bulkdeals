@@ -117,7 +117,7 @@ public class UserWebService {
 		String maybeAddress = request.getParameter("address");
 		String maybeCreditCardNumber = request.getParameter("creditCardNumber");
 		String maybeCvv = request.getParameter("cvv");
-		String maybeUserId = request.getParameter("user_id");
+		String maybeUserId = request.getParameter("userId");
 		User user = null;
 
 		boolean success = false;
