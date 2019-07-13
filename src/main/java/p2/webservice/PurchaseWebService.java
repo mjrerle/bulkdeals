@@ -1,7 +1,7 @@
 package p2.webservice;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,27 +14,23 @@ import org.apache.log4j.Logger;
 import p2.model.Product;
 import p2.model.Purchase;
 import p2.model.User;
-import p2.service.impl.PurchaseService;
+import p2.service.PurchaseService;
 import p2.util.Glogger;
+import p2.util.ValidationUtilities;
 
 public class PurchaseWebService {
   public static Logger logger = Glogger.logger;
-
-  private static boolean checkNullOrEmpty(String parameter) {
-    return parameter != null && !parameter.equals("");
-  }
 
   public static void insert(HttpServletRequest request, HttpServletResponse response) {
 
     Purchase purchase = null;
     int purchaseId = -1;
 
-    String maybeDate = request.getParameter("date_purchased");
     String maybeUserId = request.getParameter("user_id");
     String maybeProductId = request.getParameter("product_id");
 
-    if (checkNullOrEmpty(maybeDate) && checkNullOrEmpty(maybeUserId) && checkNullOrEmpty(maybeProductId)) {
-      Date datePurchased = new Date(Long.parseLong(maybeDate));
+    if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+      LocalDate datePurchased = LocalDate.now();
       int userId = Integer.parseInt(maybeUserId);
       int productId = Integer.parseInt(maybeProductId);
       User user = new User(userId);
@@ -64,22 +60,23 @@ public class PurchaseWebService {
     String maybeProductId = request.getParameter("product_id");
     String maybePurchaseId = request.getParameter("purchase_id");
     boolean success = false;
-    if (checkNullOrEmpty(maybePurchaseId)) {
-      Purchase purchase = new Purchase(Integer.parseInt(maybePurchaseId));
-
-      if (checkNullOrEmpty(maybeDate)) {
-        Date datePurchased = new Date(Long.parseLong(maybeDate));
-        purchase.setDatePurchased(datePurchased);
-      }
-      if (checkNullOrEmpty(maybeProductId)) {
-        int productId = Integer.parseInt(maybeProductId);
-        Product product = new Product(productId);
-        purchase.setProduct(product);
-      }
-      if (checkNullOrEmpty(maybeUserId)) {
-        int userId = Integer.parseInt(maybeUserId);
-        User user = new User(userId);
-        purchase.setUser(user);
+    if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
+      Purchase purchase = PurchaseService.findById(Integer.parseInt(maybePurchaseId));
+      if (purchase != null) {
+        if (ValidationUtilities.checkNullOrEmpty(maybeDate)) {
+          LocalDate datePurchased = LocalDate.parse(maybeDate);
+          purchase.setDatePurchased(datePurchased);
+        }
+        if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+          int productId = Integer.parseInt(maybeProductId);
+          Product product = new Product(productId);
+          purchase.setProduct(product);
+        }
+        if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
+          int userId = Integer.parseInt(maybeUserId);
+          User user = new User(userId);
+          purchase.setUser(user);
+        }
       }
     }
 
@@ -102,7 +99,7 @@ public class PurchaseWebService {
     String maybePurchaseId = request.getParameter("purchase_id");
     boolean success = false;
 
-    if (checkNullOrEmpty(maybePurchaseId)) {
+    if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
       purchaseId = Integer.parseInt(maybePurchaseId);
       success = PurchaseService.deleteById(purchaseId);
     }
@@ -143,7 +140,7 @@ public class PurchaseWebService {
     String maybePurchaseId = request.getParameter("purchase_id");
     Purchase purchase = null;
 
-    if (checkNullOrEmpty(maybePurchaseId)) {
+    if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
       purchaseId = Integer.parseInt(maybePurchaseId);
       purchase = PurchaseService.findById(purchaseId);
     }

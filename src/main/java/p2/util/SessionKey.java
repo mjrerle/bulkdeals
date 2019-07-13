@@ -1,5 +1,5 @@
 package p2.util;
 
 public enum SessionKey {
-	LOGGEDIN_USER
+	LOGGED_IN_USER
 }

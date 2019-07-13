@@ -1,6 +1,6 @@
 package p2.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -20,10 +20,10 @@ public class Purchase {
   @Id
   @SequenceGenerator(sequenceName = "purchases_seq", name = "s_seq")
   @GeneratedValue(generator = "s_seq", strategy = GenerationType.SEQUENCE)
-  private int id;
+  private int purchaseId;
 
   @Column(name = "date_purchased")
-  private Date datePurchased;
+  private LocalDate datePurchased;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
@@ -33,40 +33,39 @@ public class Purchase {
   @JoinColumn(name = "product_id")
   private Product product;
 
-
   public Purchase() {
   }
 
   public Purchase(int id) {
-    this.id = id;
+    this.purchaseId = id;
   }
 
-  public Purchase(Date datePurchased, User user, Product product) {
+  public Purchase(LocalDate datePurchased, User user, Product product) {
     this.datePurchased = datePurchased;
     this.user = user;
     this.product = product;
   }
 
-  public Purchase(int id, Date datePurchased, User user, Product product) {
-    this.id = id;
+  public Purchase(int id, LocalDate datePurchased, User user, Product product) {
+    this.purchaseId = id;
     this.datePurchased = datePurchased;
     this.user = user;
     this.product = product;
   }
 
   public int getId() {
-    return this.id;
+    return this.purchaseId;
   }
 
   public void setId(int id) {
-    this.id = id;
+    this.purchaseId = id;
   }
 
-  public Date getDatePurchased() {
+  public LocalDate getDatePurchased() {
     return this.datePurchased;
   }
 
-  public void setDatePurchased(Date datePurchased) {
+  public void setDatePurchased(LocalDate datePurchased) {
     this.datePurchased = datePurchased;
   }
 
@@ -87,11 +86,11 @@ public class Purchase {
   }
 
   public Purchase id(int id) {
-    this.id = id;
+    this.purchaseId = id;
     return this;
   }
 
-  public Purchase datePurchased(Date datePurchased) {
+  public Purchase datePurchased(LocalDate datePurchased) {
     this.datePurchased = datePurchased;
     return this;
   }
@@ -107,29 +106,26 @@ public class Purchase {
   }
 
   @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Purchase)) {
-            return false;
-        }
-        Purchase purchase = (Purchase) o;
-        return id == purchase.id && Objects.equals(datePurchased, purchase.datePurchased) && Objects.equals(user, purchase.user) && Objects.equals(product, purchase.product);
+  public boolean equals(Object o) {
+    if (o == this)
+      return true;
+    if (!(o instanceof Purchase)) {
+      return false;
+    }
+    Purchase purchase = (Purchase) o;
+    return purchaseId == purchase.purchaseId && Objects.equals(datePurchased, purchase.datePurchased)
+        && Objects.equals(user, purchase.user) && Objects.equals(product, purchase.product);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, datePurchased, user, product);
+    return Objects.hash(purchaseId, datePurchased, user, product);
   }
 
   @Override
   public String toString() {
-    return "{" +
-      " id='" + getId() + "'" +
-      ", datePurchased='" + getDatePurchased() + "'" +
-      ", user='" + getUser() + "'" +
-      ", product='" + getProduct() + "'" +
-      "}";
+    return "{" + " id='" + getId() + "'" + ", datePurchased='" + getDatePurchased() + "'" + ", user='" + getUser() + "'"
+        + ", product='" + getProduct() + "'" + "}";
   }
 
 }

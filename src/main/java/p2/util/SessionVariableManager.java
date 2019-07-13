@@ -9,7 +9,7 @@ import p2.model.User;
 
 public class SessionVariableManager {
 
-	private static Logger logger = Logger.getLogger(SessionVariableManager.class);
+	private static Logger logger = Glogger.logger;
 	private static HttpSession session;
 	private static int sessionInterval = 600;
 
@@ -17,11 +17,12 @@ public class SessionVariableManager {
 		try {
 			removeLoggedInUser();
 			session = request.getSession();
-			session.setAttribute(SessionKey.LOGGEDIN_USER.toString(), user);
+			session.setAttribute(SessionKey.LOGGED_IN_USER.toString(), user);
 			session.setMaxInactiveInterval(sessionInterval);
-			logger.info("User ID: " + user.getId() + " Logged into the System");
+			logger.info("User " + user.getEmail() + " logged in");
 		} catch (Exception e) {
-
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
@@ -30,14 +31,17 @@ public class SessionVariableManager {
 		try {
 			session.invalidate();
 		} catch (Exception e) {
-
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
 	public static User getLoggedInUser() {
 		try {
-			return (User) session.getAttribute(SessionKey.LOGGEDIN_USER.toString());
+			return (User) session.getAttribute(SessionKey.LOGGED_IN_USER.toString());
 		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -47,12 +51,10 @@ public class SessionVariableManager {
 			User user = getLoggedInUser();
 			if ((user != null) && (id == user.getId())) {
 				return true;
-			} else {
-				return false;
-			}
-
+			} 
 		} catch (Exception e) {
-
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 		return false;
 	}

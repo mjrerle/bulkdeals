@@ -1,10 +1,9 @@
-package p2.service.impl;
+package p2.service;
 
 import java.util.List;
 
 import p2.dao.impl.InterestDAO;
 import p2.model.Interest;
-import p2.util.InterestStatus;
 
 public class InterestService {
 
@@ -34,23 +33,15 @@ public class InterestService {
 		return interestDAO.findByProductId(productId);
 	}
 
-	public static int getNumberOfInterestByProductId(int productId) {
+	public static List<Interest> findByUserId(int userId) {
+		return interestDAO.findByUserId(userId);
+	}
+
+	public static int getNumberOfInterestsByProductId(int productId) {
 		int count = 0;
 		for (Interest interest : findByProductId(productId))
 			count += interest.getQuantity();
 		return count;
-
 	}
 
-	public static int changeStatusToNotEnoughInterest(int productId) {
-		return interestDAO.changeStatus(productId, InterestStatus.NOT_ENOUGH_INTEREST.value);
-	}
-
-	public static int changeStatusToCancelledBySeller(int productId) {
-		return interestDAO.changeStatus(productId, InterestStatus.CANCELLED_BY_SELLER.value);
-	}
-
-	public static int changeStatusToDealCompleted(int productId) {
-		return interestDAO.changeStatus(productId, InterestStatus.DEAL_COMPLETED.value);
-	}
 }

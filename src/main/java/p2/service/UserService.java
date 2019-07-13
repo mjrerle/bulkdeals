@@ -1,4 +1,4 @@
-package p2.service.impl;
+package p2.service;
 
 import java.util.List;
 

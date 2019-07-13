@@ -1,7 +1,8 @@
 package p2.model;
 
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,20 +19,17 @@ public class Interest {
 	@Id
 	@SequenceGenerator(sequenceName = "interests_seq", name = "i_seq")
 	@GeneratedValue(generator = "i_seq", strategy = GenerationType.SEQUENCE)
-	private int id;
+	private int interestId;
 
-	@ManyToOne (cascade = CascadeType.REMOVE)
+	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne (cascade = CascadeType.REMOVE)
+	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "product_id")
 	private Product product;
 
 	private int quantity;
-
-	@Column(nullable = false, columnDefinition = "int default 0")
-	private int Status;
 
 	public Interest() {
 		super();
@@ -39,37 +37,32 @@ public class Interest {
 
 	public Interest(int id) {
 		super();
-		this.id = id;
+		this.interestId = id;
 	}
 
-
-	
-	public Interest(int id, User user, Product product, int quantity, int status) {
-		super();
-		this.id = id;
+	public Interest(User user, Product product, int quantity) {
 		this.user = user;
 		this.product = product;
 		this.quantity = quantity;
-		Status = status;
 	}
 
-	public Interest(User user, Product product, int quantity, int status) {
-		super();
+	public Interest(int id, User user, Product product, int quantity) {
+		this.interestId = id;
 		this.user = user;
 		this.product = product;
 		this.quantity = quantity;
-		Status = status;
 	}
+
 	public int getId() {
-		return id;
+		return this.interestId;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.interestId = id;
 	}
 
 	public User getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setUser(User user) {
@@ -77,7 +70,7 @@ public class Interest {
 	}
 
 	public Product getProduct() {
-		return product;
+		return this.product;
 	}
 
 	public void setProduct(Product product) {
@@ -85,25 +78,54 @@ public class Interest {
 	}
 
 	public int getQuantity() {
-		return quantity;
+		return this.quantity;
 	}
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	public int getStatus() {
-		return Status;
+	public Interest id(int id) {
+		this.interestId = id;
+		return this;
 	}
 
-	public void setStatus(int status) {
-		Status = status;
+	public Interest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public Interest product(Product product) {
+		this.product = product;
+		return this;
+	}
+
+	public Interest quantity(int quantity) {
+		this.quantity = quantity;
+		return this;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof Interest)) {
+			return false;
+		}
+		Interest interest = (Interest) o;
+		return interestId == interest.interestId && Objects.equals(user, interest.user) && Objects.equals(product, interest.product)
+				&& quantity == interest.quantity;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(interestId, user, product, quantity);
 	}
 
 	@Override
 	public String toString() {
-		return "Interest [id=" + id + ", user=" + user + ", product=" + product + ", quantity=" + quantity + ", Status="
-				+ Status + "]";
+		return "{" + " id='" + getId() + "'" + ", user='" + getUser() + "'" + ", product='" + getProduct() + "'"
+				+ ", quantity='" + getQuantity() + "'" + "}";
 	}
 
 }
