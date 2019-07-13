@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
@@ -24,7 +25,6 @@ public class ProductServiceTest {
 	public void setup() {
 		now = LocalDate.now();
 		uid = UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
-			
 	}
 	
 	@Test(priority=1)
@@ -73,6 +73,11 @@ public class ProductServiceTest {
 	public void deleteProduct() {
 		id = ProductService.insert(new Product("abc", 190, 190, 0, 0, now, "Within Threshold", 0, new User(uid)));
 		Product product = ProductService.findById(id);
-		ProductService.deleteById(id);
+		ProductService.deleteById(product.getId());
+	}
+
+	@AfterSuite
+	public void teardown() {
+		UserService.deleteById(uid);
 	}
 }
