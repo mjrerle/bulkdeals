@@ -4,7 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import p2.model.User;
-import p2.service.impl.UserService;
+import p2.service.UserService;
 import p2.util.Roles;
 
 public class UserServiceTest {

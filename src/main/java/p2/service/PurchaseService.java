@@ -1,4 +1,4 @@
-package p2.service.impl;
+package p2.service;
 
 import java.util.List;
 
@@ -28,7 +28,5 @@ public class PurchaseService {
   public static boolean deleteById(int id) {
     return purchaseDAO.deleteById(id);
   }
-
-	
 
 }

@@ -1,8 +1,9 @@
-package p2.service.impl;
+package p2.service;
 
 import java.util.List;
 
 import p2.dao.impl.TaxonomyDAO;
+import p2.model.Product;
 import p2.model.Taxonomy;
 
 public class TaxonomyService {
@@ -28,6 +29,16 @@ public class TaxonomyService {
   public static boolean deleteById(int id) {
     return taxonomyDAO.deleteById(id);
   }
-	
 
+  public static List<Product> findAllProductsByType(String type) {
+    return taxonomyDAO.findAllProductsByType(type);
+  }
+
+  public static List<Product> findAllProductsBySubType(String subType) {
+    return taxonomyDAO.findAllProductsBySubType(subType);
+  }
+
+  public static List<Product> findAllProductsByTaxonomyName(String name) {
+    return taxonomyDAO.findAllProductsByTaxonomyName(name);
+  }
 }

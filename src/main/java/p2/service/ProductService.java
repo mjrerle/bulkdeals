@@ -1,10 +1,10 @@
-package p2.service.impl;
+package p2.service;
+
 import java.util.List;
 import p2.dao.impl.ProductDAO;
 import p2.model.Product;
 
-
-public class ProductService{
+public class ProductService {
 	private static ProductDAO productDAO = new ProductDAO();
 
 	public static int insert(Product t) {
@@ -12,28 +12,24 @@ public class ProductService{
 		return productDAO.insert(t);
 	}
 
-	public static void update(Product t) {
+	public static boolean update(Product t) {
 
-		productDAO.update(t);
+		return productDAO.update(t);
 	}
-
 
 	public static List<Product> findAll() {
 
 		return productDAO.findAll();
 	}
 
-
 	public static Product findById(int id) {
 
 		return productDAO.findById(id);
 	}
 
+	public static boolean deleteById(int id) {
 
-	public static void deleteById(int id) {
-
-		productDAO.deleteById(id);
+		return productDAO.deleteById(id);
 	}
-	
 
 }

@@ -2,6 +2,7 @@ package p2.webservice;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,281 +11,337 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.log4j.Logger;
+
 import p2.model.Product;
 import p2.model.User;
-import p2.service.impl.InterestService;
-import p2.service.impl.ProductService;
+import p2.service.InterestService;
+import p2.service.ProductService;
+import p2.util.Glogger;
+import p2.util.ThresholdStatus;
+import p2.util.ValidationUtilities;
 
 public class ProductWebService {
+	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String UIDm = request.getParameter("seller_id");
-		String pName = request.getParameter("name");
-		String priceM = request.getParameter("price");
-		boolean success = false;
-		User seller = null;
-		Product product = null;
-		int UID = 0;
-		double price = 0;
-		if (UIDm != null && pName != null && priceM != null) {
-			UID = Integer.parseInt(UIDm);
-			price = Double.parseDouble(priceM);
-			success = true;
+		String maybeUserId = request.getParameter("user_id");
+		String maybeName = request.getParameter("name");
+		String maybePrice = request.getParameter("price");
+		String maybeSalePrice = request.getParameter("sale_price");
+		String maybeOnSale = request.getParameter("on_sale");
+
+		String maybeStatus = request.getParameter("status");
+		String maybeInterestThreshold = request.getParameter("interest_threshold");
+		int productId = -1;
+
+		if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeName)
+				&& ValidationUtilities.checkNullOrEmpty(maybePrice)) {
+			int uId = Integer.parseInt(maybeUserId);
+			double price = Double.parseDouble(maybePrice);
+			User seller = new User(uId);
+
+			Product product = new Product(maybeName, price, price, 0, 0, null, maybeStatus, 0, seller);
+
+			if (ValidationUtilities.checkNullOrEmpty(maybeSalePrice) && ValidationUtilities.checkNullOrEmpty(maybeOnSale)) {
+				product.setSalePrice(Double.parseDouble(maybeSalePrice));
+				product.setOnSale(Integer.parseInt(maybeOnSale));
+			}
+
+			if (ValidationUtilities.checkNullOrEmpty(maybeStatus)) {
+				product.setStatus(maybeStatus);
+				if (ValidationUtilities.checkNullOrEmpty(maybeInterestThreshold)) {
+					product.setInterestThreshold(Integer.parseInt(maybeInterestThreshold));
+				}
+				LocalDate dateListed = LocalDate.now();
+				product.setDateListed(dateListed);
+			}
+
+			productId = ProductService.insert(product);
 		}
-
-		if (success == true) {
-			seller = new User(UID);
-			product = new Product();
-			product.setSeller(seller);
-			product.setProductName(pName);
-			product.setPrice(price);
-			product.setOnSale(0);
-			product.setStatus("Standard Price");
-			ProductService.insert(product);
-
-			try {
-				response.getWriter().append("Product Added");
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			if (productId >= 0) {
+				response.getWriter().append("Product Added").close();
+			} else {
+				response.getWriter().append("Product Add Failed").close();
 			}
-		} else {
-			try {
-				response.getWriter().append("Product Add Failed");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String pName = request.getParameter("name");
-		String priceM = request.getParameter("price");
-		String salepriceM = request.getParameter("sale_price");
-		String status = request.getParameter("status");
-		String PIDm = request.getParameter("product_id");
-		Product product = null;
-		double price = 0;
-		double saleprice = 0;
-		int PID = 0;
-		boolean success = false;
-		if (PIDm != null) {
-			PID = Integer.parseInt(PIDm);
-			product = ProductService.findById(PID);
-			if (status != null) {
-				product.setStatus(status);
-				if (status.equals("Pending Interest") && product.getDateListed() != null) {
-					LocalDate day = LocalDate.now();
-					product.setDateListed(day);
-				}
-			}
-			if (pName != null) {
-				product.setProductName(pName);
-			}
-			if (priceM != null) {
-				price = Double.parseDouble(priceM);
-				product.setPrice(price);
-			}
-			if (salepriceM != null) {
-				saleprice = Double.parseDouble(salepriceM);
-				product.setSalePrice(saleprice);
-			}
-			success = true;
-		}
-		if (success == true) {
-			ProductService.update(product);
-			try {
-				response.getWriter().append("Product Updated");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				response.getWriter().append("Product Update Failed");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		String maybeName = request.getParameter("name");
+		String maybePrice = request.getParameter("price");
+		String maybeSalePrice = request.getParameter("sale_price");
+		String maybeOnSale = request.getParameter("on_sale");
+		String maybeStatus = request.getParameter("status");
+		String maybeProductId = request.getParameter("product_id");
+		String maybeUserId = request.getParameter("user_id");
 
+		String maybeGeneratedInterest = request.getParameter("generated_interest");
+		String maybeInterestThreshold = request.getParameter("interest_threshold");
+		Product product = null;
+
+		int productId = -1;
+		boolean success = false;
+		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+			productId = Integer.parseInt(maybeProductId);
+			product = ProductService.findById(productId);
+			double price = 0;
+			double saleprice = 0;
+			if (product != null) {
+				if (ValidationUtilities.checkNullOrEmpty(maybeStatus)) {
+					product.setStatus(maybeStatus);
+					// updates date listed based on status
+					if (maybeStatus.equals(ThresholdStatus.WITHIN_THRESHOLD.value) && product.getDateListed() != null) {
+						LocalDate day = LocalDate.now();
+						product.setDateListed(day);
+					}
+				}
+				if (ValidationUtilities.checkNullOrEmpty(maybeName)) {
+					product.setProductName(maybeName);
+				}
+				if (ValidationUtilities.checkNullOrEmpty(maybePrice)) {
+					price = Double.parseDouble(maybePrice);
+					product.setPrice(price);
+				}
+				if (ValidationUtilities.checkNullOrEmpty(maybeSalePrice)) {
+					saleprice = Double.parseDouble(maybeSalePrice);
+					product.setSalePrice(saleprice);
+				}
+
+				if (ValidationUtilities.checkNullOrEmpty(maybeOnSale)) {
+					int onSale = Integer.parseInt(maybeOnSale);
+					product.setOnSale(onSale);
+				}
+
+				if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
+					int userId = Integer.parseInt(maybeUserId);
+					product.setSeller(new User(userId));
+				}
+				if (ValidationUtilities.checkNullOrEmpty(maybeGeneratedInterest)) {
+					int generatedInterest = Integer.parseInt(maybeGeneratedInterest);
+					product.setGeneratedInterest(generatedInterest);
+				}
+
+				if (ValidationUtilities.checkNullOrEmpty(maybeInterestThreshold)) {
+					int interestThreshold = Integer.parseInt(maybeInterestThreshold);
+					product.setInterestThreshold(interestThreshold);
+				}
+				success = ProductService.update(product);
+			}
+		}
+		try {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			if (success) {
+				response.getWriter().append("Product Updated");
+			} else {
+				response.getWriter().append("Product Update Failed");
+			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> product = ProductService.findAll();
-
-		ObjectMapper om = new ObjectMapper();
 		try {
+			ObjectMapper om = new ObjectMapper();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 			String json = om.writeValueAsString(product);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
-		String PIDm = request.getParameter("product_id");
-		int PID = 0;
-		boolean success = false;
+		String maybeProductId = request.getParameter("product_id");
+		int productId = -1;
 		Product product = null;
-		if (PIDm != null) {
-			PID = Integer.parseInt(PIDm);
-			success = true;
+		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+			productId = Integer.parseInt(maybeProductId);
+			product = ProductService.findById(productId);
 		}
 
-		if (success == true) {
-			product = ProductService.findById(PID);
-
-			ObjectMapper om = new ObjectMapper();
-
-			try {
+		try {
+			response.setCharacterEncoding("UTF-8");
+			if (product != null) {
+				ObjectMapper om = new ObjectMapper();
 				String json = om.writeValueAsString(product);
+				response.setContentType("application/json");
 				response.getWriter().append(json).close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
+			} else {
+				response.setContentType("text/html");
 				response.getWriter().append("Failed to Find Product");
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String PIDm = request.getParameter("product_id");
-		int PID = 0;
+		String maybeProductId = request.getParameter("product_id");
+		int productId = -1;
 		boolean success = false;
-		if (PIDm != null) {
-			PID = Integer.parseInt(PIDm);
-			success = true;
+		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+			productId = Integer.parseInt(maybeProductId);
+			success = ProductService.deleteById(productId);
 		}
 
-		if (success == true) {
-			ProductService.deleteById(PID);
-			try {
-				response.getWriter().append("Product Deleted");
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			if (success) {
+				response.getWriter().append("Product Deleted").close();
+			} else {
+				response.getWriter().append("Product Delete Failed").close();
 			}
-		} else {
-			try {
-				response.getWriter().append("Failed to Delete Product");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
 
-	public static void findAllStandard(HttpServletRequest request, HttpServletResponse response) {
+	public static void findPretties(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> productOriginal = ProductService.findAll();
-		List<Product> productNew = new ArrayList<Product>();
+		List<Product> allProducts = ProductService.findAll();
+		List<Product> standardProducts = new ArrayList<Product>();
 		// populating list of standard priced items being sold
-		for (int i = 0; i < productOriginal.size(); i++) {
-			if (productOriginal.get(i).getStatus().equals("Standard Price")) {
-				productNew.add(productOriginal.get(i));
+		for (int i = 0; i < allProducts.size(); i++) {
+			Product product = allProducts.get(i);
+			if (product.getStatus().equals(ThresholdStatus.STANDARD.value)) {
+				standardProducts.add(product);
 			}
 		}
 
-		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(productNew);
+			ObjectMapper om = new ObjectMapper();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			String json = om.writeValueAsString(standardProducts);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	public static void findAllSale(HttpServletRequest request, HttpServletResponse response) {
+	public static void findAllOnSale(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> productOriginal = ProductService.findAll();
-		List<Product> productNew = new ArrayList<Product>();
+		List<Product> allProducts = ProductService.findAll();
+		List<Product> onSaleProducts = new ArrayList<Product>();
 		// populating return list of those on sale
-		for (int i = 0; i < productOriginal.size(); i++) {
-			if (productOriginal.get(i).getStatus().equals("On Sale")) {
-				productNew.add(productOriginal.get(i));
+		for (int i = 0; i < allProducts.size(); i++) {
+			Product product = allProducts.get(i);
+			if (product.getStatus().equals(ThresholdStatus.ON_SALE.value)) {
+				onSaleProducts.add(product);
 			}
 		}
 
-		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(productNew);
+			ObjectMapper om = new ObjectMapper();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			String json = om.writeValueAsString(onSaleProducts);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	public static void findAllInterest(HttpServletRequest request, HttpServletResponse response) {
+	public static void findPennies(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> productOriginal = ProductService.findAll();
-		List<Product> productNew = new ArrayList<Product>();
+		List<Product> allProducts = ProductService.findAll();
+		List<Product> withinThresholdProducts = new ArrayList<>();
 		LocalDate today = LocalDate.now();
 		// Populating list of those gaining interest
-		for (int i = 0; i < productOriginal.size(); i++) {
-			if (productOriginal.get(i).getStatus().equals("Gaining Interest")) {
-				productNew.add(productOriginal.get(i));
+		// this can be optimized by having a sql/hql query to search by "Within
+		// Threshold"
+		for (int i = 0; i < allProducts.size(); i++) {
+			Product product = allProducts.get(i);
+			if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)) {
+				withinThresholdProducts.add(product);
 			}
 		}
 		// removing from list if interest not gained in one week and updating back to
-		for (int i = 0; i < productNew.size(); i++) {
-			LocalDate dayMade = productNew.get(i).getDateListed();
-			long difference = java.time.temporal.ChronoUnit.DAYS.between(dayMade, today);
+		// standard
+		// this can be optimized with another custom DAO
+		for (int i = 0; i < withinThresholdProducts.size(); i++) {
+			Product product = withinThresholdProducts.get(i);
+			LocalDate dayMade = product.getDateListed();
+			long difference = ChronoUnit.DAYS.between(dayMade, today);
 			if (difference > 7) {
-				productNew.get(i).setStatus("Standard Price");
-				productNew.get(i).setDateListed(null);
-				ProductService.update(productNew.get(i));
-				productNew.remove(i);
+				product.setStatus(ThresholdStatus.STANDARD.value);
+				product.setDateListed(null);
+				product.setInterestThreshold(0);
+				ProductService.update(product);
+				withinThresholdProducts.remove(i);
 			}
 		}
 
 		// removing from list if interest gained and setting on sale
-		for (int j = 0; j < productNew.size(); j++) {
-			int interest = InterestService.getNumberOfInterestByProductId(productNew.get(j).getId());
-			if (interest >= 10) {
-				productNew.get(j).setStatus("On Sale");
-				ProductService.update(productNew.get(j));
-				productNew.remove(j);
+		for (int i = 0; i < withinThresholdProducts.size(); i++) {
+			Product product = withinThresholdProducts.get(i);
+			int quantityOfInterests = InterestService.getNumberOfInterestsByProductId(product.getId());
+			if (quantityOfInterests >= product.getInterestThreshold()) {
+				product.setStatus(ThresholdStatus.ON_SALE.value);
+				ProductService.update(product);
+				withinThresholdProducts.remove(i);
 			}
 		}
 
-		ObjectMapper om = new ObjectMapper();
 		try {
-			String json = om.writeValueAsString(productNew);
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(withinThresholdProducts);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 	public static void removeFromSale(HttpServletRequest request, HttpServletResponse response) {
-		String PIDm = request.getParameter("product_id");
-		int PID = 0;
+		String maybeProductId = request.getParameter("product_id");
+		int productId = -1;
 		boolean success = false;
 		Product product = null;
-		if (PIDm != null) {
-			PID = Integer.parseInt(PIDm);
-			success = true;
+		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+			productId = Integer.parseInt(maybeProductId);
+			product = ProductService.findById(productId);
+			if (product != null) {
+				product.setStatus(ThresholdStatus.STANDARD.value);
+				product.setDateListed(null);
+				success = ProductService.update(product);
+			}
 		}
 
-		if (success == true) {
-			product = ProductService.findById(PID);
-			product.setStatus("Standard Price");
-			product.setDateListed(null);
-			ProductService.update(product);
-			try {
-				response.getWriter().append("Removed Product From Sale");
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			if (success) {
+				response.getWriter().append("Removed Product From Sale").close();
+			} else {
+				response.getWriter().append("Failed to Remove Product From Sale").close();
 			}
-		} else {
-			try {
-				response.getWriter().append("Failed to Remove Product From Sale");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

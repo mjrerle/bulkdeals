@@ -9,7 +9,6 @@ import org.hibernate.Session;
 import p2.dao.IInterestDAO;
 import p2.model.Interest;
 import p2.util.HibernateUtil;
-import p2.util.InterestStatus;
 
 public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 
@@ -20,8 +19,8 @@ public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 		List<Interest> list = null;
 
 		try {
-			Query query = session.createQuery("FROM Interest WHERE product.id = :productId");
-			query.setParameter("productId", productId);
+			Query query = session.createQuery("FROM Interests WHERE product_id = :product_id");
+			query.setParameter("product_id", productId);
 			list = query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
@@ -31,24 +30,21 @@ public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public int changeStatus(int productId, int status) {
+	public List<Interest> findByUserId(int userId) {
 		Session session = HibernateUtil.getSession();
-		int numberOfEntities = 0;
+		List<Interest> list = null;
 
 		try {
-			Query query  = session.createQuery("UPDATE Interest SET Status = :statusValue" + "WHERE product.id = :productId");
-			query.setParameter("statusValue", status);
-			query.setParameter("productId", productId);
-			numberOfEntities = query.executeUpdate();
-			
+			Query query = session.createQuery("FROM Interests WHERE user_id = :user_id");
+			query.setParameter("user_id", userId);
+			list = query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 		} finally {
 			session.close();
 		}
-		
-		return numberOfEntities;
+		return list;
 	}
-
 }

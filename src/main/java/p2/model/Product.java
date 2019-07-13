@@ -1,6 +1,7 @@
 package p2.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,65 +17,65 @@ import javax.persistence.Table;
 @Table(name = "Products")
 public class Product {
 	@Id
-	@Column(name="id")
-	@SequenceGenerator(sequenceName="product_seq", name="p_seq")
-	@GeneratedValue(generator="p_seq", strategy=GenerationType.SEQUENCE)
+	@Column(name = "id")
+	@SequenceGenerator(sequenceName = "product_seq", name = "p_seq")
+	@GeneratedValue(generator = "p_seq", strategy = GenerationType.SEQUENCE)
 	private int id;
-	
-	@Column(name="productname")
+
+	@Column(name = "productname")
 	private String productName;
-	
-	@Column(name="price")
+
+	@Column(name = "price")
 	private double price;
-	
-	@Column(name="sale_price")
+
+	@Column(name = "sale_price")
 	private double salePrice;
-	
-	@Column(name="on_sale")
-	private int onSale;//using 0 or 1 to indicate yes or no
-	
-	@Column(name="generated_interest")
-	private int generatedInterest;//I figure well set an integer limit that correlates to user quantity and set an if threshold.
-	
-	@Column(name="date_listed_for_interest")
-	private java.time.LocalDate dateListed;//note I pulled java.sql.Date for conversion purposes
-	
-	@Column(name="status")
+
+	@Column(name = "on_sale")
+	private int onSale;
+	// using 0 or 1 to indicate yes or no
+
+	@Column(name = "generated_interest")
+	private int generatedInterest;
+	// I figure well set an integer limit that correlates to user quantity and set
+	// an if threshold.
+
+	@Column(name = "date_listed_for_interest")
+	private LocalDate dateListed;
+	// note I pulled java.sql.Date for conversion purposes
+
+	@Column(name = "status", columnDefinition = "varchar default 'Standard'")
 	private String status;
-	
+
+	@Column(name = "interest_threshold")
+	private int interestThreshold;
+
 	@ManyToOne
-	@JoinColumn(name="seller")
+	@JoinColumn(name = "seller")
 	private User seller;
 
 	public Product() {
-		super();
 	}
 	
-
-
 	public Product(int id) {
-		super();
 		this.id = id;
 	}
 
-
-
 	public Product(String productName, double price, double salePrice, int onSale, int generatedInterest,
-			LocalDate dateListed,String status, User seller) {
-		super();
+			LocalDate dateListed, String status, int interestThreshold, User seller) {
 		this.productName = productName;
 		this.price = price;
 		this.salePrice = salePrice;
 		this.onSale = onSale;
 		this.generatedInterest = generatedInterest;
 		this.dateListed = dateListed;
-		this.seller = seller;
 		this.status = status;
+		this.interestThreshold = interestThreshold;
+		this.seller = seller;
 	}
 
 	public Product(int id, String productName, double price, double salePrice, int onSale, int generatedInterest,
-			LocalDate dateListed, String status, User seller) {
-		super();
+			LocalDate dateListed, String status, int interestThreshold, User seller) {
 		this.id = id;
 		this.productName = productName;
 		this.price = price;
@@ -82,12 +83,13 @@ public class Product {
 		this.onSale = onSale;
 		this.generatedInterest = generatedInterest;
 		this.dateListed = dateListed;
-		this.seller = seller;
 		this.status = status;
+		this.interestThreshold = interestThreshold;
+		this.seller = seller;
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -95,7 +97,7 @@ public class Product {
 	}
 
 	public String getProductName() {
-		return productName;
+		return this.productName;
 	}
 
 	public void setProductName(String productName) {
@@ -103,7 +105,7 @@ public class Product {
 	}
 
 	public double getPrice() {
-		return price;
+		return this.price;
 	}
 
 	public void setPrice(double price) {
@@ -111,7 +113,7 @@ public class Product {
 	}
 
 	public double getSalePrice() {
-		return salePrice;
+		return this.salePrice;
 	}
 
 	public void setSalePrice(double salePrice) {
@@ -119,7 +121,7 @@ public class Product {
 	}
 
 	public int getOnSale() {
-		return onSale;
+		return this.onSale;
 	}
 
 	public void setOnSale(int onSale) {
@@ -127,7 +129,7 @@ public class Product {
 	}
 
 	public int getGeneratedInterest() {
-		return generatedInterest;
+		return this.generatedInterest;
 	}
 
 	public void setGeneratedInterest(int generatedInterest) {
@@ -135,100 +137,113 @@ public class Product {
 	}
 
 	public LocalDate getDateListed() {
-		return dateListed;
+		return this.dateListed;
 	}
 
-	public void setDateListed(LocalDate date) {
-		this.dateListed = date;
+	public void setDateListed(LocalDate dateListed) {
+		this.dateListed = dateListed;
 	}
-
-	public User getSeller() {
-		return seller;
-	}
-
-	public void setSeller(User seller) {
-		this.seller = seller;
-	}
-	
-	
 
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dateListed == null) ? 0 : dateListed.hashCode());
-		result = prime * result + generatedInterest;
-		result = prime * result + id;
-		result = prime * result + onSale;
-		long temp;
-		temp = Double.doubleToLongBits(price);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((productName == null) ? 0 : productName.hashCode());
-		temp = Double.doubleToLongBits(salePrice);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((seller == null) ? 0 : seller.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		return result;
+	public int getInterestThreshold() {
+		return this.interestThreshold;
+	}
+
+	public void setInterestThreshold(int interestThreshold) {
+		this.interestThreshold = interestThreshold;
+	}
+
+	public User getSeller() {
+		return this.seller;
+	}
+
+	public void setSeller(User seller) {
+		this.seller = seller;
+	}
+
+	public Product id(int id) {
+		this.id = id;
+		return this;
+	}
+
+	public Product productName(String productName) {
+		this.productName = productName;
+		return this;
+	}
+
+	public Product price(double price) {
+		this.price = price;
+		return this;
+	}
+
+	public Product salePrice(double salePrice) {
+		this.salePrice = salePrice;
+		return this;
+	}
+
+	public Product onSale(int onSale) {
+		this.onSale = onSale;
+		return this;
+	}
+
+	public Product generatedInterest(int generatedInterest) {
+		this.generatedInterest = generatedInterest;
+		return this;
+	}
+
+	public Product dateListed(LocalDate dateListed) {
+		this.dateListed = dateListed;
+		return this;
+	}
+
+	public Product status(String status) {
+		this.status = status;
+		return this;
+	}
+
+	public Product interestThreshold(int interestThreshold) {
+		this.interestThreshold = interestThreshold;
+		return this;
+	}
+
+	public Product seller(User seller) {
+		this.seller = seller;
+		return this;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(Object o) {
+		if (o == this)
 			return true;
-		if (obj == null)
+		if (!(o instanceof Product)) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		if (dateListed == null) {
-			if (other.dateListed != null)
-				return false;
-		} else if (!dateListed.equals(other.dateListed))
-			return false;
-		if (generatedInterest != other.generatedInterest)
-			return false;
-		if (id != other.id)
-			return false;
-		if (onSale != other.onSale)
-			return false;
-		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
-			return false;
-		if (productName == null) {
-			if (other.productName != null)
-				return false;
-		} else if (!productName.equals(other.productName))
-			return false;
-		if (Double.doubleToLongBits(salePrice) != Double.doubleToLongBits(other.salePrice))
-			return false;
-		if (seller == null) {
-			if (other.seller != null)
-				return false;
-		} else if (!seller.equals(other.seller))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
-		return true;
+		}
+		Product product = (Product) o;
+		return id == product.id && Objects.equals(productName, product.productName) && price == product.price
+				&& salePrice == product.salePrice && onSale == product.onSale && generatedInterest == product.generatedInterest
+				&& Objects.equals(dateListed, product.dateListed) && Objects.equals(status, product.status)
+				&& interestThreshold == product.interestThreshold && Objects.equals(seller, product.seller);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, productName, price, salePrice, onSale, generatedInterest, dateListed, status,
+				interestThreshold, seller);
 	}
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", productName=" + productName + ", price=" + price + ", salePrice=" + salePrice
-				+ ", onSale=" + onSale + ", generatedInterest=" + generatedInterest + ", dateListed=" + dateListed
-				+ ", status=" + status + ", seller=" + seller + "]";
+		return "{" + " id='" + getId() + "'" + ", productName='" + getProductName() + "'" + ", price='" + getPrice() + "'"
+				+ ", salePrice='" + getSalePrice() + "'" + ", onSale='" + getOnSale() + "'" + ", generatedInterest='"
+				+ getGeneratedInterest() + "'" + ", dateListed='" + getDateListed() + "'" + ", status='" + getStatus() + "'"
+				+ ", interestThreshold='" + getInterestThreshold() + "'" + ", seller='" + getSeller() + "'" + "}";
 	}
-	
-	
+
 }

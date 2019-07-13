@@ -5,47 +5,56 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.log4j.Logger;
+
 import p2.model.User;
-import p2.service.impl.UserService;
+import p2.service.UserService;
+import p2.util.Glogger;
 import p2.util.SessionVariableManager;
+import p2.util.ValidationUtilities;
 
 public class UserWebService {
 
-	private static Logger logger = Logger.getLogger(UserWebService.class);
+	private static Logger logger = Glogger.logger;
 
 	public static void login(HttpServletRequest request, HttpServletResponse response) {
 
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+		User user = null;
+		if (ValidationUtilities.checkNullOrEmpty(email) && ValidationUtilities.checkNullOrEmpty(password)) {
+			user = UserService.findByEmailAndPassword(email, password);
+		}
 
-		User user = UserService.findByEmailAndPassword(email, password);
 		try {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
 			if (user != null) {
 				SessionVariableManager.addLoggedInUser(request, user);
-				logger.info("User Id: " + user.getId() + " Logged into the sysytem");
+				logger.info("User " + user.getEmail() + " logged into the system");
 				response.getWriter().append("Successfully Logged in").close();
-
 			} else {
-				response.getWriter().close();
+				response.getWriter().append("Failed to log in due to incorrect email/password").close();
 			}
-
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	public static  void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
+	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
 
 		ObjectMapper om = new ObjectMapper();
 
 		try {
 			String json = om.writeValueAsString(SessionVariableManager.getLoggedInUser());
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -53,79 +62,115 @@ public class UserWebService {
 	public static void logout(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			SessionVariableManager.removeLoggedInUser();
-			response.getWriter().close();
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().append("User Logged Out").close();
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String firstName = request.getParameter("firstName").trim();
-		String lastName = request.getParameter("lastName").trim();
-		String email = request.getParameter("email").trim();
-		String password = request.getParameter("password").trim();
-		String role = request.getParameter("role").trim();
-		String address = request.getParameter("address").trim();
-		int creditCardNumber = Integer.parseInt(request.getParameter("creditCardNumber").trim());
-		int cvv = Integer.parseInt(request.getParameter("cvv").trim());
-
-		User user = new User(firstName, lastName, email, password, role, address, creditCardNumber, cvv);
+		String maybeFirstName = request.getParameter("firstName");
+		String maybeLastName = request.getParameter("lastName");
+		String maybeEmail = request.getParameter("email");
+		String maybePassword = request.getParameter("password");
+		String maybeRole = request.getParameter("role");
+		String maybeAddress = request.getParameter("address");
+		String maybeCreditCardNumber = request.getParameter("creditCardNumber");
+		String maybeCvv = request.getParameter("cvv");
+		User user = null;
+		int userId = -1;
+		if (ValidationUtilities.checkNullOrEmpty(maybeFirstName) && ValidationUtilities.checkNullOrEmpty(maybeLastName)
+				&& ValidationUtilities.checkNullOrEmpty(maybeEmail) && ValidationUtilities.checkNullOrEmpty(maybePassword)
+				&& ValidationUtilities.checkNullOrEmpty(maybeRole) && ValidationUtilities.checkNullOrEmpty(maybeAddress)
+				&& ValidationUtilities.checkNullOrEmpty(maybeCreditCardNumber)
+				&& ValidationUtilities.checkNullOrEmpty(maybeCvv)) {
+			int creditCardNumber = Integer.parseInt(maybeCreditCardNumber);
+			int cvv = Integer.parseInt(maybeCvv);
+			user = new User(maybeFirstName, maybeLastName, maybeEmail, maybePassword, maybeRole, maybeAddress,
+					creditCardNumber, cvv);
+			userId = UserService.insert(user);
+		}
 		try {
-			if (UserService.insert(user) != -1) {
-				response.getWriter().append("Suceessfully Added").close();
-				logger.info("User, ID: " + user.getId() + " added to the System");
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			if (userId >= 0) {
+				logger.info("User " + user.getEmail() + " Inserted");				
+				response.getWriter().append("User Inserted").close();
 			} else {
-				response.getWriter().close();
+				response.getWriter().append("User Insert Failed").close();
 			}
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		int id = Integer.parseInt(request.getParameter("id").trim());
-		String firstName = request.getParameter("firstName").trim();
-		String lastName = request.getParameter("lastName").trim();
-		String password = request.getParameter("password").trim();
-		String role = request.getParameter("role").trim();
-		String address = request.getParameter("address").trim();
-		int creditCardNumber = Integer.parseInt(request.getParameter("creditCardNumber").trim());
-		int cvv = Integer.parseInt(request.getParameter("cvv").trim());
+		String maybeFirstName = request.getParameter("firstName");
+		String maybeLastName = request.getParameter("lastName");
+		String maybeEmail = request.getParameter("email");
+		String maybePassword = request.getParameter("password");
+		String maybeRole = request.getParameter("role");
+		String maybeAddress = request.getParameter("address");
+		String maybeCreditCardNumber = request.getParameter("creditCardNumber");
+		String maybeCvv = request.getParameter("cvv");
+		String maybeUserId = request.getParameter("user_id");
+		User user = null;
 
-		User user = UserService.findById(id);
+		boolean success = false;
+		if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
+			user = UserService.findById(Integer.parseInt(maybeUserId));
+			if (user != null) {
+				if (ValidationUtilities.checkNullOrEmpty(maybeFirstName)) {
+					user.setFirstName(maybeFirstName);
+				}
 
-		if (!user.getFirstName().equals(firstName))
-			user.setFirstName(firstName);
+				if (ValidationUtilities.checkNullOrEmpty(maybeLastName)) {
+					user.setLastName(maybeLastName);
+				}
 
-		if (!user.getLastName().equals(lastName))
-			user.setLastName(lastName);
+				if (ValidationUtilities.checkNullOrEmpty(maybeEmail)) {
+					user.setLastName(maybeEmail);
+				}
 
-		if (!user.getPassword().equals(password))
-			user.setPassword(password);
+				if (ValidationUtilities.checkNullOrEmpty(maybePassword)) {
+					user.setPassword(maybePassword);
+				}
 
-		if (!user.getRole().equals(role))
-			user.setRole(role);
+				if (ValidationUtilities.checkNullOrEmpty(maybeRole)) {
+					user.setRole(maybeRole);
+				}
 
-		if (!user.getAddress().equals(address))
-			user.setAddress(address);
+				if (ValidationUtilities.checkNullOrEmpty(maybeAddress)) {
+					user.setAddress(maybeAddress);
+				}
 
-		if (!(user.getCreditCardNumber() == creditCardNumber))
-			user.setCreditCardNumber(creditCardNumber);
+				if (ValidationUtilities.checkNullOrEmpty(maybeCreditCardNumber)) {
+					user.setCreditCardNumber(Integer.parseInt(maybeCreditCardNumber));
+				}
 
-		if (!(user.getCvv() == cvv))
-			user.setCvv(cvv);
+				if (ValidationUtilities.checkNullOrEmpty(maybeCvv)) {
+					user.setCvv(Integer.parseInt(maybeCvv));
+				}
+				success = UserService.update(user);
+			}
+		}
 
 		try {
-			if (UserService.update(user)) {
-				response.getWriter().append("Suceessfully Updated").close();
-				logger.info("User, ID: " + user.getId() + " Updated");
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			if (success) {
+				logger.info("User " + user.getEmail() + " Updated");
+				response.getWriter().append("User Updated").close();
 			} else {
-				response.getWriter().close();
+				response.getWriter().append("User Update Failed").close();
 			}
 		} catch (IOException e) {
+			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
 	}
-
 }

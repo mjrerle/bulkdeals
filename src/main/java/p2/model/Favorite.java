@@ -35,6 +35,12 @@ public class Favorite {
 		this.id = id;
 	}
 
+	public Favorite(User user, Product product) {
+		super();
+		this.user = user;
+		this.product = product;
+	}
+
 	public Favorite(int id, User user, Product product) {
 		super();
 		this.id = id;

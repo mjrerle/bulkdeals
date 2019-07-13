@@ -18,141 +18,151 @@ import p2.webservice.UserWebService;
 
 public class RequestHelper {
   public static Logger logger = Glogger.logger;
-  private static final String baseURI = "/project2";
-  private static final String baseAPI = baseURI + "/api";
-  private static final String userAPI = baseAPI + "/user";
-  private static final String favoriteAPI = baseAPI + "/favorite";
-  private static final String interestAPI = baseAPI + "/interest";
-  private static final String productAPI = baseAPI + "/product";
-  private static final String purchaseAPI = baseAPI + "/purchase";
-  private static final String taxonomyAPI = baseAPI + "/taxonomy";
-  private static final String taxonomiesAPI = baseAPI + "/taxonomies";
+  
 
   public static void Process(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String uri = request.getRequestURI();
-    logger.info(request.getMethod() + " " + uri + " " + request.getQueryString());
+    logger.info("METHOD: " + request.getMethod() + " URI: " + uri + " QUERY: " + request.getQueryString());
     String meth = request.getMethod();
     // switch on the method first, then look at the uri
     switch (meth) {
-    
+
     case "GET":
       switch (uri) {
-      case userAPI :
-          break;
-      case userAPI + "/login":
-    	UserWebService.login(request, response);
+      case API.user + "/getLoggedInUser":
+        UserWebService.getLoggedInUser(request, response);
         break;
-      case userAPI + "/logout":
-      	UserWebService.logout(request, response);
-          break;
-      case userAPI + "/getLoggedInUser":
-      	UserWebService.getLoggedInUser(request, response);
-          break;
-      case favoriteAPI:
+      case API.favorite:
         FavoriteWebService.findById(request, response);
         break;
-      // favorites/by?customer_id=1
-      case favoriteAPI + "s/by_user":
+      // favorites/by_user?user_id=1
+      case API.favorites + "/by_user":
         FavoriteWebService.findByUser(request, response);
         break;
-      case favoriteAPI + "s":
+      case API.favorites:
         FavoriteWebService.findAll(request, response);
         break;
-      case productAPI:
+      case API.product:
         ProductWebService.findById(request, response);
         break;
-      case productAPI + "/interests":
-        ProductWebService.findAllInterest(request, response);
+      case API.product + "/pennies":
+        ProductWebService.findPennies(request, response);
         break;
-      case productAPI + "s/standard":
-        ProductWebService.findAllStandard(request, response);
+      case API.products + "/pretty":
+        ProductWebService.findPretties(request, response);
         break;
-      case productAPI + "s/on_sale":
-        ProductWebService.findAllSale(request, response);
+      case API.products + "/on_sale":
+        ProductWebService.findAllOnSale(request, response);
         break;
-      case productAPI + "s":
+      case API.products:
         ProductWebService.findAll(request, response);
         break;
-      case interestAPI:
+      case API.products + "/by_type":
+        TaxonomyWebService.findAllProductsByType(request, response);
         break;
-      case interestAPI + "s":
+      case API.products + "/by_sub_type":
+        TaxonomyWebService.findAllProductsBySubType(request, response);
         break;
-      case purchaseAPI:
+      case API.products + "/by_name":
+        TaxonomyWebService.findAllProductsByTaxonomyName(request, response);
+        break;
+      case API.interest:
+        InterestWebService.findById(request, response);
+        break;
+      case API.interests:
+        InterestWebService.findAll(request, response);
+        break;
+      case API.interests + "/by_user":
+        InterestWebService.findByUserId(request, response);
+        break;
+      case API.interests + "/by_product":
+        InterestWebService.findByProductId(request, response);
+        break;
+      case API.purchase:
         PurchaseWebService.findById(request, response);
         break;
-      case purchaseAPI + "s":
+      case API.purchases:
         PurchaseWebService.findAll(request, response);
         break;
-      case taxonomyAPI:
+      case API.taxonomy:
         TaxonomyWebService.findById(request, response);
         break;
-      case taxonomiesAPI:
+
+      case API.taxonomies:
         TaxonomyWebService.findById(request, response);
         break;
       }
       break;
-      
+
     case "POST":
       switch (uri) {
-      case userAPI:
-    	UserWebService.insert(request, response);
+      case API.user:
+        UserWebService.insert(request, response);
         break;
-      case favoriteAPI:
+      case API.user + "/login":
+        UserWebService.login(request, response);
+        break;
+      case API.user + "/logout":
+        UserWebService.logout(request, response);
+        break;
+      case API.favorite:
         FavoriteWebService.insert(request, response);
         break;
-      case productAPI:
+      case API.product:
         ProductWebService.insert(request, response);
         break;
-      case interestAPI:
-    	  InterestWebService.insert(request, response);
+      case API.interest:
+        InterestWebService.insert(request, response);
         break;
-      case purchaseAPI:
+      case API.purchase:
         PurchaseWebService.insert(request, response);
         break;
-      case taxonomyAPI:
+      case API.taxonomy:
         TaxonomyWebService.insert(request, response);
         break;
       }
       break;
-      
+
     case "PUT":
       switch (uri) {
-      case userAPI:
-    	  UserWebService.update(request, response);
+      case API.user:
+        UserWebService.update(request, response);
         break;
-      case favoriteAPI:
+      case API.favorite:
         FavoriteWebService.update(request, response);
         break;
-      case productAPI:
+      case API.product:
         ProductWebService.update(request, response);
         break;
-      case interestAPI:
+      case API.interest:
+        InterestWebService.update(request, response);
         break;
-      case purchaseAPI:
+      case API.purchase:
         PurchaseWebService.update(request, response);
         break;
-      case taxonomyAPI:
+      case API.taxonomy:
         TaxonomyWebService.update(request, response);
         break;
       }
       break;
     case "DELETE":
       switch (uri) {
-      case userAPI :
-          break;
-      case favoriteAPI:
+      case API.user:
+        break;
+      case API.favorite:
         FavoriteWebService.deleteById(request, response);
         break;
-      case productAPI:
+      case API.product:
         ProductWebService.deleteById(request, response);
         break;
-      case interestAPI:
+      case API.interest:
+        InterestWebService.deleteById(request, response);
         break;
-      case purchaseAPI:
+      case API.purchase:
         PurchaseWebService.deleteById(request, response);
         break;
-      case taxonomyAPI:
+      case API.taxonomy:
         TaxonomyWebService.deleteById(request, response);
         break;
       }
