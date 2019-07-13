@@ -19,7 +19,7 @@ public class FavoriteDAO extends GenericDAO<Favorite> implements IFavoriteDAO {
 		List<Favorite> favorites = null;
 
 		try {
-			Query query = session.createQuery("FROM favorites WHERE user_id = :user_id");
+			Query query = session.createQuery("FROM Favorites WHERE user_id = :user_id");
 			query.setParameter("user_id", user.getId());
 			favorites = query.list();
 		} catch (HibernateException e) {
