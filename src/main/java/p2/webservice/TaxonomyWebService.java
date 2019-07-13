@@ -26,8 +26,8 @@ public class TaxonomyWebService {
 
     String maybeName = request.getParameter("name");
     String maybeType = request.getParameter("type");
-    String maybeSubType = request.getParameter("sub_type");
-    String maybeProductId = request.getParameter("product_id");
+    String maybeSubType = request.getParameter("subType");
+    String maybeProductId = request.getParameter("productId");
 
     if (ValidationUtilities.checkNullOrEmpty(maybeName) && ValidationUtilities.checkNullOrEmpty(maybeType)
         && ValidationUtilities.checkNullOrEmpty(maybeSubType) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
@@ -56,9 +56,9 @@ public class TaxonomyWebService {
 
     String maybeName = request.getParameter("name");
     String maybeType = request.getParameter("type");
-    String maybeSubType = request.getParameter("sub_type");
-    String maybeProductId = request.getParameter("product_id");
-    String maybeTaxonomyId = request.getParameter("taxonomy_id");
+    String maybeSubType = request.getParameter("subType");
+    String maybeProductId = request.getParameter("productId");
+    String maybeTaxonomyId = request.getParameter("taxonomyId");
 
     boolean success = false;
     if (ValidationUtilities.checkNullOrEmpty(maybeTaxonomyId)) {
@@ -100,7 +100,7 @@ public class TaxonomyWebService {
 
   public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
     int taxonomyId = -1;
-    String maybeTaxonomyId = request.getParameter("taxonomy_id");
+    String maybeTaxonomyId = request.getParameter("taxonomyId");
     boolean success = false;
 
     if (ValidationUtilities.checkNullOrEmpty(maybeTaxonomyId)) {
@@ -141,7 +141,7 @@ public class TaxonomyWebService {
   public static void findById(HttpServletRequest request, HttpServletResponse response) {
 
     int taxonomyId = -1;
-    String maybeTaxonomyId = request.getParameter("taxonomy_id");
+    String maybeTaxonomyId = request.getParameter("taxonomyId");
     Taxonomy taxonomy = null;
 
     if (ValidationUtilities.checkNullOrEmpty(maybeTaxonomyId)) {
@@ -189,7 +189,7 @@ public class TaxonomyWebService {
 
   public static void findAllProductsBySubType(HttpServletRequest request, HttpServletResponse response) {
 
-    String maybeSubType = request.getParameter("sub_type");
+    String maybeSubType = request.getParameter("subType");
     List<Product> products = null;
 
     if (ValidationUtilities.checkNullOrEmpty(maybeSubType)) {

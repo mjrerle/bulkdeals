@@ -25,14 +25,14 @@ public class ProductWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("user_id");
+		String maybeUserId = request.getParameter("userId");
 		String maybeName = request.getParameter("name");
 		String maybePrice = request.getParameter("price");
-		String maybeSalePrice = request.getParameter("sale_price");
-		String maybeOnSale = request.getParameter("on_sale");
+		String maybeSalePrice = request.getParameter("salePrice");
+		String maybeOnSale = request.getParameter("onSale");
 
 		String maybeStatus = request.getParameter("status");
-		String maybeInterestThreshold = request.getParameter("interest_threshold");
+		String maybeInterestThreshold = request.getParameter("interestThreshold");
 		int productId = -1;
 
 		if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeName)
@@ -76,14 +76,14 @@ public class ProductWebService {
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
 		String maybeName = request.getParameter("name");
 		String maybePrice = request.getParameter("price");
-		String maybeSalePrice = request.getParameter("sale_price");
-		String maybeOnSale = request.getParameter("on_sale");
+		String maybeSalePrice = request.getParameter("salePrice");
+		String maybeOnSale = request.getParameter("onSale");
 		String maybeStatus = request.getParameter("status");
-		String maybeProductId = request.getParameter("product_id");
-		String maybeUserId = request.getParameter("user_id");
+		String maybeProductId = request.getParameter("productId");
+		String maybeUserId = request.getParameter("userId");
 
-		String maybeGeneratedInterest = request.getParameter("generated_interest");
-		String maybeInterestThreshold = request.getParameter("interest_threshold");
+		String maybeGeneratedInterest = request.getParameter("generatedInterest");
+		String maybeInterestThreshold = request.getParameter("interestThreshold");
 		Product product = null;
 
 		int productId = -1;
@@ -165,7 +165,7 @@ public class ProductWebService {
 	}
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeProductId = request.getParameter("product_id");
+		String maybeProductId = request.getParameter("productId");
 		int productId = -1;
 		Product product = null;
 		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
@@ -192,7 +192,7 @@ public class ProductWebService {
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeProductId = request.getParameter("product_id");
+		String maybeProductId = request.getParameter("productId");
 		int productId = -1;
 		boolean success = false;
 		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
@@ -317,7 +317,7 @@ public class ProductWebService {
 	}
 
 	public static void removeFromSale(HttpServletRequest request, HttpServletResponse response) {
-		String maybeProductId = request.getParameter("product_id");
+		String maybeProductId = request.getParameter("productId");
 		int productId = -1;
 		boolean success = false;
 		Product product = null;

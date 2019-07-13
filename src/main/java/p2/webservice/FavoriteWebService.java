@@ -21,8 +21,8 @@ public class FavoriteWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("user_id");
-		String maybeProductId = request.getParameter("product_id");
+		String maybeUserId = request.getParameter("userId");
+		String maybeProductId = request.getParameter("productId");
 		int favoriteId = -1;
 		User user = null;
 		Product product = null;
@@ -49,9 +49,9 @@ public class FavoriteWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFavoriteId = request.getParameter("favorite_id");
-		String maybeUserId = request.getParameter("user_id");
-		String maybeProductId = request.getParameter("product_id");
+		String maybeFavoriteId = request.getParameter("favoriteId");
+		String maybeUserId = request.getParameter("userId");
+		String maybeProductId = request.getParameter("productId");
 		boolean success = false;
 		Favorite favorite = null;
 		if (ValidationUtilities.checkNullOrEmpty(maybeFavoriteId)) {
@@ -101,7 +101,7 @@ public class FavoriteWebService {
 	}
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFavoriteId = request.getParameter("favorite_id");
+		String maybeFavoriteId = request.getParameter("favoriteId");
 		Favorite favorite = null;
 		if (ValidationUtilities.checkNullOrEmpty(maybeFavoriteId)) {
 			int favoriteId = Integer.parseInt(maybeFavoriteId);
@@ -126,7 +126,7 @@ public class FavoriteWebService {
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFavoriteId = request.getParameter("favorite_id");
+		String maybeFavoriteId = request.getParameter("favoriteId");
 		boolean success = false;
 		int favoriteId = -1;
 		if (ValidationUtilities.checkNullOrEmpty(maybeFavoriteId)) {
@@ -149,7 +149,7 @@ public class FavoriteWebService {
 	}
 
 	public static void findByUser(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("user_id");
+		String maybeUserId = request.getParameter("userId");
 		List<Favorite> favoritesByUser = null;
 
 		if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
