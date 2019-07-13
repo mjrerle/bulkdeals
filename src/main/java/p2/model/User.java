@@ -15,7 +15,7 @@ public class User {
 	@Id
 	@SequenceGenerator(sequenceName = "user_seq", name = "u_seq")
 	@GeneratedValue(generator = "u_seq", strategy = GenerationType.SEQUENCE)
-	private int id;
+	private int userId;
 	
 	@Column(nullable = false)
 	private String firstName;
@@ -41,13 +41,13 @@ public class User {
 
 	public User(int id) {
 		super();
-		this.id = id;
+		this.userId = id;
 	}
 
 	public User(int id, String firstName, String lastName, String email, String password, String role, String address,
 			int creditCardNumber, int cvv) {
 		super();
-		this.id = id;
+		this.userId = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -72,11 +72,11 @@ public class User {
 	}
 
 	public int getId() {
-		return id;
+		return userId;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.userId = id;
 	}
 
 	public String getFirstName() {
@@ -145,7 +145,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+		return "User [id=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + ", role=" + role + ", address=" + address + ", creditCardNumber="
 				+ creditCardNumber + ", cvv=" + cvv + "]";
 	}

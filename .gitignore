@@ -47,6 +47,7 @@ log/
 server/test-output
 server/src/main/resources/hibernate.cfg.xml
 **/log.html
+**/log.html.*
 **/log.log
 **/log4j.properties
 

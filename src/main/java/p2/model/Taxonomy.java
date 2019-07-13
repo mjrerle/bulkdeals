@@ -19,7 +19,7 @@ public class Taxonomy {
   @Id
   @SequenceGenerator(sequenceName = "taxonomies_seq", name = "t_seq")
   @GeneratedValue(generator = "t_seq", strategy = GenerationType.SEQUENCE)
-  private int id;
+  private int taxonomyId;
 
   @Column(name = "name")
   private String name;
@@ -40,7 +40,7 @@ public class Taxonomy {
   }
 
   public Taxonomy(int id) {
-    this.id = id;
+    this.taxonomyId = id;
   }
 
   public Taxonomy(String name, String type, String subType, Product product) {
@@ -51,7 +51,7 @@ public class Taxonomy {
   }
 
   public Taxonomy(int id, String name, String type, String subType, Product product) {
-    this.id = id;
+    this.taxonomyId = id;
     this.name = name;
     this.type = type;
     this.subType = subType;
@@ -59,11 +59,11 @@ public class Taxonomy {
   }
 
   public int getId() {
-    return this.id;
+    return this.taxonomyId;
   }
 
   public void setId(int id) {
-    this.id = id;
+    this.taxonomyId = id;
   }
 
   public String getName() {
@@ -99,7 +99,7 @@ public class Taxonomy {
   }
 
   public Taxonomy id(int id) {
-    this.id = id;
+    this.taxonomyId = id;
     return this;
   }
 
@@ -131,12 +131,12 @@ public class Taxonomy {
             return false;
         }
         Taxonomy taxonomy = (Taxonomy) o;
-        return id == taxonomy.id && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type) && Objects.equals(subType, taxonomy.subType) && Objects.equals(product, taxonomy.product);
+        return taxonomyId == taxonomy.taxonomyId && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type) && Objects.equals(subType, taxonomy.subType) && Objects.equals(product, taxonomy.product);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, type, subType, product);
+    return Objects.hash(taxonomyId, name, type, subType, product);
   }
 
   @Override

@@ -19,7 +19,7 @@ public class Interest {
 	@Id
 	@SequenceGenerator(sequenceName = "interests_seq", name = "i_seq")
 	@GeneratedValue(generator = "i_seq", strategy = GenerationType.SEQUENCE)
-	private int id;
+	private int interestId;
 
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "user_id")
@@ -37,7 +37,7 @@ public class Interest {
 
 	public Interest(int id) {
 		super();
-		this.id = id;
+		this.interestId = id;
 	}
 
 	public Interest(User user, Product product, int quantity) {
@@ -47,18 +47,18 @@ public class Interest {
 	}
 
 	public Interest(int id, User user, Product product, int quantity) {
-		this.id = id;
+		this.interestId = id;
 		this.user = user;
 		this.product = product;
 		this.quantity = quantity;
 	}
 
 	public int getId() {
-		return this.id;
+		return this.interestId;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.interestId = id;
 	}
 
 	public User getUser() {
@@ -86,7 +86,7 @@ public class Interest {
 	}
 
 	public Interest id(int id) {
-		this.id = id;
+		this.interestId = id;
 		return this;
 	}
 
@@ -113,13 +113,13 @@ public class Interest {
 			return false;
 		}
 		Interest interest = (Interest) o;
-		return id == interest.id && Objects.equals(user, interest.user) && Objects.equals(product, interest.product)
+		return interestId == interest.interestId && Objects.equals(user, interest.user) && Objects.equals(product, interest.product)
 				&& quantity == interest.quantity;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, user, product, quantity);
+		return Objects.hash(interestId, user, product, quantity);
 	}
 
 	@Override

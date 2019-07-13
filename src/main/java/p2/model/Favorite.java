@@ -16,7 +16,7 @@ public class Favorite {
 	@Id
 	@SequenceGenerator(sequenceName = "favorites_seq", name = "f_seq")
 	@GeneratedValue(generator = "f_seq", strategy = GenerationType.SEQUENCE)
-	private int id;
+	private int favoriteId;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -32,7 +32,7 @@ public class Favorite {
 
 	public Favorite(int id) {
 		super();
-		this.id = id;
+		this.favoriteId = id;
 	}
 
 	public Favorite(User user, Product product) {
@@ -43,17 +43,17 @@ public class Favorite {
 
 	public Favorite(int id, User user, Product product) {
 		super();
-		this.id = id;
+		this.favoriteId = id;
 		this.user = user;
 		this.product = product;
 	}
 
 	public int getId() {
-		return id;
+		return favoriteId;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.favoriteId = id;
 	}
 
 	public User getUser() {
@@ -74,7 +74,7 @@ public class Favorite {
 
 	@Override
 	public String toString() {
-		return "Favorite [id=" + id + ", user=" + user + ", product=" + product + "]";
+		return "Favorite [id=" + favoriteId + ", user=" + user + ", product=" + product + "]";
 	}
 
 }

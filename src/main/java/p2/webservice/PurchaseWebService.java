@@ -1,7 +1,7 @@
 package p2.webservice;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,13 +26,11 @@ public class PurchaseWebService {
     Purchase purchase = null;
     int purchaseId = -1;
 
-    String maybeDate = request.getParameter("date_purchased");
     String maybeUserId = request.getParameter("user_id");
     String maybeProductId = request.getParameter("product_id");
 
-    if (ValidationUtilities.checkNullOrEmpty(maybeDate) && ValidationUtilities.checkNullOrEmpty(maybeUserId)
-        && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-      Date datePurchased = new Date(Long.parseLong(maybeDate));
+    if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+      LocalDate datePurchased = LocalDate.now();
       int userId = Integer.parseInt(maybeUserId);
       int productId = Integer.parseInt(maybeProductId);
       User user = new User(userId);
@@ -64,9 +62,9 @@ public class PurchaseWebService {
     boolean success = false;
     if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
       Purchase purchase = PurchaseService.findById(Integer.parseInt(maybePurchaseId));
-      if(purchase != null) {
+      if (purchase != null) {
         if (ValidationUtilities.checkNullOrEmpty(maybeDate)) {
-          Date datePurchased = new Date(Long.parseLong(maybeDate));
+          LocalDate datePurchased = LocalDate.parse(maybeDate);
           purchase.setDatePurchased(datePurchased);
         }
         if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {

@@ -17,10 +17,9 @@ import javax.persistence.Table;
 @Table(name = "Products")
 public class Product {
 	@Id
-	@Column(name = "id")
 	@SequenceGenerator(sequenceName = "product_seq", name = "p_seq")
 	@GeneratedValue(generator = "p_seq", strategy = GenerationType.SEQUENCE)
-	private int id;
+	private int producId;
 
 	@Column(name = "productname")
 	private String productName;
@@ -44,7 +43,7 @@ public class Product {
 	private LocalDate dateListed;
 	// note I pulled java.sql.Date for conversion purposes
 
-	@Column(name = "status", columnDefinition = "varchar default 'Standard'")
+	@Column(name = "status")
 	private String status;
 
 	@Column(name = "interest_threshold")
@@ -58,7 +57,7 @@ public class Product {
 	}
 	
 	public Product(int id) {
-		this.id = id;
+		this.producId = id;
 	}
 
 	public Product(String productName, double price, double salePrice, int onSale, int generatedInterest,
@@ -76,7 +75,7 @@ public class Product {
 
 	public Product(int id, String productName, double price, double salePrice, int onSale, int generatedInterest,
 			LocalDate dateListed, String status, int interestThreshold, User seller) {
-		this.id = id;
+		this.producId = id;
 		this.productName = productName;
 		this.price = price;
 		this.salePrice = salePrice;
@@ -89,11 +88,11 @@ public class Product {
 	}
 
 	public int getId() {
-		return this.id;
+		return this.producId;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.producId = id;
 	}
 
 	public String getProductName() {
@@ -169,7 +168,7 @@ public class Product {
 	}
 
 	public Product id(int id) {
-		this.id = id;
+		this.producId = id;
 		return this;
 	}
 
@@ -226,7 +225,7 @@ public class Product {
 			return false;
 		}
 		Product product = (Product) o;
-		return id == product.id && Objects.equals(productName, product.productName) && price == product.price
+		return producId == product.producId && Objects.equals(productName, product.productName) && price == product.price
 				&& salePrice == product.salePrice && onSale == product.onSale && generatedInterest == product.generatedInterest
 				&& Objects.equals(dateListed, product.dateListed) && Objects.equals(status, product.status)
 				&& interestThreshold == product.interestThreshold && Objects.equals(seller, product.seller);
@@ -234,7 +233,7 @@ public class Product {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, productName, price, salePrice, onSale, generatedInterest, dateListed, status,
+		return Objects.hash(producId, productName, price, salePrice, onSale, generatedInterest, dateListed, status,
 				interestThreshold, seller);
 	}
 
