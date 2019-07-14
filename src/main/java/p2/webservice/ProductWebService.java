@@ -13,10 +13,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
 
+import p2.model.Interest;
 import p2.model.Product;
+import p2.model.Purchase;
+import p2.model.Taxonomy;
 import p2.model.User;
 import p2.service.InterestService;
 import p2.service.ProductService;
+import p2.service.PurchaseService;
 import p2.util.Glogger;
 import p2.util.ThresholdStatus;
 import p2.util.ValidationUtilities;
@@ -30,18 +34,23 @@ public class ProductWebService {
 		String maybePrice = request.getParameter("price");
 		String maybeSalePrice = request.getParameter("salePrice");
 		String maybeOnSale = request.getParameter("onSale");
-
+		String maybeDescription = request.getParameter("description");
 		String maybeStatus = request.getParameter("status");
 		String maybeInterestThreshold = request.getParameter("interestThreshold");
+		String maybeTaxonomy = request.getParameter("taxonomyId");
+		String maybeImageUrl = request.getParameter("imageUrl");
 		int productId = -1;
 
 		if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeName)
-				&& ValidationUtilities.checkNullOrEmpty(maybePrice)) {
+				&& ValidationUtilities.checkNullOrEmpty(maybePrice) && ValidationUtilities.checkNullOrEmpty(maybeTaxonomy)
+				&& ValidationUtilities.checkNullOrEmpty(maybeImageUrl)) {
 			int uId = Integer.parseInt(maybeUserId);
 			double price = Double.parseDouble(maybePrice);
 			User seller = new User(uId);
+			int tId = Integer.parseInt(maybeTaxonomy);
 
-			Product product = new Product(maybeName, price, price, 0, 0, null, maybeStatus, 0, seller);
+			Product product = new Product(maybeName, maybeDescription, price, price, 0, 0, maybeImageUrl, null, maybeStatus,
+					0, new Taxonomy(tId), seller);
 
 			if (ValidationUtilities.checkNullOrEmpty(maybeSalePrice) && ValidationUtilities.checkNullOrEmpty(maybeOnSale)) {
 				product.setSalePrice(Double.parseDouble(maybeSalePrice));
@@ -60,11 +69,14 @@ public class ProductWebService {
 			productId = ProductService.insert(product);
 		}
 		try {
-			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
 			if (productId >= 0) {
-				response.getWriter().append("Product Added").close();
+				ObjectMapper om = new ObjectMapper();
+				String json = om.writeValueAsString(productId);
+				response.setContentType("application/json");
+				response.getWriter().append(json).close();
 			} else {
+				response.setContentType("text/html");
 				response.getWriter().append("Product Add Failed").close();
 			}
 		} catch (IOException e) {
@@ -300,6 +312,11 @@ public class ProductWebService {
 			if (quantityOfInterests >= product.getInterestThreshold()) {
 				product.setStatus(ThresholdStatus.ON_SALE.value);
 				ProductService.update(product);
+				List<Interest> interests = InterestService.findByProductId(product.getId());
+				for (Interest interest : interests) {
+					Purchase purchase = new Purchase(LocalDate.now(), interest.getUser(), product);
+					PurchaseService.insert(purchase);
+				}
 				withinThresholdProducts.remove(i);
 			}
 		}
@@ -344,4 +361,123 @@ public class ProductWebService {
 			e.printStackTrace();
 		}
 	}
+
+	public static void findAllProductsByType(HttpServletRequest request, HttpServletResponse response) {
+
+		String maybeType = request.getParameter("type");
+		List<Product> products = null;
+
+		if (ValidationUtilities.checkNullOrEmpty(maybeType)) {
+			products = ProductService.findAllProductsByType(maybeType);
+		}
+
+		try {
+			response.setCharacterEncoding("UTF-8");
+			if (products != null) {
+				ObjectMapper om = new ObjectMapper();
+				String json = om.writeValueAsString(products);
+				response.setContentType("application/json");
+				response.getWriter().append(json).close();
+			} else {
+				response.setContentType("text/html");
+				response.getWriter().append("Products Not Found").close();
+			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public static void findAllProductsBySubType(HttpServletRequest request, HttpServletResponse response) {
+
+		String maybeSubType = request.getParameter("subType");
+		List<Product> products = null;
+
+		if (ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
+			products = ProductService.findAllProductsBySubType(maybeSubType);
+		}
+
+		try {
+			response.setCharacterEncoding("UTF-8");
+			if (products != null) {
+				ObjectMapper om = new ObjectMapper();
+				String json = om.writeValueAsString(products);
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().append(json).close();
+			} else {
+				response.setContentType("text/html");
+				response.getWriter().append("Products Not Found").close();
+			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public static void findAllProductsByTaxonomyName(HttpServletRequest request, HttpServletResponse response) {
+
+		String maybeName = request.getParameter("name");
+		List<Product> products = null;
+
+		if (ValidationUtilities.checkNullOrEmpty(maybeName)) {
+			products = ProductService.findAllProductsByTaxonomyName(maybeName);
+		}
+
+		try {
+			response.setCharacterEncoding("UTF-8");
+			if (products != null) {
+				ObjectMapper om = new ObjectMapper();
+				String json = om.writeValueAsString(products);
+				response.setContentType("application/json");
+				response.getWriter().append(json).close();
+			} else {
+				response.setContentType("text/html");
+				response.getWriter().append("Products Not Found").close();
+			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public static void findAllProductsByTaxonomy(HttpServletRequest request, HttpServletResponse response) {
+
+		String maybeName = request.getParameter("name");
+		String maybeType = request.getParameter("type");
+		String maybeSubType = request.getParameter("subType");
+
+		List<Product> products = null;
+
+		// replace the empty fields with wildcards
+		if (!ValidationUtilities.checkNullOrEmpty(maybeName)) {
+			maybeName = "%";
+		}
+
+		if (!ValidationUtilities.checkNullOrEmpty(maybeType)) {
+			maybeType = "%";
+		}
+
+		if (!ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
+			maybeSubType = "%";
+		}
+		products = ProductService.findAllProductsByTaxonomy(maybeName, maybeType, maybeSubType);
+
+		try {
+			response.setCharacterEncoding("UTF-8");
+			if (products != null) {
+				ObjectMapper om = new ObjectMapper();
+				String json = om.writeValueAsString(products);
+				response.setContentType("application/json");
+				response.getWriter().append(json).close();
+			} else {
+				response.setContentType("text/html");
+				response.getWriter().append("Products Not Found").close();
+			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
 }

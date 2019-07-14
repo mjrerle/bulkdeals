@@ -1,5 +1,6 @@
 package p2.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class Favorite {
 	@Id
 	@SequenceGenerator(sequenceName = "favorites_seq", name = "f_seq")
 	@GeneratedValue(generator = "f_seq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "favorite_id", unique = true, nullable = false)
 	private int favoriteId;
 
 	@ManyToOne

@@ -18,7 +18,6 @@ import p2.webservice.UserWebService;
 
 public class RequestHelper {
   public static Logger logger = Glogger.logger;
-  
 
   public static void Process(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -59,13 +58,13 @@ public class RequestHelper {
         ProductWebService.findAll(request, response);
         break;
       case API.products + "/by_type":
-        TaxonomyWebService.findAllProductsByType(request, response);
+        ProductWebService.findAllProductsByType(request, response);
         break;
       case API.products + "/by_sub_type":
-        TaxonomyWebService.findAllProductsBySubType(request, response);
+        ProductWebService.findAllProductsBySubType(request, response);
         break;
       case API.products + "/by_name":
-        TaxonomyWebService.findAllProductsByTaxonomyName(request, response);
+        ProductWebService.findAllProductsByTaxonomyName(request, response);
         break;
       case API.interest:
         InterestWebService.findById(request, response);
@@ -90,7 +89,7 @@ public class RequestHelper {
         break;
 
       case API.taxonomies:
-        TaxonomyWebService.findById(request, response);
+        TaxonomyWebService.findAll(request, response);
         break;
       }
       break;

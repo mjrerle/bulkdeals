@@ -20,6 +20,7 @@ public class Purchase {
   @Id
   @SequenceGenerator(sequenceName = "purchases_seq", name = "s_seq")
   @GeneratedValue(generator = "s_seq", strategy = GenerationType.SEQUENCE)
+  @Column(name = "purchase_id", unique = true, nullable = false)
   private int purchaseId;
 
   @Column(name = "date_purchased")

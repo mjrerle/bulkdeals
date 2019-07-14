@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,6 +17,7 @@ public class Taxonomy {
   @Id
   @SequenceGenerator(sequenceName = "taxonomies_seq", name = "t_seq")
   @GeneratedValue(generator = "t_seq", strategy = GenerationType.SEQUENCE)
+  @Column(name = "taxonomy_id", unique = true, nullable = false)
   private int taxonomyId;
 
   @Column(name = "name")
@@ -30,12 +29,6 @@ public class Taxonomy {
   @Column(name = "sub_type")
   private String subType;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id")
-  private Product product;
-
-
-
   public Taxonomy() {
   }
 
@@ -43,27 +36,25 @@ public class Taxonomy {
     this.taxonomyId = id;
   }
 
-  public Taxonomy(String name, String type, String subType, Product product) {
+  public Taxonomy(String name, String type, String subType) {
     this.name = name;
     this.type = type;
     this.subType = subType;
-    this.product = product;
   }
 
-  public Taxonomy(int id, String name, String type, String subType, Product product) {
-    this.taxonomyId = id;
+  public Taxonomy(int taxonomyId, String name, String type, String subType) {
+    this.taxonomyId = taxonomyId;
     this.name = name;
     this.type = type;
     this.subType = subType;
-    this.product = product;
   }
 
   public int getId() {
     return this.taxonomyId;
   }
 
-  public void setId(int id) {
-    this.taxonomyId = id;
+  public void setId(int taxonomyId) {
+    this.taxonomyId = taxonomyId;
   }
 
   public String getName() {
@@ -90,16 +81,8 @@ public class Taxonomy {
     this.subType = subType;
   }
 
-  public Product getProduct() {
-    return this.product;
-  }
-
-  public void setProduct(Product product) {
-    this.product = product;
-  }
-
-  public Taxonomy id(int id) {
-    this.taxonomyId = id;
+  public Taxonomy taxonomyId(int taxonomyId) {
+    this.taxonomyId = taxonomyId;
     return this;
   }
 
@@ -118,37 +101,27 @@ public class Taxonomy {
     return this;
   }
 
-  public Taxonomy product(Product product) {
-    this.product = product;
-    return this;
-  }
-
   @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Taxonomy)) {
-            return false;
-        }
-        Taxonomy taxonomy = (Taxonomy) o;
-        return taxonomyId == taxonomy.taxonomyId && Objects.equals(name, taxonomy.name) && Objects.equals(type, taxonomy.type) && Objects.equals(subType, taxonomy.subType) && Objects.equals(product, taxonomy.product);
+  public boolean equals(Object o) {
+    if (o == this)
+      return true;
+    if (!(o instanceof Taxonomy)) {
+      return false;
+    }
+    Taxonomy taxonomy = (Taxonomy) o;
+    return taxonomyId == taxonomy.taxonomyId && Objects.equals(name, taxonomy.name)
+        && Objects.equals(type, taxonomy.type) && Objects.equals(subType, taxonomy.subType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(taxonomyId, name, type, subType, product);
+    return Objects.hash(taxonomyId, name, type, subType);
   }
 
   @Override
   public String toString() {
-    return "{" +
-      " id='" + getId() + "'" +
-      ", name='" + getName() + "'" +
-      ", type='" + getType() + "'" +
-      ", subType='" + getSubType() + "'" +
-      ", product='" + getProduct() + "'" +
-      "}";
+    return "{" + " taxonomyId='" + getId() + "'" + ", name='" + getName() + "'" + ", type='" + getType() + "'"
+        + ", subType='" + getSubType() + "'" + "}";
   }
-  
 
 }

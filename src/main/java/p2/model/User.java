@@ -15,20 +15,21 @@ public class User {
 	@Id
 	@SequenceGenerator(sequenceName = "user_seq", name = "u_seq")
 	@GeneratedValue(generator = "u_seq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "user_id", unique = true, nullable = false)
 	private int userId;
-	
+
 	@Column(nullable = false)
 	private String firstName;
-	
+
 	@Column(nullable = false)
 	private String lastName;
-	
+
 	@Column(unique = true)
 	private String email;
-	
+
 	@Column(nullable = false)
 	private String password;
-	
+
 	@Column(nullable = false)
 	private String role;
 	private String address;
@@ -57,7 +58,7 @@ public class User {
 		this.creditCardNumber = creditCardNumber;
 		this.cvv = cvv;
 	}
-	
+
 	public User(String firstName, String lastName, String email, String password, String role, String address,
 			int creditCardNumber, int cvv) {
 		super();
