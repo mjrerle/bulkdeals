@@ -32,4 +32,20 @@ public class ProductService {
 		return productDAO.deleteById(id);
 	}
 
+	public static List<Product> findAllProductsByTaxonomy(String name, String type, String subType) {
+		return productDAO.findAllProductsByTaxonomy(name, type, subType);
+	}
+
+	public static List<Product> findAllProductsByType(String type) {
+		return productDAO.findAllProductsByType(type);
+	}
+
+	public static List<Product> findAllProductsBySubType(String subType) {
+		return productDAO.findAllProductsBySubType(subType);
+	}
+
+	public static List<Product> findAllProductsByTaxonomyName(String name) {
+		return productDAO.findAllProductsByTaxonomyName(name);
+	}
+
 }

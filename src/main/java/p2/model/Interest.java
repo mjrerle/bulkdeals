@@ -3,6 +3,7 @@ package p2.model;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class Interest {
 	@Id
 	@SequenceGenerator(sequenceName = "interests_seq", name = "i_seq")
 	@GeneratedValue(generator = "i_seq", strategy = GenerationType.SEQUENCE)
+	@Column(name = "interest_id", unique = true, nullable = false)
 	private int interestId;
 
 	@ManyToOne(cascade = CascadeType.REMOVE)
@@ -113,8 +115,8 @@ public class Interest {
 			return false;
 		}
 		Interest interest = (Interest) o;
-		return interestId == interest.interestId && Objects.equals(user, interest.user) && Objects.equals(product, interest.product)
-				&& quantity == interest.quantity;
+		return interestId == interest.interestId && Objects.equals(user, interest.user)
+				&& Objects.equals(product, interest.product) && quantity == interest.quantity;
 	}
 
 	@Override

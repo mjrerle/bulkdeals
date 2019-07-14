@@ -18,10 +18,24 @@ import p2.webservice.UserWebService;
 
 public class RequestHelper {
   public static Logger logger = Glogger.logger;
-  
+
+  private static void addCorsHeader(HttpServletResponse resp) {
+    // log.trace("adding headers");
+
+    // this will have to change sometime in the future to allow for sending cookies
+    // if I don't care about getting my cookie, this will work
+    resp.addHeader("Access-Control-Allow-Origin", "*");
+    resp.addHeader("Vary", "Origin");
+    resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+    resp.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
+    resp.addHeader("Access-Control-Allow-Credentials", "true");
+    resp.addHeader("Access-Control-Max-Age", "1728000");
+    resp.addHeader("Produces", "application/json");
+  }
 
   public static void Process(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    addCorsHeader(response);
     String uri = request.getRequestURI();
     logger.info("METHOD: " + request.getMethod() + " URI: " + uri + " QUERY: " + request.getQueryString());
     String meth = request.getMethod();
@@ -59,13 +73,13 @@ public class RequestHelper {
         ProductWebService.findAll(request, response);
         break;
       case API.products + "/by_type":
-        TaxonomyWebService.findAllProductsByType(request, response);
+        ProductWebService.findAllProductsByType(request, response);
         break;
       case API.products + "/by_sub_type":
-        TaxonomyWebService.findAllProductsBySubType(request, response);
+        ProductWebService.findAllProductsBySubType(request, response);
         break;
       case API.products + "/by_name":
-        TaxonomyWebService.findAllProductsByTaxonomyName(request, response);
+        ProductWebService.findAllProductsByTaxonomyName(request, response);
         break;
       case API.interest:
         InterestWebService.findById(request, response);
@@ -90,7 +104,7 @@ public class RequestHelper {
         break;
 
       case API.taxonomies:
-        TaxonomyWebService.findById(request, response);
+        TaxonomyWebService.findAll(request, response);
         break;
       }
       break;

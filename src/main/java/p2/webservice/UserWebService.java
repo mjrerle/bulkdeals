@@ -34,7 +34,10 @@ public class UserWebService {
 			if (user != null) {
 				SessionVariableManager.addLoggedInUser(request, user);
 				logger.info("User " + user.getEmail() + " logged into the system");
-				response.getWriter().append("Successfully Logged in").close();
+				ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(user);
+        response.setContentType("application/json");
+        response.getWriter().append(json).close();
 			} else {
 				response.getWriter().append("Failed to log in due to incorrect email/password").close();
 			}

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
 
-import p2.model.Product;
 import p2.model.Taxonomy;
 import p2.service.TaxonomyService;
 import p2.util.Glogger;
@@ -27,13 +26,11 @@ public class TaxonomyWebService {
     String maybeName = request.getParameter("name");
     String maybeType = request.getParameter("type");
     String maybeSubType = request.getParameter("subType");
-    String maybeProductId = request.getParameter("productId");
 
     if (ValidationUtilities.checkNullOrEmpty(maybeName) && ValidationUtilities.checkNullOrEmpty(maybeType)
-        && ValidationUtilities.checkNullOrEmpty(maybeSubType) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+        && ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
 
-      int productId = Integer.parseInt(maybeProductId);
-      taxonomy = new Taxonomy(maybeName, maybeType, maybeSubType, new Product(productId));
+      taxonomy = new Taxonomy(maybeName, maybeType, maybeSubType);
       taxonomyId = TaxonomyService.insert(taxonomy);
 
     }
@@ -57,7 +54,6 @@ public class TaxonomyWebService {
     String maybeName = request.getParameter("name");
     String maybeType = request.getParameter("type");
     String maybeSubType = request.getParameter("subType");
-    String maybeProductId = request.getParameter("productId");
     String maybeTaxonomyId = request.getParameter("taxonomyId");
 
     boolean success = false;
@@ -66,11 +62,6 @@ public class TaxonomyWebService {
       if (taxonomy != null) {
         if (ValidationUtilities.checkNullOrEmpty(maybeName)) {
           taxonomy.setName(maybeName);
-        }
-        if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-          int productId = Integer.parseInt(maybeProductId);
-          Product product = new Product(productId);
-          taxonomy.setProduct(product);
         }
         if (ValidationUtilities.checkNullOrEmpty(maybeType)) {
           taxonomy.setType(maybeType);
@@ -160,83 +151,5 @@ public class TaxonomyWebService {
       e.printStackTrace();
     }
   }
-
-  public static void findAllProductsByType(HttpServletRequest request, HttpServletResponse response) {
-
-    String maybeType = request.getParameter("type");
-    List<Product> products = null;
-
-    if (ValidationUtilities.checkNullOrEmpty(maybeType)) {
-      products = TaxonomyService.findAllProductsByType(maybeType);
-    }
-
-    try {
-      response.setCharacterEncoding("UTF-8");
-      if (products != null) {
-        ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(products);
-        response.setContentType("application/json");
-        response.getWriter().append(json).close();
-      } else {
-        response.setContentType("text/html");
-        response.getWriter().append("Products Not Found").close();
-      }
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-      e.printStackTrace();
-    }
-  }
-
-  public static void findAllProductsBySubType(HttpServletRequest request, HttpServletResponse response) {
-
-    String maybeSubType = request.getParameter("subType");
-    List<Product> products = null;
-
-    if (ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
-      products = TaxonomyService.findAllProductsBySubType(maybeSubType);
-    }
-
-    try {
-      response.setCharacterEncoding("UTF-8");
-      if (products != null) {
-        ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(products);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().append(json).close();
-      } else {
-        response.setContentType("text/html");
-        response.getWriter().append("Products Not Found").close();
-      }
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-      e.printStackTrace();
-    }
-  }
-
-  public static void findAllProductsByTaxonomyName(HttpServletRequest request, HttpServletResponse response) {
-
-    String maybeName = request.getParameter("name");
-    List<Product> products = null;
-
-    if (ValidationUtilities.checkNullOrEmpty(maybeName)) {
-      products = TaxonomyService.findAllProductsByTaxonomyName(maybeName);
-    }
-
-    try {
-      response.setCharacterEncoding("UTF-8");
-      if (products != null) {
-        ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(products);
-        response.setContentType("application/json");
-        response.getWriter().append(json).close();
-      } else {
-        response.setContentType("text/html");
-        response.getWriter().append("Products Not Found").close();
-      }
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-      e.printStackTrace();
-    }
-  }
+  
 }

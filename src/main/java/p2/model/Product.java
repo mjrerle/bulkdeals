@@ -19,10 +19,14 @@ public class Product {
 	@Id
 	@SequenceGenerator(sequenceName = "product_seq", name = "p_seq")
 	@GeneratedValue(generator = "p_seq", strategy = GenerationType.SEQUENCE)
-	private int producId;
+	@Column(name = "product_id", unique = true, nullable = false)
+	private int productId;
 
-	@Column(name = "productname")
+	@Column(name = "product_name")
 	private String productName;
+
+	@Column(name = "description")
+	private String description;
 
 	@Column(name = "price")
 	private double price;
@@ -39,6 +43,9 @@ public class Product {
 	// I figure well set an integer limit that correlates to user quantity and set
 	// an if threshold.
 
+	@Column(name = "image_url")
+	private String imageUrl;
+
 	@Column(name = "date_listed_for_interest")
 	private LocalDate dateListed;
 	// note I pulled java.sql.Date for conversion purposes
@@ -50,49 +57,61 @@ public class Product {
 	private int interestThreshold;
 
 	@ManyToOne
+	@JoinColumn(name = "taxonomy_id")
+	private Taxonomy taxonomy;
+
+	@ManyToOne
 	@JoinColumn(name = "seller")
 	private User seller;
 
 	public Product() {
 	}
-	
+
 	public Product(int id) {
-		this.producId = id;
+		this.productId = id;
 	}
 
-	public Product(String productName, double price, double salePrice, int onSale, int generatedInterest,
-			LocalDate dateListed, String status, int interestThreshold, User seller) {
+	public Product(String productName, String description, double price, double salePrice, int onSale,
+			int generatedInterest, String imageUrl, LocalDate dateListed, String status, int interestThreshold,
+			Taxonomy taxonomy, User seller) {
 		this.productName = productName;
+		this.description = description;
 		this.price = price;
 		this.salePrice = salePrice;
 		this.onSale = onSale;
 		this.generatedInterest = generatedInterest;
+		this.imageUrl = imageUrl;
 		this.dateListed = dateListed;
 		this.status = status;
 		this.interestThreshold = interestThreshold;
+		this.taxonomy = taxonomy;
 		this.seller = seller;
 	}
 
-	public Product(int id, String productName, double price, double salePrice, int onSale, int generatedInterest,
-			LocalDate dateListed, String status, int interestThreshold, User seller) {
-		this.producId = id;
+	public Product(int productId, String productName, String description, double price, double salePrice, int onSale,
+			int generatedInterest, String imageUrl, LocalDate dateListed, String status, int interestThreshold,
+			Taxonomy taxonomy, User seller) {
+		this.productId = productId;
 		this.productName = productName;
+		this.description = description;
 		this.price = price;
 		this.salePrice = salePrice;
 		this.onSale = onSale;
 		this.generatedInterest = generatedInterest;
+		this.imageUrl = imageUrl;
 		this.dateListed = dateListed;
 		this.status = status;
 		this.interestThreshold = interestThreshold;
+		this.taxonomy = taxonomy;
 		this.seller = seller;
 	}
 
 	public int getId() {
-		return this.producId;
+		return this.productId;
 	}
 
-	public void setId(int id) {
-		this.producId = id;
+	public void setId(int productId) {
+		this.productId = productId;
 	}
 
 	public String getProductName() {
@@ -101,6 +120,14 @@ public class Product {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public double getPrice() {
@@ -135,6 +162,14 @@ public class Product {
 		this.generatedInterest = generatedInterest;
 	}
 
+	public String getImageUrl() {
+		return this.imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public LocalDate getDateListed() {
 		return this.dateListed;
 	}
@@ -159,6 +194,14 @@ public class Product {
 		this.interestThreshold = interestThreshold;
 	}
 
+	public Taxonomy getTaxonomy() {
+		return this.taxonomy;
+	}
+
+	public void setTaxonomy(Taxonomy taxonomy) {
+		this.taxonomy = taxonomy;
+	}
+
 	public User getSeller() {
 		return this.seller;
 	}
@@ -167,13 +210,18 @@ public class Product {
 		this.seller = seller;
 	}
 
-	public Product id(int id) {
-		this.producId = id;
+	public Product productId(int productId) {
+		this.productId = productId;
 		return this;
 	}
 
 	public Product productName(String productName) {
 		this.productName = productName;
+		return this;
+	}
+
+	public Product description(String description) {
+		this.description = description;
 		return this;
 	}
 
@@ -197,6 +245,11 @@ public class Product {
 		return this;
 	}
 
+	public Product imageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+		return this;
+	}
+
 	public Product dateListed(LocalDate dateListed) {
 		this.dateListed = dateListed;
 		return this;
@@ -209,6 +262,11 @@ public class Product {
 
 	public Product interestThreshold(int interestThreshold) {
 		this.interestThreshold = interestThreshold;
+		return this;
+	}
+
+	public Product taxonomy(Taxonomy taxonomy) {
+		this.taxonomy = taxonomy;
 		return this;
 	}
 
@@ -225,24 +283,28 @@ public class Product {
 			return false;
 		}
 		Product product = (Product) o;
-		return producId == product.producId && Objects.equals(productName, product.productName) && price == product.price
-				&& salePrice == product.salePrice && onSale == product.onSale && generatedInterest == product.generatedInterest
-				&& Objects.equals(dateListed, product.dateListed) && Objects.equals(status, product.status)
-				&& interestThreshold == product.interestThreshold && Objects.equals(seller, product.seller);
+		return productId == product.productId && Objects.equals(productName, product.productName)
+				&& Objects.equals(description, product.description) && price == product.price && salePrice == product.salePrice
+				&& onSale == product.onSale && generatedInterest == product.generatedInterest
+				&& Objects.equals(imageUrl, product.imageUrl) && Objects.equals(dateListed, product.dateListed)
+				&& Objects.equals(status, product.status) && interestThreshold == product.interestThreshold
+				&& Objects.equals(taxonomy, product.taxonomy) && Objects.equals(seller, product.seller);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(producId, productName, price, salePrice, onSale, generatedInterest, dateListed, status,
-				interestThreshold, seller);
+		return Objects.hash(productId, productName, description, price, salePrice, onSale, generatedInterest, imageUrl,
+				dateListed, status, interestThreshold, taxonomy, seller);
 	}
 
 	@Override
 	public String toString() {
-		return "{" + " id='" + getId() + "'" + ", productName='" + getProductName() + "'" + ", price='" + getPrice() + "'"
-				+ ", salePrice='" + getSalePrice() + "'" + ", onSale='" + getOnSale() + "'" + ", generatedInterest='"
-				+ getGeneratedInterest() + "'" + ", dateListed='" + getDateListed() + "'" + ", status='" + getStatus() + "'"
-				+ ", interestThreshold='" + getInterestThreshold() + "'" + ", seller='" + getSeller() + "'" + "}";
+		return "{" + " productId='" + getId() + "'" + ", productName='" + getProductName() + "'" + ", description='"
+				+ getDescription() + "'" + ", price='" + getPrice() + "'" + ", salePrice='" + getSalePrice() + "'"
+				+ ", onSale='" + getOnSale() + "'" + ", generatedInterest='" + getGeneratedInterest() + "'" + ", imageUrl='"
+				+ getImageUrl() + "'" + ", dateListed='" + getDateListed() + "'" + ", status='" + getStatus() + "'"
+				+ ", interestThreshold='" + getInterestThreshold() + "'" + ", taxonomy='" + getTaxonomy() + "'" + ", seller='"
+				+ getSeller() + "'" + "}";
 	}
 
 }
