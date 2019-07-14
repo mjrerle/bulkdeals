@@ -1,7 +1,7 @@
 package p2.serf;
 
 public final class API {
-  public static final String baseURI = "/project2";
+  public static final String baseURI = "/project2-backend";
   public static final String base = baseURI + "/api";
 
   public static final String user = base + "/user";
