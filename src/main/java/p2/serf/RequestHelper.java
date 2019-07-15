@@ -19,23 +19,8 @@ import p2.webservice.UserWebService;
 public class RequestHelper {
   public static Logger logger = Glogger.logger;
 
-  private static void addCorsHeader(HttpServletResponse resp) {
-    // log.trace("adding headers");
-
-    // this will have to change sometime in the future to allow for sending cookies
-    // if I don't care about getting my cookie, this will work
-    resp.addHeader("Access-Control-Allow-Origin", "*");
-    resp.addHeader("Vary", "Origin");
-    resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-    resp.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
-    resp.addHeader("Access-Control-Allow-Credentials", "true");
-    resp.addHeader("Access-Control-Max-Age", "1728000");
-    resp.addHeader("Produces", "application/json");
-  }
-
   public static void Process(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    addCorsHeader(response);
     String uri = request.getRequestURI();
     logger.info("METHOD: " + request.getMethod() + " URI: " + uri + " QUERY: " + request.getQueryString());
     String meth = request.getMethod();
@@ -46,6 +31,12 @@ public class RequestHelper {
       switch (uri) {
       case API.user + "/getLoggedInUser":
         UserWebService.getLoggedInUser(request, response);
+        break;
+      case API.user:
+        UserWebService.findById(request, response);
+        break;
+      case API.users:
+        UserWebService.findAll(request, response);
         break;
       case API.favorite:
         FavoriteWebService.findById(request, response);
