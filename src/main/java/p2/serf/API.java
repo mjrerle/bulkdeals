@@ -5,6 +5,8 @@ public final class API {
   public static final String base = baseURI + "/api";
 
   public static final String user = base + "/user";
+  public static final String users = user + "s";
+
 
   public static final String favorite = base + "/favorite";
   public static final String favorites = favorite + "s";

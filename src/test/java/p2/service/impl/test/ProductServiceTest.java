@@ -110,6 +110,7 @@ public class ProductServiceTest {
 	public void productsCanBeFoundByTaxName() {
 		LocalDate now1 = LocalDate.now();
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Phones"));
 		int uid1 = UserService.insert(
 				new User("vajira", "Hapu Arachchige", "sadkflj@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
@@ -129,11 +130,12 @@ public class ProductServiceTest {
 		List<Product> products = ProductService.findAllProductsByTaxonomyName("Samsung");
 		Assert.assertEquals(products.size(), 3);
 		// cleanup
-		// TaxonomyService.deleteById(tid2);
 		ProductService.deleteById(pid1);
 		ProductService.deleteById(pid2);
 		ProductService.deleteById(pid3);
 		UserService.deleteById(uid1);
+		TaxonomyService.deleteById(tid2);
+
 		TaxonomyService.deleteById(tid1);
 
 		// ProductService.deleteById(pid4);
@@ -144,6 +146,7 @@ public class ProductServiceTest {
 	public void productsCanBeFoundByType() {
 		LocalDate now1 = LocalDate.now();
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Phones"));
 		int uid1 = UserService.insert(
 				new User("vajira", "Hapu Arachchige", "dsfsd@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
@@ -168,6 +171,7 @@ public class ProductServiceTest {
 		ProductService.deleteById(pid2);
 		ProductService.deleteById(pid3);
 		UserService.deleteById(uid1);
+		TaxonomyService.deleteById(tid2);
 
 		TaxonomyService.deleteById(tid1);
 
@@ -179,6 +183,7 @@ public class ProductServiceTest {
 	public void productsCanByFoundBySubType() {
 		LocalDate now1 = LocalDate.now();
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Phones"));
 		int uid1 = UserService.insert(
 				new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
@@ -198,12 +203,53 @@ public class ProductServiceTest {
 		List<Product> products = ProductService.findAllProductsBySubType("Phones");
 		Assert.assertEquals(products.size(), 3);
 		// cleanup
-		// TaxonomyService.deleteById(tid2);
 		ProductService.deleteById(pid1);
 		ProductService.deleteById(pid2);
 		ProductService.deleteById(pid3);
 		UserService.deleteById(uid1);
 
+		TaxonomyService.deleteById(tid2);
+		TaxonomyService.deleteById(tid1);
+
+		// ProductService.deleteById(pid4);
+	}
+
+	@Test
+	public void productsCanBeFoundByAnyTaxValue() {
+		LocalDate now1 = LocalDate.now();
+		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Phones"));
+		int uid1 = UserService.insert(
+				new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
+				new Taxonomy(tid1), new User(uid1));
+		// int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics",
+		// "Phones"));
+
+		// add three products with the same tax
+		int pid1 = ProductService.insert(prod);
+		int pid2 = ProductService.insert(prod);
+		int pid3 = ProductService.insert(prod);
+		// product.setTaxonomy(new Taxonomy(tid2));
+
+		// add one product with a different tax
+		// int pid4 = ProductService.insert(product);
+
+		List<Product> products = ProductService.findAllProductsByTaxonomy("Samsung", "Electronics", "Phones");
+		Assert.assertEquals(products.size(), 3);
+
+		products = ProductService.findAllProductsByTaxonomy("Apple", "Electronics", "Phones");
+		Assert.assertEquals(products.size(), 0);
+
+		// products = ProductService.findAllProductsByTaxonomy("%", "%", "%");
+		// Assert.assertEquals(products.size(), 3);
+		// cleanup
+		ProductService.deleteById(pid1);
+		ProductService.deleteById(pid2);
+		ProductService.deleteById(pid3);
+		UserService.deleteById(uid1);
+
+		TaxonomyService.deleteById(tid2);
 		TaxonomyService.deleteById(tid1);
 
 		// ProductService.deleteById(pid4);

@@ -1,6 +1,7 @@
 package p2.webservice;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,45 @@ public class UserWebService {
 		}
 	}
 
+	public static void findById(HttpServletRequest request, HttpServletResponse response) {
+
+    int userId = -1;
+    String maybeUserId = request.getParameter("userId");
+    User user = null;
+
+    if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
+      userId = Integer.parseInt(maybeUserId);
+      user = UserService.findById(userId);
+    }
+
+    try {
+      ObjectMapper om = new ObjectMapper();
+      String json = om.writeValueAsString(user);
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+      response.getWriter().append(json).close();
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+      e.printStackTrace();
+    }
+	}
+	
+	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
+
+    List<User> users = UserService.findAll();
+
+    try {
+      ObjectMapper om = new ObjectMapper();
+      String json = om.writeValueAsString(users);
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+      response.getWriter().append(json).close();
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+      e.printStackTrace();
+    }
+  }
+
 	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
 
 		ObjectMapper om = new ObjectMapper();
@@ -61,6 +101,8 @@ public class UserWebService {
 			e.printStackTrace();
 		}
 	}
+
+
 
 	public static void logout(HttpServletRequest request, HttpServletResponse response) {
 		try {

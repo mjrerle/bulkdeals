@@ -26,7 +26,7 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
 
     try {
       Query query = session
-          .createQuery("FROM Product WHERE taxonomy = (SELECT taxonomyId FROM Taxonomy WHERE type = :type)");
+          .createQuery("FROM Product p, Taxonomy t where p.taxonomy = t.taxonomyId and t.type = :type");
       query.setParameter("type", type);
       list = query.list();
     } catch (HibernateException e) {
@@ -45,7 +45,8 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
 
     try {
       Query query = session
-          .createQuery("FROM Product WHERE taxonomy = (SELECT taxonomyId FROM Taxonomy WHERE subType = :subType)");
+          .createQuery("FROM Product p, Taxonomy t where p.taxonomy = t.taxonomyId and t.subType = :subType");
+      // FROM Product p Where p.taxonomy
       query.setParameter("subType", subType);
       list = query.list();
     } catch (HibernateException e) {
@@ -64,7 +65,7 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
 
     try {
       Query query = session
-          .createQuery("FROM Product WHERE taxonomy = (SELECT taxonomyId FROM Taxonomy WHERE name = :name)");
+          .createQuery("FROM Product p, Taxonomy t where p.taxonomy = t.taxonomyId and t.name = :name");
 
       query.setParameter("name", name);
       list = query.list();
@@ -83,17 +84,14 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
     List<Product> list = null;
 
     try {
-      Criteria crit = session.createCriteria(Product.class);
-      Criterion nameCrit = Restrictions.like("name", name);
-      Criterion typeCrit = Restrictions.like("type", type);
-      Criterion subTypeCrit = Restrictions.like("sub_type", subType);
-      LogicalExpression and = Restrictions.and(typeCrit, nameCrit);
-      crit.add(and);
-      and = Restrictions.and(typeCrit, subTypeCrit);
-      crit.add(and);
-      and = Restrictions.and(nameCrit, subTypeCrit);
-      crit.add(and);
-      list = crit.list();
+      Query query = session
+          .createQuery("FROM Product p, Taxonomy t where p.taxonomy = t.taxonomyId and t.name = :name and t.type = :type and t.subType = :subType");
+
+      query.setParameter("name", name);
+      query.setParameter("type", type);
+      query.setParameter("subType", subType);
+
+      list = query.list();
     } catch (HibernateException e) {
       logger.warn(e.getMessage());
       e.printStackTrace();
