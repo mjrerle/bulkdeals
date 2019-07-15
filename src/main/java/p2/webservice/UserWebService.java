@@ -136,6 +136,7 @@ public class UserWebService {
 			int cvv = Integer.parseInt(maybeCvv);
 			user = new User(maybeFirstName, maybeLastName, maybeEmail, maybePassword, maybeRole, maybeAddress,
 					creditCardNumber, cvv);
+			logger.info(user);
 			userId = UserService.insert(user);
 		}
 		try {

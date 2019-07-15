@@ -22,7 +22,7 @@ public class RequestHelper {
   public static void Process(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String uri = request.getRequestURI();
-    logger.info("METHOD: " + request.getMethod() + " URI: " + uri + " QUERY: " + request.getQueryString());
+    logger.info("METHOD: " + request.getMethod() + " URI: " + uri);
     String meth = request.getMethod();
     // switch on the method first, then look at the uri
     switch (meth) {
