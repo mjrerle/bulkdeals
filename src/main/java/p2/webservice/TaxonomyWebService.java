@@ -31,7 +31,9 @@ public class TaxonomyWebService {
         && ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
 
       taxonomy = new Taxonomy(maybeName, maybeType, maybeSubType);
-      taxonomyId = TaxonomyService.insert(taxonomy);
+      if(TaxonomyService.findByTaxonomy(taxonomy) == null) {
+        taxonomyId = TaxonomyService.insert(taxonomy);
+      }
 
     }
     try {
