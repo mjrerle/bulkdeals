@@ -3,13 +3,9 @@ package p2.dao.impl;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.LogicalExpression;
-import org.hibernate.criterion.Restrictions;
 
 import p2.dao.IProductDAO;
 import p2.model.Product;
@@ -85,7 +81,7 @@ public class ProductDAO extends GenericDAO<Product> implements IProductDAO {
 
     try {
       Query query = session
-          .createQuery("FROM Product p, Taxonomy t where p.taxonomy = t.taxonomyId and t.name = :name and t.type = :type and t.subType = :subType");
+          .createQuery("FROM Product p, Taxonomy t where p.taxonomy = t.taxonomyId and t.name like :name and t.type like :type and t.subType like :subType");
 
       query.setParameter("name", name);
       query.setParameter("type", type);
