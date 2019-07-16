@@ -39,8 +39,6 @@ public class UserWebService {
         String json = om.writeValueAsString(user);
         response.setContentType("application/json");
         response.getWriter().append(json).close();
-			} else {
-				response.getWriter().append("Failed to log in due to incorrect email/password").close();
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
