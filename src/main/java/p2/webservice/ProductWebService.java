@@ -30,14 +30,14 @@ public class ProductWebService {
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		String maybeUserId = request.getParameter("userId");
-		String maybeName = request.getParameter("name");
+		String maybeName = request.getParameter("productName");
 		String maybePrice = request.getParameter("price");
 		String maybeSalePrice = request.getParameter("salePrice");
 		String maybeOnSale = request.getParameter("onSale");
 		String maybeDescription = request.getParameter("description");
 		String maybeStatus = request.getParameter("status");
 		String maybeInterestThreshold = request.getParameter("interestThreshold");
-		String maybeTaxonomy = request.getParameter("taxonomyId");
+		String maybeTaxonomy = request.getParameter("taxonomy");
 		String maybeImageUrl = request.getParameter("imageUrl");
 		int productId = -1;
 
@@ -86,7 +86,7 @@ public class ProductWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeName = request.getParameter("name");
+		String maybeName = request.getParameter("productName");
 		String maybePrice = request.getParameter("price");
 		String maybeSalePrice = request.getParameter("salePrice");
 		String maybeOnSale = request.getParameter("onSale");
