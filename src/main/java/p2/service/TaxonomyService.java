@@ -29,4 +29,9 @@ public class TaxonomyService {
     return taxonomyDAO.deleteById(id);
   }
 
+  public static List<Taxonomy> findByTaxonomy(Taxonomy taxonomy) {
+    return taxonomyDAO.findByTaxonomy(taxonomy);
+  }
+
+
 }

@@ -33,6 +33,7 @@ public class UserWebService {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
 			if (user != null) {
+				user.setPassword(null);
 				SessionVariableManager.addLoggedInUser(request, user);
 				logger.info("User " + user.getEmail() + " logged into the system");
 				ObjectMapper om = new ObjectMapper();

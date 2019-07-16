@@ -1,5 +1,9 @@
 package p2.dao;
 
-public interface ITaxonomyDAO {
+import java.util.List;
 
+import p2.model.Taxonomy;
+
+public interface ITaxonomyDAO {
+  public List<Taxonomy> findByTaxonomy(Taxonomy taxonomy);
 }
