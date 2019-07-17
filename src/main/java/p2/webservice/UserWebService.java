@@ -23,20 +23,21 @@ public class UserWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void login(HttpServletRequest request, HttpServletResponse response) {
+
 		ObjectMapper mapper = new ObjectMapper();
-    User user = null;
-    try {
-      user = mapper.readValue(request.getInputStream(), User.class);
-    } catch (JsonParseException e1) {
-      e1.printStackTrace();
-    } catch (JsonMappingException e1) {
-      e1.printStackTrace();
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    }
-    if (user != null) {
-      user = UserService.findByEmailAndPassword(user.getEmail(), user.getPassword());
-    }
+		User user = null;
+		try {
+			user = mapper.readValue(request.getInputStream(), User.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		if (user != null) {
+			user = UserService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+		}
 
 		try {
 			response.setContentType("text/html");
@@ -46,9 +47,9 @@ public class UserWebService {
 				SessionVariableManager.addLoggedInUser(request, user);
 				logger.info("User " + user.getEmail() + " logged into the system");
 				ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(user);
-        response.setContentType("application/json");
-        response.getWriter().append(json).close();
+				String json = om.writeValueAsString(user);
+				response.setContentType("application/json");
+				response.getWriter().append(json).close();
 			} else {
 				response.getWriter().append("Failed to log in due to incorrect email/password").close();
 			}
@@ -60,42 +61,42 @@ public class UserWebService {
 
 	public static void findById(HttpServletRequest request, HttpServletResponse response) {
 
-    int userId = -1;
-    String maybeUserId = request.getParameter("userId");
-    User user = null;
+		int userId = -1;
+		String maybeUserId = request.getParameter("userId");
+		User user = null;
 
-    if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
-      userId = Integer.parseInt(maybeUserId);
-      user = UserService.findById(userId);
-    }
+		if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
+			userId = Integer.parseInt(maybeUserId);
+			user = UserService.findById(userId);
+		}
 
-    try {
-      ObjectMapper om = new ObjectMapper();
-      String json = om.writeValueAsString(user);
-      response.setContentType("application/json");
-      response.setCharacterEncoding("UTF-8");
-      response.getWriter().append(json).close();
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-      e.printStackTrace();
-    }
+		try {
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(user);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().append(json).close();
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
 	}
-	
+
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
-    List<User> users = UserService.findAll();
+		List<User> users = UserService.findAll();
 
-    try {
-      ObjectMapper om = new ObjectMapper();
-      String json = om.writeValueAsString(users);
-      response.setContentType("application/json");
-      response.setCharacterEncoding("UTF-8");
-      response.getWriter().append(json).close();
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-      e.printStackTrace();
-    }
-  }
+		try {
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(users);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().append(json).close();
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
 	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
 
@@ -112,8 +113,6 @@ public class UserWebService {
 		}
 	}
 
-
-
 	public static void logout(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			SessionVariableManager.removeLoggedInUser();
@@ -128,26 +127,26 @@ public class UserWebService {
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
-    User user = null;
-    try {
-      user = mapper.readValue(request.getInputStream(), User.class);
-    } catch (JsonParseException e1) {
-      e1.printStackTrace();
-    } catch (JsonMappingException e1) {
-      e1.printStackTrace();
-    } catch (IOException e1) {
-      e1.printStackTrace();
+		User user = null;
+		try {
+			user = mapper.readValue(request.getInputStream(), User.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-		
+
 		int userId = -1;
-    if (user != null) {
-      userId = UserService.insert(user);
-    }
+		if (user != null) {
+			userId = UserService.insert(user);
+		}
 		try {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
 			if (userId >= 0) {
-				logger.info("User " + user.getEmail() + " Inserted");				
+				logger.info("User " + user.getEmail() + " Inserted");
 				response.getWriter().append("User Inserted").close();
 			} else {
 				response.getWriter().append("User Insert Failed").close();
@@ -160,21 +159,21 @@ public class UserWebService {
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
-    User user = null;
-    try {
-      user = mapper.readValue(request.getInputStream(), User.class);
-    } catch (JsonParseException e1) {
-      e1.printStackTrace();
-    } catch (JsonMappingException e1) {
-      e1.printStackTrace();
-    } catch (IOException e1) {
-      e1.printStackTrace();
+		User user = null;
+		try {
+			user = mapper.readValue(request.getInputStream(), User.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-		
+
 		boolean success = false;
-    if (user != null) {
-      success = UserService.update(user);
-    }
+		if (user != null) {
+			success = UserService.update(user);
+		}
 
 		try {
 			response.setContentType("text/html");
