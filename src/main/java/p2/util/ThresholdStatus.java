@@ -4,9 +4,10 @@ public enum ThresholdStatus {
 	
 	WITHIN_THRESHOLD("Within Threshold"),
 	NEVER_SURPASSED_THRESHOLD("Never Surpassed Threshold"),
+	SURPASSED_THRESHOLD("Surpassed Threshold"),
 	CANCELLED_BY_SELLER("Cancelled By Seller"),
-	ON_SALE("On Sale"),
-	STANDARD("Standard");
+	ON_SALE("On Sale");
+//	STANDARD("Standard");
 	
 	public final String value;
 	

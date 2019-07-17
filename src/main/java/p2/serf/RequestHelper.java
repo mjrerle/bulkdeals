@@ -57,9 +57,10 @@ public class RequestHelper {
       case API.products + "/pretty":
         ProductWebService.findPretties(request, response);
         break;
-      case API.products + "/on_sale":
-        ProductWebService.findAllOnSale(request, response);
-        break;
+			/*
+			 * case API.products + "/on_sale": ProductWebService.findAllOnSale(request,
+			 * response); break;
+			 */
       case API.products:
         ProductWebService.findAll(request, response);
         break;
@@ -72,6 +73,12 @@ public class RequestHelper {
       case API.products + "/by_name":
         ProductWebService.findAllProductsByTaxonomyName(request, response);
         break;
+      case API.product + "/pennies/by_seller":
+          ProductWebService.findPenniesBySeller(request, response);
+          break;
+        case API.products + "/pretty/by_seller":
+          ProductWebService.findPrettiesBySeller(request, response);
+          break;
       case API.interest:
         InterestWebService.findById(request, response);
         break;
