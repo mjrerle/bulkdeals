@@ -18,7 +18,7 @@ public class UserDAO extends GenericDAO<User> implements IUserDAO {
 		User user = null;
 
 		try {
-			Query query = session.createQuery("FROM Interest WHERE email = :email AND password = :password");
+			Query query = session.createQuery("FROM User WHERE email = :email AND password = :password");
 			query.setParameter("email", email);
 			query.setParameter("password", password);
 			user = (User) query.list().get(0);
