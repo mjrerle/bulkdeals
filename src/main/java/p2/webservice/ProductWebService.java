@@ -219,7 +219,7 @@ public class ProductWebService {
 	public static void findPennies(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> allProducts = ProductService.findAll();
-		List<Product> pennisProducts = new ArrayList<>();
+		List<Product> penniesProducts = new ArrayList<>();
 		LocalDate today = LocalDate.now();
 		// Populating list of those gaining interest
 		// this can be optimized by having a sql/hql query to search by "Within
@@ -237,13 +237,13 @@ public class ProductWebService {
 						product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
 						ProductService.update(product);
 					}
-					pennisProducts.add(product);
+					penniesProducts.add(product);
 				} else {
 					if (product.getGeneratedInterest() < product.getInterestThreshold()) {
 						product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
 						ProductService.update(product);
 					} else {
-						pennisProducts.add(product);
+						penniesProducts.add(product);
 					}
 
 				}
@@ -253,7 +253,7 @@ public class ProductWebService {
 
 		try {
 			ObjectMapper om = new ObjectMapper();
-			String json = om.writeValueAsString(pennisProducts);
+			String json = om.writeValueAsString(penniesProducts);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().append(json).close();
@@ -426,14 +426,25 @@ public class ProductWebService {
 
 	public static void findPrettiesBySeller(HttpServletRequest request, HttpServletResponse response) {
 
-		int sellerID = Integer.parseInt(request.getParameter("userId"));
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Product requestproduct = null;
+		try {
+			requestproduct = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> standardProducts = new ArrayList<Product>();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if ((product.getUser().getId() == sellerID) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+			if ((product.getUser().getId() == requestproduct.getUser().getId()) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
 				standardProducts.add(product);
 			}
 		}
@@ -451,15 +462,26 @@ public class ProductWebService {
 	}
 
 	public static void findPenniesBySeller(HttpServletRequest request, HttpServletResponse response) {
-
-		int sellerID = Integer.parseInt(request.getParameter("userId"));
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Product requestproduct = null;
+		try {
+			requestproduct = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> pennisProducts = new ArrayList<>();
 		LocalDate today = LocalDate.now();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getUser().getId() == sellerID) {
+			if (product.getUser().getId() == requestproduct.getUser().getId()) {
 
 				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
 						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
