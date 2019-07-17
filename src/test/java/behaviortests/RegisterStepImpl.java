@@ -46,7 +46,7 @@ public class RegisterStepImpl {
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
 			User tested = useful.findByEmailAndPassword("test@test.test", "psssword");
-			useful.deleteById(tested.getId());
+			useful.deleteById(tested.getUserId());
 			Assert.assertEquals(driver.getTitle(), "PrettyPenny");
 			
 			

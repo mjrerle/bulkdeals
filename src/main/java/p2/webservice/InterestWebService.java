@@ -42,7 +42,7 @@ public class InterestWebService {
 			// check if interest has a product and a user
 			if (interest.getProduct() != null && interest.getUser() != null) {
 				Product product = ProductService.findById(interest.getProduct().getId());
-				User user = UserService.findById(interest.getUser().getId());
+				User user = UserService.findById(interest.getUser().getUserId());
 				// if it does, then make sure that the user and the tax exist in the db
 				if (product != null && user != null) {
 					interestId = InterestService.insert(interest);
@@ -82,7 +82,7 @@ public class InterestWebService {
 				// check if interest has a product and a user
 				if (interest.getProduct() != null && interest.getUser() != null) {
 					Product product = ProductService.findById(interest.getProduct().getId());
-					User user = UserService.findById(interest.getUser().getId());
+					User user = UserService.findById(interest.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (product != null && user != null) {
 						success = InterestService.update(interest);
@@ -199,7 +199,7 @@ public class InterestWebService {
 				// check if interest has a product and a user
 				if (interest.getProduct() != null && interest.getUser() != null) {
 					Product product = ProductService.findById(interest.getProduct().getId());
-					User user = UserService.findById(interest.getUser().getId());
+					User user = UserService.findById(interest.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (product != null && user != null) {
 						success = InterestService.deleteById(interest.getId());
