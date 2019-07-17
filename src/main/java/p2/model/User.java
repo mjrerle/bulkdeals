@@ -33,7 +33,7 @@ public class User {
 	@Column(nullable = false)
 	private String role;
 	private String address;
-	private int creditCardNumber;
+	private long creditCardNumber;
 	private int cvv;
 
 	public User() {
@@ -46,7 +46,7 @@ public class User {
 	}
 
 	public User(int id, String firstName, String lastName, String email, String password, String role, String address,
-			int creditCardNumber, int cvv) {
+			long creditCardNumber, int cvv) {
 		super();
 		this.userId = id;
 		this.firstName = firstName;
@@ -60,7 +60,7 @@ public class User {
 	}
 
 	public User(String firstName, String lastName, String email, String password, String role, String address,
-			int creditCardNumber, int cvv) {
+			long creditCardNumber, int cvv) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -128,11 +128,11 @@ public class User {
 		this.address = address;
 	}
 
-	public int getCreditCardNumber() {
+	public long getCreditCardNumber() {
 		return creditCardNumber;
 	}
 
-	public void setCreditCardNumber(int creditCardNumber) {
+	public void setCreditCardNumber(long creditCardNumber) {
 		this.creditCardNumber = creditCardNumber;
 	}
 
