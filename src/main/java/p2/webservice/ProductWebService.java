@@ -15,14 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
 
-import p2.model.Interest;
 import p2.model.Product;
-import p2.model.Purchase;
 import p2.model.Taxonomy;
 import p2.model.User;
 import p2.service.InterestService;
 import p2.service.ProductService;
-import p2.service.PurchaseService;
 import p2.service.TaxonomyService;
 import p2.service.UserService;
 import p2.util.Glogger;
@@ -31,6 +28,7 @@ import p2.util.ValidationUtilities;
 
 public class ProductWebService {
 	private static Logger logger = Glogger.logger;
+	private static final int maximumThresholdDays = 7;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -202,7 +200,7 @@ public class ProductWebService {
 		// populating list of standard priced items being sold
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getStatus().equals(ThresholdStatus.STANDARD.value)) {
+			if (product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
 				standardProducts.add(product);
 			}
 		}
@@ -219,79 +217,44 @@ public class ProductWebService {
 		}
 	}
 
-	public static void findAllOnSale(HttpServletRequest request, HttpServletResponse response) {
-
-		List<Product> allProducts = ProductService.findAll();
-		List<Product> onSaleProducts = new ArrayList<Product>();
-		// populating return list of those on sale
-		for (int i = 0; i < allProducts.size(); i++) {
-			Product product = allProducts.get(i);
-			if (product.getStatus().equals(ThresholdStatus.ON_SALE.value)) {
-				onSaleProducts.add(product);
-			}
-		}
-
-		try {
-			ObjectMapper om = new ObjectMapper();
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			String json = om.writeValueAsString(onSaleProducts);
-			response.getWriter().append(json).close();
-		} catch (IOException e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
 	public static void findPennies(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> allProducts = ProductService.findAll();
-		List<Product> withinThresholdProducts = new ArrayList<>();
+		List<Product> penniesProducts = new ArrayList<>();
 		LocalDate today = LocalDate.now();
 		// Populating list of those gaining interest
 		// this can be optimized by having a sql/hql query to search by "Within
 		// Threshold"
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)) {
-				withinThresholdProducts.add(product);
-			}
-		}
-		// removing from list if interest not gained in one week and updating back to
-		// standard
-		// this can be optimized with another custom DAO
-		for (int i = 0; i < withinThresholdProducts.size(); i++) {
-			Product product = withinThresholdProducts.get(i);
-			LocalDate dayMade = product.getDateListed();
-			long difference = ChronoUnit.DAYS.between(dayMade, today);
-			if (difference > 7) {
-				product.setStatus(ThresholdStatus.STANDARD.value);
-				product.setDateListed(null);
-				product.setInterestThreshold(0);
-				ProductService.update(product);
-				withinThresholdProducts.remove(i);
-			}
-		}
+			if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
+					|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
 
-		// removing from list if interest gained and setting on sale
-		for (int i = 0; i < withinThresholdProducts.size(); i++) {
-			Product product = withinThresholdProducts.get(i);
-			int quantityOfInterests = InterestService.getNumberOfInterestsByProductId(product.getId());
-			if (quantityOfInterests >= product.getInterestThreshold()) {
-				product.setStatus(ThresholdStatus.ON_SALE.value);
-				ProductService.update(product);
-				List<Interest> interests = InterestService.findByProductId(product.getId());
-				for (Interest interest : interests) {
-					Purchase purchase = new Purchase(LocalDate.now(), interest.getUser(), product);
-					PurchaseService.insert(purchase);
+				LocalDate dayMade = product.getDateListed();
+				long difference = ChronoUnit.DAYS.between(dayMade, today);
+
+				if (difference <= maximumThresholdDays) {
+					if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
+						product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
+						ProductService.update(product);
+					}
+					penniesProducts.add(product);
+				} else {
+					if (product.getGeneratedInterest() < product.getInterestThreshold()) {
+						product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
+						ProductService.update(product);
+					} else {
+						penniesProducts.add(product);
+					}
+
 				}
-				withinThresholdProducts.remove(i);
+
 			}
 		}
 
 		try {
 			ObjectMapper om = new ObjectMapper();
-			String json = om.writeValueAsString(withinThresholdProducts);
+			String json = om.writeValueAsString(penniesProducts);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().append(json).close();
@@ -322,7 +285,7 @@ public class ProductWebService {
 					User user = UserService.findById(product.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
-						product.setStatus(ThresholdStatus.STANDARD.value);
+						product.setStatus(ThresholdStatus.PRETTY.value);
 						product.setDateListed(null);
 						success = ProductService.update(product);
 					}
@@ -456,6 +419,103 @@ public class ProductWebService {
 				response.setContentType("text/html");
 				response.getWriter().append("Products Not Found").close();
 			}
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public static void findPrettiesBySeller(HttpServletRequest request, HttpServletResponse response) {
+
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Product requestproduct = null;
+		try {
+			requestproduct = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		List<Product> allProducts = ProductService.findAll();
+		List<Product> standardProducts = new ArrayList<Product>();
+
+		for (int i = 0; i < allProducts.size(); i++) {
+			Product product = allProducts.get(i);
+			if ((product.getUser().getId() == requestproduct.getUser().getId()) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+				standardProducts.add(product);
+			}
+		}
+
+		try {
+			ObjectMapper om = new ObjectMapper();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			String json = om.writeValueAsString(standardProducts);
+			response.getWriter().append(json).close();
+		} catch (IOException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public static void findPenniesBySeller(HttpServletRequest request, HttpServletResponse response) {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Product requestproduct = null;
+		try {
+			requestproduct = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		List<Product> allProducts = ProductService.findAll();
+		List<Product> pennisProducts = new ArrayList<>();
+		LocalDate today = LocalDate.now();
+
+		for (int i = 0; i < allProducts.size(); i++) {
+			Product product = allProducts.get(i);
+			if (product.getUser().getId() == requestproduct.getUser().getId()) {
+
+				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
+						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
+
+					LocalDate dayMade = product.getDateListed();
+					long difference = ChronoUnit.DAYS.between(dayMade, today);
+
+					if (difference <= maximumThresholdDays) {
+						if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
+							product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
+							ProductService.update(product);
+						}
+						pennisProducts.add(product);
+					} else {
+						if (product.getGeneratedInterest() < product.getInterestThreshold()) {
+							product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
+							ProductService.update(product);
+						} else {
+							pennisProducts.add(product);
+						}
+
+					}
+
+				}
+			}
+		}
+
+		try {
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(pennisProducts);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
