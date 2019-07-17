@@ -141,14 +141,18 @@ public class UserWebService {
     if (user != null) {
       userId = UserService.insert(user);
     }
+    ObjectMapper om = new ObjectMapper();
 		try {
-			response.setContentType("text/html");
-			response.setCharacterEncoding("UTF-8");
+
 			if (userId >= 0) {
 				logger.info("User " + user.getEmail() + " Inserted");				
-				response.getWriter().append("User Inserted").close();
+		        String json = om.writeValueAsString("1");
+		        response.setContentType("application/json");
+		        response.getWriter().append(json).close();
 			} else {
-				response.getWriter().append("User Insert Failed").close();
+		        String json = om.writeValueAsString("0");
+		        response.setContentType("application/json");
+		        response.getWriter().append(json).close();
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());

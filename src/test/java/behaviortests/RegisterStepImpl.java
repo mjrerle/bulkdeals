@@ -24,7 +24,7 @@ public class RegisterStepImpl {
 	
 	@Given("^I am on the register page$")
 		public void i_am_on_the_register_page() {
-			driver.get("http://ec2-13-59-19-55.us-east-2.compute.amazonaws.com:8080/project2-frontend/login");
+			driver.get("http://localhost:4200/project2-frontend/login");
 	}
 	
 	@Given("^registration fields are correctly filled$")
@@ -34,7 +34,7 @@ public class RegisterStepImpl {
 			mainDriver.findRegisterFname().sendKeys("john");
 			mainDriver.findRegisterLname().sendKeys("doe");
 			mainDriver.findRegisterAddress().sendKeys("No ty");
-			mainDriver.findCreditCardNumber().sendKeys("1346789");
+			mainDriver.findCreditCardNumber().sendKeys("1346");
 			mainDriver.findCVV().sendKeys("123");
 			}
 	
