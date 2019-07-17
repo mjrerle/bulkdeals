@@ -6,9 +6,8 @@ public enum ThresholdStatus {
 	NEVER_SURPASSED_THRESHOLD("Never Surpassed Threshold"),
 	SURPASSED_THRESHOLD("Surpassed Threshold"),
 	CANCELLED_BY_SELLER("Cancelled By Seller"),
-	ON_SALE("On Sale");
-//	STANDARD("Standard");
-	
+	PRETTY("Pretty");
+
 	public final String value;
 	
 	private ThresholdStatus( String value) {
@@ -17,3 +16,4 @@ public enum ThresholdStatus {
 
 
 }
+
