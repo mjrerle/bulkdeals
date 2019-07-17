@@ -22,6 +22,7 @@ public class UserDAO extends GenericDAO<User> implements IUserDAO {
 			query.setParameter("email", email);
 			query.setParameter("password", password);
 			user = (User) query.list().get(0);
+			return user;
 		} catch (HibernateException e) {
 			logger.warn(e.getMessage());
 			e.printStackTrace();

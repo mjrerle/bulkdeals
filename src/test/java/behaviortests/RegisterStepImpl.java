@@ -41,15 +41,13 @@ public class RegisterStepImpl {
 	@When("^I click on submit registration$")
 		public void i_click_on_submit_registration() {
 			mainDriver.requestRegistration().click();
+			User tested = useful.findByEmailAndPassword("test@test.test", "password");
+			useful.deleteById(tested.getUserId());
 		}
 
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
-			User tested = useful.findByEmailAndPassword("test@test.test", "password");
-			useful.deleteById(tested.getUserId());
 			Assert.assertEquals(driver.getTitle(), "PrettyPenny");
-			
-			
 		}
 	
 

@@ -43,7 +43,7 @@ public class UserWebService {
 			response.setCharacterEncoding("UTF-8");
 			if (user != null) {
 				user.setPassword(null);
-				SessionVariableManager.addLoggedInUser(request, user);
+				//SessionVariableManager.addLoggedInUser(request, user);
 				logger.info("User " + user.getEmail() + " logged into the system");
 				ObjectMapper om = new ObjectMapper();
         String json = om.writeValueAsString(user);
@@ -95,34 +95,34 @@ public class UserWebService {
     }
   }
 
-	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
-
-		ObjectMapper om = new ObjectMapper();
-
-		try {
-			String json = om.writeValueAsString(SessionVariableManager.getLoggedInUser());
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().append(json).close();
-		} catch (IOException e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-
-
-	public static void logout(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			SessionVariableManager.removeLoggedInUser();
-			response.setContentType("text/html");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().append("User Logged Out").close();
-		} catch (IOException e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
-		}
-	}
+//	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
+//
+//		ObjectMapper om = new ObjectMapper();
+//
+//		try {
+//			String json = om.writeValueAsString(SessionVariableManager.getLoggedInUser());
+//			response.setContentType("application/json");
+//			response.setCharacterEncoding("UTF-8");
+//			response.getWriter().append(json).close();
+//		} catch (IOException e) {
+//			logger.warn(e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
+//
+//
+//
+//	public static void logout(HttpServletRequest request, HttpServletResponse response) {
+//		try {
+//			SessionVariableManager.removeLoggedInUser();
+//			response.setContentType("text/html");
+//			response.setCharacterEncoding("UTF-8");
+//			response.getWriter().append("User Logged Out").close();
+//		} catch (IOException e) {
+//			logger.warn(e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
