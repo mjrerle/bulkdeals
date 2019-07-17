@@ -29,9 +29,9 @@ public class RequestHelper {
 
     case "GET":
       switch (uri) {
-      case API.user + "/getLoggedInUser":
-        UserWebService.getLoggedInUser(request, response);
-        break;
+      //case API.user + "/getLoggedInUser":
+        //UserWebService.getLoggedInUser(request, response);
+        //break;
       case API.user:
         UserWebService.findById(request, response);
         break;
@@ -105,9 +105,9 @@ public class RequestHelper {
       case API.user + "/login":
         UserWebService.login(request, response);
         break;
-      case API.user + "/logout":
-        UserWebService.logout(request, response);
-        break;
+      //case API.user + "/logout":
+        //UserWebService.logout(request, response);
+        //break;
       case API.favorite:
         FavoriteWebService.insert(request, response);
         break;

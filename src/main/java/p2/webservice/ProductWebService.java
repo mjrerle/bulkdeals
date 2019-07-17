@@ -46,8 +46,8 @@ public class ProductWebService {
 		if (product != null) {
 			// check if product has a tax and a user
 			if (product.getTaxonomy() != null && product.getUser() != null) {
-				Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
-				User user = UserService.findById(product.getUser().getId());
+				Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
+				User user = UserService.findById(product.getUser().getUserId());
 				// if it does, then make sure that the user and the tax exist in the db
 				if (tax != null && user != null) {
 					product.setDateListed(LocalDate.now());
@@ -86,8 +86,8 @@ public class ProductWebService {
 			if (product.getId() >= 0) {
 				// check if product has a tax and a user
 				if (product.getTaxonomy() != null && product.getUser() != null) {
-					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
-					User user = UserService.findById(product.getUser().getId());
+					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
+					User user = UserService.findById(product.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
 						success = ProductService.update(product);
@@ -168,8 +168,8 @@ public class ProductWebService {
 			if (product.getId() >= 0) {
 				// check if product has a tax and a user
 				if (product.getTaxonomy() != null && product.getUser() != null) {
-					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
-					User user = UserService.findById(product.getUser().getId());
+					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
+					User user = UserService.findById(product.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
 						success = ProductService.deleteById(product.getId());
@@ -281,8 +281,8 @@ public class ProductWebService {
 			if (product.getId() >= 0) {
 				// check if product has a tax and a user
 				if (product.getTaxonomy() != null && product.getUser() != null) {
-					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
-					User user = UserService.findById(product.getUser().getId());
+					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
+					User user = UserService.findById(product.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
 						product.setStatus(ThresholdStatus.PRETTY.value);

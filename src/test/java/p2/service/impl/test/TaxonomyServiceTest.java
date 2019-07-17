@@ -30,8 +30,8 @@ public class TaxonomyServiceTest {
     int id = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 
     Taxonomy taxonomy = TaxonomyService.findById(id);
-    Assert.assertTrue(taxonomy.getId() > -1);
-    TaxonomyService.deleteById(taxonomy.getId());
+    Assert.assertTrue(taxonomy.getTaxonomyId() > -1);
+    TaxonomyService.deleteById(taxonomy.getTaxonomyId());
   }
 
   @Test
@@ -43,9 +43,9 @@ public class TaxonomyServiceTest {
     String newTaxName = "efg";
     taxonomy.setName(newTaxName);
     Assert.assertTrue(TaxonomyService.update(taxonomy));
-    taxonomy = TaxonomyService.findById(taxonomy.getId());
+    taxonomy = TaxonomyService.findById(taxonomy.getTaxonomyId());
     Assert.assertTrue(taxonomy.getName().equals(newTaxName));
-    TaxonomyService.deleteById(taxonomy.getId());
+    TaxonomyService.deleteById(taxonomy.getTaxonomyId());
   }
 
   @Test
@@ -53,7 +53,7 @@ public class TaxonomyServiceTest {
     int id = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 
     Taxonomy taxonomy = TaxonomyService.findById(id);
-    Assert.assertTrue(TaxonomyService.deleteById(taxonomy.getId()));
+    Assert.assertTrue(TaxonomyService.deleteById(taxonomy.getTaxonomyId()));
   }
 
   @Test(priority=3)

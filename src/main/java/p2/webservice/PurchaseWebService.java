@@ -42,7 +42,7 @@ public class PurchaseWebService {
       // check if favorite has a product and a user
       if (purchase.getProduct() != null && purchase.getUser() != null) {
         Product product = ProductService.findById(purchase.getProduct().getId());
-        User user = UserService.findById(purchase.getUser().getId());
+        User user = UserService.findById(purchase.getUser().getUserId());
         // if it does, then make sure that the user and the tax exist in the db
         if (product != null && user != null) {
           purchaseId = PurchaseService.insert(purchase);
@@ -83,7 +83,7 @@ public class PurchaseWebService {
         // check if favorite has a product and a user
         if (purchase.getProduct() != null && purchase.getUser() != null) {
           Product product = ProductService.findById(purchase.getProduct().getId());
-          User user = UserService.findById(purchase.getUser().getId());
+          User user = UserService.findById(purchase.getUser().getUserId());
           // if it does, then make sure that the user and the tax exist in the db
           if (product != null && user != null) {
             success = PurchaseService.update(purchase);
@@ -124,7 +124,7 @@ public class PurchaseWebService {
         // check if favorite has a product and a user
         if (purchase.getProduct() != null && purchase.getUser() != null) {
           Product product = ProductService.findById(purchase.getProduct().getId());
-          User user = UserService.findById(purchase.getUser().getId());
+          User user = UserService.findById(purchase.getUser().getUserId());
           // if it does, then make sure that the user and the tax exist in the db
           if (product != null && user != null) {
             success = PurchaseService.deleteById(purchase.getId());

@@ -34,7 +34,7 @@ public class PurchaseServiceTest {
 
     Purchase p = PurchaseService.findById(id);
     Assert.assertNotNull(p);
-    Assert.assertEquals(uid, p.getUser().getId());
+    Assert.assertEquals(uid, p.getUser().getUserId());
     Assert.assertEquals(pid, p.getProduct().getId());
     Assert.assertEquals(now, p.getDatePurchased());
     PurchaseService.deleteById(id);

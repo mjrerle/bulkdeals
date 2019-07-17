@@ -72,11 +72,11 @@ public class User {
 		this.cvv = cvv;
 	}
 
-	public int getId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setId(int id) {
+	public void setUserId(int id) {
 		this.userId = id;
 	}
 

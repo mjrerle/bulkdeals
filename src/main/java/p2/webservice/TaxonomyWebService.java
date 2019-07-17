@@ -67,7 +67,7 @@ public class TaxonomyWebService {
     }
     boolean success = false;
     if (taxonomy != null) {
-      if (taxonomy.getId() >= 0) {
+      if (taxonomy.getTaxonomyId() >= 0) {
         success = TaxonomyService.update(taxonomy);
       }
     }
@@ -100,8 +100,8 @@ public class TaxonomyWebService {
     }
     boolean success = false;
     if (taxonomy != null) {
-      if (taxonomy.getId() >= 0) {
-        success = TaxonomyService.deleteById(taxonomy.getId());
+      if (taxonomy.getTaxonomyId() >= 0) {
+        success = TaxonomyService.deleteById(taxonomy.getTaxonomyId());
       }
     }
 
