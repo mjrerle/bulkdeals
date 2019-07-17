@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import p2.model.Product;
 import p2.model.Taxonomy;
 import p2.model.User;
+import p2.service.InterestService;
 import p2.service.ProductService;
 import p2.service.TaxonomyService;
 import p2.service.UserService;
