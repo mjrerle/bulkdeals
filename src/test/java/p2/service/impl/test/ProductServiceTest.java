@@ -20,7 +20,7 @@ public class ProductServiceTest {
 	@Test
 	public void aProductCanBeInserted() {
 		LocalDate now = LocalDate.now();
-		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123",
+		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "fsdafsdaf@gmail.com", "abc123",
 				Roles.ADMIN.value, "abc", 123466, 322));
 		int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		Product product = new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold", 0,
@@ -36,7 +36,7 @@ public class ProductServiceTest {
 	@Test
 	public void aProductCanBeUpdated() {
 		LocalDate now = LocalDate.now();
-		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123",
+		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "sfsadfsdaf@gmail.com", "abc123",
 				Roles.ADMIN.value, "abc", 123466, 322));
 		int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		Product product = new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold", 0,
@@ -56,7 +56,7 @@ public class ProductServiceTest {
 	@Test
 	public void allProductsCanBeFound() {
 		LocalDate now = LocalDate.now();
-		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123",
+		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "fsdafsdafsa@gmail.com", "abc123",
 				Roles.ADMIN.value, "abc", 123466, 322));
 		int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		Product product = new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold", 0,
@@ -64,36 +64,39 @@ public class ProductServiceTest {
 		int id = ProductService.insert(product);
 		int id2 = ProductService.insert(product);
 		int id3 = ProductService.insert(product);
-
+		
 		List<Product> productList = ProductService.findAll();
-		Assert.assertEquals(productList.size(), 3);
+
 		ProductService.deleteById(id);
 		ProductService.deleteById(id2);
 		ProductService.deleteById(id3);
 		UserService.deleteById(uid);
 		TaxonomyService.deleteById(tid);
+		Assert.assertEquals(productList.size(), 3);
+
 	}
 
 	@Test
 	public void aProductCanBeFoundById() {
 		LocalDate now = LocalDate.now();
-		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123",
+		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "sdfafsadf@gmail.com", "abc123",
 				Roles.ADMIN.value, "abc", 123466, 322));
 		int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		Product product = new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold", 0,
 				new Taxonomy(tid), new User(uid));
 		int id = ProductService.insert(product);
 		product = ProductService.findById(id);
-		Assert.assertTrue(product.getId() >= 0);
+
 		ProductService.deleteById(id);
 		UserService.deleteById(uid);
 		TaxonomyService.deleteById(tid);
+		Assert.assertTrue(product.getId() >= 0);
 	}
 
 	@Test
 	public void aProductCanBeDeleted() {
 		LocalDate now = LocalDate.now();
-		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "vajirakarunathilake@gmail.com", "abc123",
+		int uid = UserService.insert(new User("vajira", "Hapu Arachchige", "sfddsafsadfsd@gmail.com", "abc123",
 				Roles.ADMIN.value, "abc", 123466, 322));
 		int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		Product product = new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold", 0,
@@ -101,9 +104,10 @@ public class ProductServiceTest {
 
 		int id = ProductService.insert(product);
 		product = ProductService.findById(id);
-		ProductService.deleteById(product.getId());
+		boolean success = ProductService.deleteById(product.getId());
 		UserService.deleteById(uid);
 		TaxonomyService.deleteById(tid);
+		Assert.assertTrue(success);
 	}
 
 	@Test
@@ -112,7 +116,7 @@ public class ProductServiceTest {
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Phones"));
 		int uid1 = UserService.insert(
-				new User("vajira", "Hapu Arachchige", "sadkflj@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+				new User("vajira", "Hapu Arachchige", "sdafsafsd@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
 				new Taxonomy(tid1), new User(uid1));
 
@@ -126,7 +130,6 @@ public class ProductServiceTest {
 				0, new Taxonomy(tid2), new User(uid1)));
 
 		List<Product> products = ProductService.findAllProductsByTaxonomyName("Samsung");
-		Assert.assertEquals(products.size(), 3);
 		// cleanup
 		ProductService.deleteById(pid1);
 		ProductService.deleteById(pid2);
@@ -138,7 +141,7 @@ public class ProductServiceTest {
 		TaxonomyService.deleteById(tid2);
 
 		TaxonomyService.deleteById(tid1);
-
+		Assert.assertEquals(products.size(), 3);
 	}
 
 	@Test
@@ -147,7 +150,7 @@ public class ProductServiceTest {
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "User Data", "IP Addresses"));
 		int uid1 = UserService.insert(
-				new User("vajira", "Hapu Arachchige", "dsfsd@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+				new User("vajira", "Hapu Arachchige", "fdsafsadfsa@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
 				new Taxonomy(tid1), new User(uid1));
 
@@ -161,7 +164,6 @@ public class ProductServiceTest {
 				0, new Taxonomy(tid2), new User(uid1)));
 
 		List<Product> products = ProductService.findAllProductsByType("Electronics");
-		Assert.assertEquals(products.size(), 3);
 		// cleanup
 		ProductService.deleteById(pid1);
 		ProductService.deleteById(pid2);
@@ -172,7 +174,7 @@ public class ProductServiceTest {
 		TaxonomyService.deleteById(tid2);
 
 		TaxonomyService.deleteById(tid1);
-
+		Assert.assertEquals(products.size(), 3);
 	}
 
 	@Test
@@ -181,7 +183,7 @@ public class ProductServiceTest {
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Laptops"));
 		int uid1 = UserService.insert(
-				new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+				new User("vajira", "Hapu Arachchige", "asfdd@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
 				new Taxonomy(tid1), new User(uid1));
 
@@ -194,7 +196,6 @@ public class ProductServiceTest {
 				0, new Taxonomy(tid2), new User(uid1)));
 
 		List<Product> products = ProductService.findAllProductsBySubType("Phones");
-		Assert.assertEquals(products.size(), 3);
 		// cleanup
 		ProductService.deleteById(pid1);
 		ProductService.deleteById(pid2);
@@ -204,6 +205,7 @@ public class ProductServiceTest {
 
 		TaxonomyService.deleteById(tid2);
 		TaxonomyService.deleteById(tid1);
+		Assert.assertEquals(products.size(), 3);
 
 	}
 
@@ -213,7 +215,7 @@ public class ProductServiceTest {
 		int tid1 = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
 		int tid2 = TaxonomyService.insert(new Taxonomy("Apple", "Electronics", "Phones"));
 		int uid1 = UserService.insert(
-				new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+				new User("vajira", "Hapu Arachchige", "fsdfdsfsdf@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 		Product prod = new Product("name", "description", 190, 190, 0, 0, "url", now1, "Within Threshold", 0,
 				new Taxonomy(tid1), new User(uid1));
 
