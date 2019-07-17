@@ -41,7 +41,7 @@ public class PurchaseWebService {
     if (purchase != null) {
       // check if favorite has a product and a user
       if (purchase.getProduct() != null && purchase.getUser() != null) {
-        Product product = ProductService.findById(purchase.getProduct().getId());
+        Product product = ProductService.findById(purchase.getProduct().getProductId());
         User user = UserService.findById(purchase.getUser().getUserId());
         // if it does, then make sure that the user and the tax exist in the db
         if (product != null && user != null) {
@@ -79,10 +79,10 @@ public class PurchaseWebService {
     }
     boolean success = false;
     if (purchase != null) {
-      if (purchase.getId() >= 0) {
+      if (purchase.getPurchaseId() >= 0) {
         // check if favorite has a product and a user
         if (purchase.getProduct() != null && purchase.getUser() != null) {
-          Product product = ProductService.findById(purchase.getProduct().getId());
+          Product product = ProductService.findById(purchase.getProduct().getProductId());
           User user = UserService.findById(purchase.getUser().getUserId());
           // if it does, then make sure that the user and the tax exist in the db
           if (product != null && user != null) {
@@ -120,14 +120,14 @@ public class PurchaseWebService {
     }
     boolean success = false;
     if (purchase != null) {
-      if (purchase.getId() >= 0) {
+      if (purchase.getPurchaseId() >= 0) {
         // check if favorite has a product and a user
         if (purchase.getProduct() != null && purchase.getUser() != null) {
-          Product product = ProductService.findById(purchase.getProduct().getId());
+          Product product = ProductService.findById(purchase.getProduct().getProductId());
           User user = UserService.findById(purchase.getUser().getUserId());
           // if it does, then make sure that the user and the tax exist in the db
           if (product != null && user != null) {
-            success = PurchaseService.deleteById(purchase.getId());
+            success = PurchaseService.deleteById(purchase.getPurchaseId());
           }
         }
       }

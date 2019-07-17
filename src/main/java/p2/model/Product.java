@@ -106,11 +106,11 @@ public class Product {
 		this.user = user;
 	}
 
-	public int getId() {
+	public int getProductId() {
 		return this.productId;
 	}
 
-	public void setId(int productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 
@@ -299,7 +299,7 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "{" + " productId='" + getId() + "'" + ", productName='" + getProductName() + "'" + ", description='"
+		return "{" + " productId='" + getProductId() + "'" + ", productName='" + getProductName() + "'" + ", description='"
 				+ getDescription() + "'" + ", price='" + getPrice() + "'" + ", salePrice='" + getSalePrice() + "'"
 				+ ", onSale='" + getOnSale() + "'" + ", generatedInterest='" + getGeneratedInterest() + "'" + ", imageUrl='"
 				+ getImageUrl() + "'" + ", dateListed='" + getDateListed() + "'" + ", status='" + getStatus() + "'"
