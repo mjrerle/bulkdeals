@@ -147,6 +147,9 @@ public class RequestHelper {
       case API.product:
         ProductWebService.update(request, response);
         break;
+      case API.product + "/remove_from_sale":
+        ProductWebService.removeFromSale(request, response);
+        break;
       case API.interest:
         InterestWebService.update(request, response);
         break;
