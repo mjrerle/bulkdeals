@@ -24,7 +24,7 @@ public class RegisterStepImpl {
 	
 	@Given("^I am on the register page$")
 		public void i_am_on_the_register_page() {
-			driver.get("http://localhost:4200/project2-frontend/login");
+			driver.get("http://localhost:4200/login");
 	}
 	
 	@Given("^registration fields are correctly filled$")
@@ -45,7 +45,7 @@ public class RegisterStepImpl {
 
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
-			User tested = useful.findByEmailAndPassword("test@test.test", "psssword");
+			User tested = useful.findByEmailAndPassword("test@test.test", "password");
 			useful.deleteById(tested.getUserId());
 			Assert.assertEquals(driver.getTitle(), "PrettyPenny");
 			
