@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
@@ -14,6 +16,8 @@ import p2.model.Favorite;
 import p2.model.Product;
 import p2.model.User;
 import p2.service.FavoriteService;
+import p2.service.ProductService;
+import p2.service.UserService;
 import p2.util.Glogger;
 import p2.util.ValidationUtilities;
 
@@ -21,17 +25,28 @@ public class FavoriteWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("userId");
-		String maybeProductId = request.getParameter("productId");
+		ObjectMapper mapper = new ObjectMapper();
+		Favorite favorite = null;
+		try {
+			favorite = mapper.readValue(request.getInputStream(), Favorite.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		int favoriteId = -1;
-		User user = null;
-		Product product = null;
-		if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-			int customerId = Integer.parseInt(maybeUserId);
-			int productId = Integer.parseInt(maybeProductId);
-			user = new User(customerId);
-			product = new Product(productId);
-			favoriteId = FavoriteService.insert(new Favorite(user, product));
+		if (favorite != null) {
+			// check if favorite has a product and a user
+			if (favorite.getProduct() != null && favorite.getUser() != null) {
+				Product product = ProductService.findById(favorite.getProduct().getId());
+				User user = UserService.findById(favorite.getUser().getId());
+				// if it does, then make sure that the user and the tax exist in the db
+				if (product != null && user != null) {
+					favoriteId = FavoriteService.insert(favorite);
+				}
+			}
 		}
 
 		try {
@@ -49,27 +64,31 @@ public class FavoriteWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFavoriteId = request.getParameter("favoriteId");
-		String maybeUserId = request.getParameter("userId");
-		String maybeProductId = request.getParameter("productId");
-		boolean success = false;
+		ObjectMapper mapper = new ObjectMapper();
 		Favorite favorite = null;
-		if (ValidationUtilities.checkNullOrEmpty(maybeFavoriteId)) {
-			int favoriteId = Integer.parseInt(maybeFavoriteId);
-			favorite = FavoriteService.findById(favoriteId);
-			if (favorite != null) {
-				if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
-					int customerId = Integer.parseInt(maybeUserId);
-					favorite.setUser(new User(customerId));
+		try {
+			favorite = mapper.readValue(request.getInputStream(), Favorite.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		boolean success = false;
+		if (favorite != null) {
+			if (favorite.getId() >= 0) {
+				// check if favorite has a product and a user
+				if (favorite.getProduct() != null && favorite.getUser() != null) {
+					Product product = ProductService.findById(favorite.getProduct().getId());
+					User user = UserService.findById(favorite.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (product != null && user != null) {
+						success = FavoriteService.update(favorite);
+					}
 				}
-				if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-					int productId = Integer.parseInt(maybeProductId);
-					favorite.setProduct(new Product(productId));
-				}
-				success = FavoriteService.update(favorite);
 			}
 		}
-
 		try {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
@@ -126,12 +145,30 @@ public class FavoriteWebService {
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFavoriteId = request.getParameter("favoriteId");
+		ObjectMapper mapper = new ObjectMapper();
+		Favorite favorite = null;
+		try {
+			favorite = mapper.readValue(request.getInputStream(), Favorite.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		boolean success = false;
-		int favoriteId = -1;
-		if (ValidationUtilities.checkNullOrEmpty(maybeFavoriteId)) {
-			favoriteId = Integer.parseInt(maybeFavoriteId);
-			success = FavoriteService.deleteById(favoriteId);
+		if (favorite != null) {
+			if (favorite.getId() >= 0) {
+				// check if favorite has a product and a user
+				if (favorite.getProduct() != null && favorite.getUser() != null) {
+					Product product = ProductService.findById(favorite.getProduct().getId());
+					User user = UserService.findById(favorite.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (product != null && user != null) {
+						success = FavoriteService.update(favorite);
+					}
+				}
+			}
 		}
 
 		try {

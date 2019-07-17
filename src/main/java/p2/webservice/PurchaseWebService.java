@@ -1,12 +1,13 @@
 package p2.webservice;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
@@ -14,7 +15,9 @@ import org.apache.log4j.Logger;
 import p2.model.Product;
 import p2.model.Purchase;
 import p2.model.User;
+import p2.service.ProductService;
 import p2.service.PurchaseService;
+import p2.service.UserService;
 import p2.util.Glogger;
 import p2.util.ValidationUtilities;
 
@@ -23,20 +26,28 @@ public class PurchaseWebService {
 
   public static void insert(HttpServletRequest request, HttpServletResponse response) {
 
+    ObjectMapper mapper = new ObjectMapper();
     Purchase purchase = null;
+    try {
+      purchase = mapper.readValue(request.getInputStream(), Purchase.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
     int purchaseId = -1;
-
-    String maybeUserId = request.getParameter("userId");
-    String maybeProductId = request.getParameter("productId");
-
-    if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-      LocalDate datePurchased = LocalDate.now();
-      int userId = Integer.parseInt(maybeUserId);
-      int productId = Integer.parseInt(maybeProductId);
-      User user = new User(userId);
-      Product product = new Product(productId);
-      purchase = new Purchase(datePurchased, user, product);
-      purchaseId = PurchaseService.insert(purchase);
+    if (purchase != null) {
+      // check if favorite has a product and a user
+      if (purchase.getProduct() != null && purchase.getUser() != null) {
+        Product product = ProductService.findById(purchase.getProduct().getId());
+        User user = UserService.findById(purchase.getUser().getId());
+        // if it does, then make sure that the user and the tax exist in the db
+        if (product != null && user != null) {
+          purchaseId = PurchaseService.insert(purchase);
+        }
+      }
     }
     try {
       response.setContentType("text/html");
@@ -55,27 +66,28 @@ public class PurchaseWebService {
 
   public static void update(HttpServletRequest request, HttpServletResponse response) {
 
-    String maybeDate = request.getParameter("date_purchased");
-    String maybeUserId = request.getParameter("userId");
-    String maybeProductId = request.getParameter("productId");
-    String maybePurchaseId = request.getParameter("purchaseId");
+    ObjectMapper mapper = new ObjectMapper();
+    Purchase purchase = null;
+    try {
+      purchase = mapper.readValue(request.getInputStream(), Purchase.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
     boolean success = false;
-    if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
-      Purchase purchase = PurchaseService.findById(Integer.parseInt(maybePurchaseId));
-      if (purchase != null) {
-        if (ValidationUtilities.checkNullOrEmpty(maybeDate)) {
-          LocalDate datePurchased = LocalDate.parse(maybeDate);
-          purchase.setDatePurchased(datePurchased);
-        }
-        if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-          int productId = Integer.parseInt(maybeProductId);
-          Product product = new Product(productId);
-          purchase.setProduct(product);
-        }
-        if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
-          int userId = Integer.parseInt(maybeUserId);
-          User user = new User(userId);
-          purchase.setUser(user);
+    if (purchase != null) {
+      if (purchase.getId() >= 0) {
+        // check if favorite has a product and a user
+        if (purchase.getProduct() != null && purchase.getUser() != null) {
+          Product product = ProductService.findById(purchase.getProduct().getId());
+          User user = UserService.findById(purchase.getUser().getId());
+          // if it does, then make sure that the user and the tax exist in the db
+          if (product != null && user != null) {
+            success = PurchaseService.update(purchase);
+          }
         }
       }
     }
@@ -95,13 +107,30 @@ public class PurchaseWebService {
   }
 
   public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-    int purchaseId = -1;
-    String maybePurchaseId = request.getParameter("purchaseId");
+    ObjectMapper mapper = new ObjectMapper();
+    Purchase purchase = null;
+    try {
+      purchase = mapper.readValue(request.getInputStream(), Purchase.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
     boolean success = false;
-
-    if (ValidationUtilities.checkNullOrEmpty(maybePurchaseId)) {
-      purchaseId = Integer.parseInt(maybePurchaseId);
-      success = PurchaseService.deleteById(purchaseId);
+    if (purchase != null) {
+      if (purchase.getId() >= 0) {
+        // check if favorite has a product and a user
+        if (purchase.getProduct() != null && purchase.getUser() != null) {
+          Product product = ProductService.findById(purchase.getProduct().getId());
+          User user = UserService.findById(purchase.getUser().getId());
+          // if it does, then make sure that the user and the tax exist in the db
+          if (product != null && user != null) {
+            success = PurchaseService.deleteById(purchase.getId());
+          }
+        }
+      }
     }
 
     try {
