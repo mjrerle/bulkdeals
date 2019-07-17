@@ -61,19 +61,19 @@ public class Product {
 	private Taxonomy taxonomy;
 
 	@ManyToOne
-	@JoinColumn(name = "seller")
-	private User seller;
+	@JoinColumn(name = "user_id")
+	private User user;
 
 	public Product() {
 	}
 
-	public Product(int id) {
-		this.productId = id;
+	public Product(int productId) {
+		this.productId = productId;
 	}
 
 	public Product(String productName, String description, double price, double salePrice, int onSale,
 			int generatedInterest, String imageUrl, LocalDate dateListed, String status, int interestThreshold,
-			Taxonomy taxonomy, User seller) {
+			Taxonomy taxonomy, User user) {
 		this.productName = productName;
 		this.description = description;
 		this.price = price;
@@ -85,12 +85,12 @@ public class Product {
 		this.status = status;
 		this.interestThreshold = interestThreshold;
 		this.taxonomy = taxonomy;
-		this.seller = seller;
+		this.user = user;
 	}
 
 	public Product(int productId, String productName, String description, double price, double salePrice, int onSale,
 			int generatedInterest, String imageUrl, LocalDate dateListed, String status, int interestThreshold,
-			Taxonomy taxonomy, User seller) {
+			Taxonomy taxonomy, User user) {
 		this.productId = productId;
 		this.productName = productName;
 		this.description = description;
@@ -103,7 +103,7 @@ public class Product {
 		this.status = status;
 		this.interestThreshold = interestThreshold;
 		this.taxonomy = taxonomy;
-		this.seller = seller;
+		this.user = user;
 	}
 
 	public int getId() {
@@ -202,12 +202,12 @@ public class Product {
 		this.taxonomy = taxonomy;
 	}
 
-	public User getSeller() {
-		return this.seller;
+	public User getUser() {
+		return this.user;
 	}
 
-	public void setSeller(User seller) {
-		this.seller = seller;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Product productId(int productId) {
@@ -270,8 +270,8 @@ public class Product {
 		return this;
 	}
 
-	public Product seller(User seller) {
-		this.seller = seller;
+	public Product user(User user) {
+		this.user = user;
 		return this;
 	}
 
@@ -288,13 +288,13 @@ public class Product {
 				&& onSale == product.onSale && generatedInterest == product.generatedInterest
 				&& Objects.equals(imageUrl, product.imageUrl) && Objects.equals(dateListed, product.dateListed)
 				&& Objects.equals(status, product.status) && interestThreshold == product.interestThreshold
-				&& Objects.equals(taxonomy, product.taxonomy) && Objects.equals(seller, product.seller);
+				&& Objects.equals(taxonomy, product.taxonomy) && Objects.equals(user, product.user);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(productId, productName, description, price, salePrice, onSale, generatedInterest, imageUrl,
-				dateListed, status, interestThreshold, taxonomy, seller);
+				dateListed, status, interestThreshold, taxonomy, user);
 	}
 
 	@Override
@@ -303,8 +303,8 @@ public class Product {
 				+ getDescription() + "'" + ", price='" + getPrice() + "'" + ", salePrice='" + getSalePrice() + "'"
 				+ ", onSale='" + getOnSale() + "'" + ", generatedInterest='" + getGeneratedInterest() + "'" + ", imageUrl='"
 				+ getImageUrl() + "'" + ", dateListed='" + getDateListed() + "'" + ", status='" + getStatus() + "'"
-				+ ", interestThreshold='" + getInterestThreshold() + "'" + ", taxonomy='" + getTaxonomy() + "'" + ", seller='"
-				+ getSeller() + "'" + "}";
+				+ ", interestThreshold='" + getInterestThreshold() + "'" + ", taxonomy='" + getTaxonomy() + "'" + ", user='"
+				+ getUser() + "'" + "}";
 	}
 
 }

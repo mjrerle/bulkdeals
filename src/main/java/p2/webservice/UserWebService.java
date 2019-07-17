@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
@@ -21,13 +23,20 @@ public class UserWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void login(HttpServletRequest request, HttpServletResponse response) {
-
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		User user = null;
-		if (ValidationUtilities.checkNullOrEmpty(email) && ValidationUtilities.checkNullOrEmpty(password)) {
-			user = UserService.findByEmailAndPassword(email, password);
-		}
+		ObjectMapper mapper = new ObjectMapper();
+    User user = null;
+    try {
+      user = mapper.readValue(request.getInputStream(), User.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
+    if (user != null) {
+      user = UserService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+    }
 
 		try {
 			response.setContentType("text/html");
@@ -118,28 +127,22 @@ public class UserWebService {
 	}
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFirstName = request.getParameter("firstName");
-		String maybeLastName = request.getParameter("lastName");
-		String maybeEmail = request.getParameter("email");
-		String maybePassword = request.getParameter("password");
-		String maybeRole = request.getParameter("role");
-		String maybeAddress = request.getParameter("address");
-		String maybeCreditCardNumber = request.getParameter("creditCardNumber");
-		String maybeCvv = request.getParameter("cvv");
-		User user = null;
-		int userId = -1;
-		if (ValidationUtilities.checkNullOrEmpty(maybeFirstName) && ValidationUtilities.checkNullOrEmpty(maybeLastName)
-				&& ValidationUtilities.checkNullOrEmpty(maybeEmail) && ValidationUtilities.checkNullOrEmpty(maybePassword)
-				&& ValidationUtilities.checkNullOrEmpty(maybeRole) && ValidationUtilities.checkNullOrEmpty(maybeAddress)
-				&& ValidationUtilities.checkNullOrEmpty(maybeCreditCardNumber)
-				&& ValidationUtilities.checkNullOrEmpty(maybeCvv)) {
-			int creditCardNumber = Integer.parseInt(maybeCreditCardNumber);
-			int cvv = Integer.parseInt(maybeCvv);
-			user = new User(maybeFirstName, maybeLastName, maybeEmail, maybePassword, maybeRole, maybeAddress,
-					creditCardNumber, cvv);
-			logger.info(user);
-			userId = UserService.insert(user);
+		ObjectMapper mapper = new ObjectMapper();
+    User user = null;
+    try {
+      user = mapper.readValue(request.getInputStream(), User.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
 		}
+		
+		int userId = -1;
+    if (user != null) {
+      userId = UserService.insert(user);
+    }
 		try {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
@@ -156,55 +159,22 @@ public class UserWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeFirstName = request.getParameter("firstName");
-		String maybeLastName = request.getParameter("lastName");
-		String maybeEmail = request.getParameter("email");
-		String maybePassword = request.getParameter("password");
-		String maybeRole = request.getParameter("role");
-		String maybeAddress = request.getParameter("address");
-		String maybeCreditCardNumber = request.getParameter("creditCardNumber");
-		String maybeCvv = request.getParameter("cvv");
-		String maybeUserId = request.getParameter("userId");
-		User user = null;
-
-		boolean success = false;
-		if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
-			user = UserService.findById(Integer.parseInt(maybeUserId));
-			if (user != null) {
-				if (ValidationUtilities.checkNullOrEmpty(maybeFirstName)) {
-					user.setFirstName(maybeFirstName);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeLastName)) {
-					user.setLastName(maybeLastName);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeEmail)) {
-					user.setLastName(maybeEmail);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybePassword)) {
-					user.setPassword(maybePassword);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeRole)) {
-					user.setRole(maybeRole);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeAddress)) {
-					user.setAddress(maybeAddress);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeCreditCardNumber)) {
-					user.setCreditCardNumber(Integer.parseInt(maybeCreditCardNumber));
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeCvv)) {
-					user.setCvv(Integer.parseInt(maybeCvv));
-				}
-				success = UserService.update(user);
-			}
+		ObjectMapper mapper = new ObjectMapper();
+    User user = null;
+    try {
+      user = mapper.readValue(request.getInputStream(), User.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
 		}
+		
+		boolean success = false;
+    if (user != null) {
+      success = UserService.update(user);
+    }
 
 		try {
 			response.setContentType("text/html");

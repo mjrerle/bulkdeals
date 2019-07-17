@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
@@ -14,6 +16,8 @@ import p2.model.Interest;
 import p2.model.Product;
 import p2.model.User;
 import p2.service.InterestService;
+import p2.service.ProductService;
+import p2.service.UserService;
 import p2.util.Glogger;
 import p2.util.ValidationUtilities;
 
@@ -22,18 +26,28 @@ public class InterestWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("userId");
-		String maybeProductId = request.getParameter("productId");
-		String maybeQuantity = request.getParameter("quantity");
+		ObjectMapper mapper = new ObjectMapper();
 		Interest interest = null;
+		try {
+			interest = mapper.readValue(request.getInputStream(), Interest.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		int interestId = -1;
-		if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeProductId)
-				&& ValidationUtilities.checkNullOrEmpty(maybeQuantity)) {
-			int userId = Integer.parseInt(maybeUserId);
-			int productId = Integer.parseInt(maybeProductId);
-			int quantity = Integer.parseInt(maybeQuantity);
-			interest = new Interest(new User(userId), new Product(productId), quantity);
-			interestId = InterestService.insert(interest);
+		if (interest != null) {
+			// check if interest has a product and a user
+			if (interest.getProduct() != null && interest.getUser() != null) {
+				Product product = ProductService.findById(interest.getProduct().getId());
+				User user = UserService.findById(interest.getUser().getId());
+				// if it does, then make sure that the user and the tax exist in the db
+				if (product != null && user != null) {
+					interestId = InterestService.insert(interest);
+				}
+			}
 		}
 
 		try {
@@ -51,30 +65,29 @@ public class InterestWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("userId");
-		String maybeProductId = request.getParameter("productId");
-		String maybeQuantity = request.getParameter("quantity");
-		String maybeInterestId = request.getParameter("interestId");
+		ObjectMapper mapper = new ObjectMapper();
 		Interest interest = null;
+		try {
+			interest = mapper.readValue(request.getInputStream(), Interest.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		boolean success = false;
-		if (ValidationUtilities.checkNullOrEmpty(maybeInterestId)) {
-			int interestId = Integer.parseInt(maybeInterestId);
-			interest = InterestService.findById(interestId);
-			if (interest != null) {
-				if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
-					int userId = Integer.parseInt(maybeUserId);
-					interest.setUser(new User(userId));
+		if (interest != null) {
+			if (interest.getId() >= 0) {
+				// check if interest has a product and a user
+				if (interest.getProduct() != null && interest.getUser() != null) {
+					Product product = ProductService.findById(interest.getProduct().getId());
+					User user = UserService.findById(interest.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (product != null && user != null) {
+						success = InterestService.update(interest);
+					}
 				}
-				if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-					int productId = Integer.parseInt(maybeProductId);
-					interest.setProduct(new Product(productId));
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeQuantity)) {
-					int quantity = Integer.parseInt(maybeQuantity);
-					interest.setQuantity(quantity);
-				}
-				success = InterestService.update(interest);
 			}
 		}
 
@@ -110,7 +123,7 @@ public class InterestWebService {
 	public static void findByProductId(HttpServletRequest request, HttpServletResponse response) {
 		String maybeProductId = request.getParameter("productId");
 		List<Interest> interests = null;
-		if(ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
+		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
 			interests = InterestService.findByProductId(Integer.parseInt(maybeProductId));
 		}
 		try {
@@ -128,7 +141,7 @@ public class InterestWebService {
 	public static void findByUserId(HttpServletRequest request, HttpServletResponse response) {
 		String maybeUserId = request.getParameter("userId");
 		List<Interest> interests = null;
-		if(ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
+		if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
 			interests = InterestService.findByUserId(Integer.parseInt(maybeUserId));
 		}
 		try {
@@ -169,11 +182,31 @@ public class InterestWebService {
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeInterestId = request.getParameter("interestId");
+		ObjectMapper mapper = new ObjectMapper();
+		Interest interest = null;
+		try {
+			interest = mapper.readValue(request.getInputStream(), Interest.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		boolean success = false;
-		if (ValidationUtilities.checkNullOrEmpty(maybeInterestId)) {
-			int interestId = Integer.parseInt(maybeInterestId);
-			success = InterestService.deleteById(interestId);
+		if (interest != null) {
+			if (interest.getId() >= 0) {
+				// check if interest has a product and a user
+				if (interest.getProduct() != null && interest.getUser() != null) {
+					Product product = ProductService.findById(interest.getProduct().getId());
+					User user = UserService.findById(interest.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (product != null && user != null) {
+						success = InterestService.deleteById(interest.getId());
+					}
+				}
+			}
+
 		}
 
 		try {
