@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import p2.model.User;
 import p2.service.UserService;
 import p2.util.Glogger;
-import p2.util.SessionVariableManager;
 import p2.util.ValidationUtilities;
 
 public class UserWebService {
