@@ -9,6 +9,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
@@ -21,6 +23,8 @@ import p2.model.User;
 import p2.service.InterestService;
 import p2.service.ProductService;
 import p2.service.PurchaseService;
+import p2.service.TaxonomyService;
+import p2.service.UserService;
 import p2.util.Glogger;
 import p2.util.ThresholdStatus;
 import p2.util.ValidationUtilities;
@@ -29,44 +33,29 @@ public class ProductWebService {
 	private static Logger logger = Glogger.logger;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
-		String maybeUserId = request.getParameter("userId");
-		String maybeName = request.getParameter("productName");
-		String maybePrice = request.getParameter("price");
-		String maybeSalePrice = request.getParameter("salePrice");
-		String maybeOnSale = request.getParameter("onSale");
-		String maybeDescription = request.getParameter("description");
-		String maybeStatus = request.getParameter("status");
-		String maybeInterestThreshold = request.getParameter("interestThreshold");
-		String maybeTaxonomy = request.getParameter("taxonomy");
-		String maybeImageUrl = request.getParameter("imageUrl");
+		ObjectMapper mapper = new ObjectMapper();
+		Product product = null;
+		try {
+			product = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		int productId = -1;
-
-		if (ValidationUtilities.checkNullOrEmpty(maybeUserId) && ValidationUtilities.checkNullOrEmpty(maybeName)
-				&& ValidationUtilities.checkNullOrEmpty(maybePrice) && ValidationUtilities.checkNullOrEmpty(maybeTaxonomy)
-				&& ValidationUtilities.checkNullOrEmpty(maybeImageUrl)) {
-			int uId = Integer.parseInt(maybeUserId);
-			double price = Double.parseDouble(maybePrice);
-			User seller = new User(uId);
-			int tId = Integer.parseInt(maybeTaxonomy);
-
-			Product product = new Product(maybeName, maybeDescription, price, price, 0, 0, maybeImageUrl, null, maybeStatus,
-					0, new Taxonomy(tId), seller);
-
-			if (ValidationUtilities.checkNullOrEmpty(maybeSalePrice) && ValidationUtilities.checkNullOrEmpty(maybeOnSale)) {
-				product.setSalePrice(Double.parseDouble(maybeSalePrice));
-				product.setOnSale(Integer.parseInt(maybeOnSale));
-			}
-
-			if (ValidationUtilities.checkNullOrEmpty(maybeStatus)) {
-				product.setStatus(maybeStatus);
-				if (ValidationUtilities.checkNullOrEmpty(maybeInterestThreshold)) {
-					product.setInterestThreshold(Integer.parseInt(maybeInterestThreshold));
+		if (product != null) {
+			// check if product has a tax and a user
+			if (product.getTaxonomy() != null && product.getUser() != null) {
+				Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
+				User user = UserService.findById(product.getUser().getId());
+				// if it does, then make sure that the user and the tax exist in the db
+				if (tax != null && user != null) {
+					product.setDateListed(LocalDate.now());
+					productId = ProductService.insert(product);
 				}
-				LocalDate dateListed = LocalDate.now();
-				product.setDateListed(dateListed);
 			}
-
-			productId = ProductService.insert(product);
 		}
 		try {
 			response.setCharacterEncoding("UTF-8");
@@ -75,9 +64,6 @@ public class ProductWebService {
 				String json = om.writeValueAsString(productId);
 				response.setContentType("application/json");
 				response.getWriter().append(json).close();
-			} else {
-				response.setContentType("text/html");
-				response.getWriter().append("Product Add Failed").close();
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
@@ -86,65 +72,29 @@ public class ProductWebService {
 	}
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
-		String maybeName = request.getParameter("productName");
-		String maybePrice = request.getParameter("price");
-		String maybeSalePrice = request.getParameter("salePrice");
-		String maybeOnSale = request.getParameter("onSale");
-		String maybeStatus = request.getParameter("status");
-		String maybeProductId = request.getParameter("productId");
-		String maybeUserId = request.getParameter("userId");
-
-		String maybeGeneratedInterest = request.getParameter("generatedInterest");
-		String maybeInterestThreshold = request.getParameter("interestThreshold");
+		ObjectMapper mapper = new ObjectMapper();
 		Product product = null;
-
-		int productId = -1;
+		try {
+			product = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		boolean success = false;
-		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-			productId = Integer.parseInt(maybeProductId);
-			product = ProductService.findById(productId);
-			double price = 0;
-			double saleprice = 0;
-			if (product != null) {
-				if (ValidationUtilities.checkNullOrEmpty(maybeStatus)) {
-					product.setStatus(maybeStatus);
-					// updates date listed based on status
-					if (maybeStatus.equals(ThresholdStatus.WITHIN_THRESHOLD.value) && product.getDateListed() != null) {
-						LocalDate day = LocalDate.now();
-						product.setDateListed(day);
+		if (product != null) {
+			if (product.getId() >= 0) {
+				// check if product has a tax and a user
+				if (product.getTaxonomy() != null && product.getUser() != null) {
+					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
+					User user = UserService.findById(product.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (tax != null && user != null) {
+						success = ProductService.update(product);
 					}
 				}
-				if (ValidationUtilities.checkNullOrEmpty(maybeName)) {
-					product.setProductName(maybeName);
-				}
-				if (ValidationUtilities.checkNullOrEmpty(maybePrice)) {
-					price = Double.parseDouble(maybePrice);
-					product.setPrice(price);
-				}
-				if (ValidationUtilities.checkNullOrEmpty(maybeSalePrice)) {
-					saleprice = Double.parseDouble(maybeSalePrice);
-					product.setSalePrice(saleprice);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeOnSale)) {
-					int onSale = Integer.parseInt(maybeOnSale);
-					product.setOnSale(onSale);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeUserId)) {
-					int userId = Integer.parseInt(maybeUserId);
-					product.setSeller(new User(userId));
-				}
-				if (ValidationUtilities.checkNullOrEmpty(maybeGeneratedInterest)) {
-					int generatedInterest = Integer.parseInt(maybeGeneratedInterest);
-					product.setGeneratedInterest(generatedInterest);
-				}
-
-				if (ValidationUtilities.checkNullOrEmpty(maybeInterestThreshold)) {
-					int interestThreshold = Integer.parseInt(maybeInterestThreshold);
-					product.setInterestThreshold(interestThreshold);
-				}
-				success = ProductService.update(product);
 			}
 		}
 		try {
@@ -204,12 +154,30 @@ public class ProductWebService {
 	}
 
 	public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-		String maybeProductId = request.getParameter("productId");
-		int productId = -1;
+		ObjectMapper mapper = new ObjectMapper();
+		Product product = null;
+		try {
+			product = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		boolean success = false;
-		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-			productId = Integer.parseInt(maybeProductId);
-			success = ProductService.deleteById(productId);
+		if (product != null) {
+			if (product.getId() >= 0) {
+				// check if product has a tax and a user
+				if (product.getTaxonomy() != null && product.getUser() != null) {
+					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
+					User user = UserService.findById(product.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (tax != null && user != null) {
+						success = ProductService.deleteById(product.getId());
+					}
+				}
+			}
 		}
 
 		try {
@@ -334,17 +302,31 @@ public class ProductWebService {
 	}
 
 	public static void removeFromSale(HttpServletRequest request, HttpServletResponse response) {
-		String maybeProductId = request.getParameter("productId");
-		int productId = -1;
-		boolean success = false;
+		ObjectMapper mapper = new ObjectMapper();
 		Product product = null;
-		if (ValidationUtilities.checkNullOrEmpty(maybeProductId)) {
-			productId = Integer.parseInt(maybeProductId);
-			product = ProductService.findById(productId);
-			if (product != null) {
-				product.setStatus(ThresholdStatus.STANDARD.value);
-				product.setDateListed(null);
-				success = ProductService.update(product);
+		try {
+			product = mapper.readValue(request.getInputStream(), Product.class);
+		} catch (JsonParseException e1) {
+			e1.printStackTrace();
+		} catch (JsonMappingException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		boolean success = false;
+		if (product != null) {
+			if (product.getId() >= 0) {
+				// check if product has a tax and a user
+				if (product.getTaxonomy() != null && product.getUser() != null) {
+					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getId());
+					User user = UserService.findById(product.getUser().getId());
+					// if it does, then make sure that the user and the tax exist in the db
+					if (tax != null && user != null) {
+						product.setStatus(ThresholdStatus.STANDARD.value);
+						product.setDateListed(null);
+						success = ProductService.update(product);
+					}
+				}
 			}
 		}
 

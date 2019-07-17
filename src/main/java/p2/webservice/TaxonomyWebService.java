@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
@@ -20,21 +22,20 @@ public class TaxonomyWebService {
 
   public static void insert(HttpServletRequest request, HttpServletResponse response) {
 
+    ObjectMapper mapper = new ObjectMapper();
     Taxonomy taxonomy = null;
+    try {
+      taxonomy = mapper.readValue(request.getInputStream(), Taxonomy.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
     int taxonomyId = -1;
-
-    String maybeName = request.getParameter("name");
-    String maybeType = request.getParameter("type");
-    String maybeSubType = request.getParameter("subType");
-
-    if (ValidationUtilities.checkNullOrEmpty(maybeName) && ValidationUtilities.checkNullOrEmpty(maybeType)
-        && ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
-
-      taxonomy = new Taxonomy(maybeName, maybeType, maybeSubType);
-      if(TaxonomyService.findByTaxonomy(taxonomy) == null) {
-        taxonomyId = TaxonomyService.insert(taxonomy);
-      }
-
+    if (taxonomy != null) {
+      taxonomyId = TaxonomyService.insert(taxonomy);
     }
     try {
       response.setContentType("text/html");
@@ -53,27 +54,21 @@ public class TaxonomyWebService {
 
   public static void update(HttpServletRequest request, HttpServletResponse response) {
 
-    String maybeName = request.getParameter("name");
-    String maybeType = request.getParameter("type");
-    String maybeSubType = request.getParameter("subType");
-    String maybeTaxonomyId = request.getParameter("taxonomyId");
-
+    ObjectMapper mapper = new ObjectMapper();
+    Taxonomy taxonomy = null;
+    try {
+      taxonomy = mapper.readValue(request.getInputStream(), Taxonomy.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
     boolean success = false;
-    if (ValidationUtilities.checkNullOrEmpty(maybeTaxonomyId)) {
-      Taxonomy taxonomy = TaxonomyService.findById(Integer.parseInt(maybeTaxonomyId));
-      if (taxonomy != null) {
-        if (ValidationUtilities.checkNullOrEmpty(maybeName)) {
-          taxonomy.setName(maybeName);
-        }
-        if (ValidationUtilities.checkNullOrEmpty(maybeType)) {
-          taxonomy.setType(maybeType);
-        }
-
-        if (ValidationUtilities.checkNullOrEmpty(maybeSubType)) {
-          taxonomy.setSubType(maybeSubType);
-        }
-        TaxonomyService.update(taxonomy);
-        success = true;
+    if (taxonomy != null) {
+      if (taxonomy.getId() >= 0) {
+        success = TaxonomyService.update(taxonomy);
       }
     }
 
@@ -92,13 +87,22 @@ public class TaxonomyWebService {
   }
 
   public static void deleteById(HttpServletRequest request, HttpServletResponse response) {
-    int taxonomyId = -1;
-    String maybeTaxonomyId = request.getParameter("taxonomyId");
+    ObjectMapper mapper = new ObjectMapper();
+    Taxonomy taxonomy = null;
+    try {
+      taxonomy = mapper.readValue(request.getInputStream(), Taxonomy.class);
+    } catch (JsonParseException e1) {
+      e1.printStackTrace();
+    } catch (JsonMappingException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
     boolean success = false;
-
-    if (ValidationUtilities.checkNullOrEmpty(maybeTaxonomyId)) {
-      taxonomyId = Integer.parseInt(maybeTaxonomyId);
-      success = TaxonomyService.deleteById(taxonomyId);
+    if (taxonomy != null) {
+      if (taxonomy.getId() >= 0) {
+        success = TaxonomyService.deleteById(taxonomy.getId());
+      }
     }
 
     try {
@@ -153,5 +157,5 @@ public class TaxonomyWebService {
       e.printStackTrace();
     }
   }
-  
+
 }
