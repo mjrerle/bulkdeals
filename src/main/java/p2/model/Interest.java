@@ -55,11 +55,11 @@ public class Interest {
 		this.quantity = quantity;
 	}
 
-	public int getId() {
+	public int getInterestId() {
 		return this.interestId;
 	}
 
-	public void setId(int id) {
+	public void setInterestId(int id) {
 		this.interestId = id;
 	}
 
@@ -126,7 +126,7 @@ public class Interest {
 
 	@Override
 	public String toString() {
-		return "{" + " id='" + getId() + "'" + ", user='" + getUser() + "'" + ", product='" + getProduct() + "'"
+		return "{" + " id='" + getInterestId() + "'" + ", user='" + getUser() + "'" + ", product='" + getProduct() + "'"
 				+ ", quantity='" + getQuantity() + "'" + "}";
 	}
 

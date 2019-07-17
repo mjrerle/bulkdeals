@@ -44,14 +44,12 @@ public class UserWebService {
 			response.setCharacterEncoding("UTF-8");
 			if (user != null) {
 				user.setPassword(null);
-				SessionVariableManager.addLoggedInUser(request, user);
+				//SessionVariableManager.addLoggedInUser(request, user);
 				logger.info("User " + user.getEmail() + " logged into the system");
 				ObjectMapper om = new ObjectMapper();
-				String json = om.writeValueAsString(user);
-				response.setContentType("application/json");
-				response.getWriter().append(json).close();
-			} else {
-				response.getWriter().append("Failed to log in due to incorrect email/password").close();
+        String json = om.writeValueAsString(user);
+        response.setContentType("application/json");
+        response.getWriter().append(json).close();
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
@@ -98,32 +96,35 @@ public class UserWebService {
 		}
 	}
 
-	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
 
-		ObjectMapper om = new ObjectMapper();
-
-		try {
-			String json = om.writeValueAsString(SessionVariableManager.getLoggedInUser());
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().append(json).close();
-		} catch (IOException e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	public static void logout(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			SessionVariableManager.removeLoggedInUser();
-			response.setContentType("text/html");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().append("User Logged Out").close();
-		} catch (IOException e) {
-			logger.warn(e.getMessage());
-			e.printStackTrace();
-		}
-	}
+//	public static void getLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
+//
+//		ObjectMapper om = new ObjectMapper();
+//
+//		try {
+//			String json = om.writeValueAsString(SessionVariableManager.getLoggedInUser());
+//			response.setContentType("application/json");
+//			response.setCharacterEncoding("UTF-8");
+//			response.getWriter().append(json).close();
+//		} catch (IOException e) {
+//			logger.warn(e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
+//
+//
+//
+//	public static void logout(HttpServletRequest request, HttpServletResponse response) {
+//		try {
+//			SessionVariableManager.removeLoggedInUser();
+//			response.setContentType("text/html");
+//			response.setCharacterEncoding("UTF-8");
+//			response.getWriter().append("User Logged Out").close();
+//		} catch (IOException e) {
+//			logger.warn(e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -139,17 +140,25 @@ public class UserWebService {
 		}
 
 		int userId = -1;
-		if (user != null) {
-			userId = UserService.insert(user);
-		}
+
+    if (user != null) {
+      userId = UserService.insert(user);
+    }
+    ObjectMapper om = new ObjectMapper();
+
 		try {
-			response.setContentType("text/html");
-			response.setCharacterEncoding("UTF-8");
+
 			if (userId >= 0) {
-				logger.info("User " + user.getEmail() + " Inserted");
-				response.getWriter().append("User Inserted").close();
+
+				logger.info("User " + user.getEmail() + " Inserted");				
+		        String json = om.writeValueAsString("1");
+		        response.setContentType("application/json");
+		        response.getWriter().append(json).close();
+
 			} else {
-				response.getWriter().append("User Insert Failed").close();
+		        String json = om.writeValueAsString("0");
+		        response.setContentType("application/json");
+		        response.getWriter().append(json).close();
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());

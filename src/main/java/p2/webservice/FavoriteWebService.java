@@ -40,8 +40,8 @@ public class FavoriteWebService {
 		if (favorite != null) {
 			// check if favorite has a product and a user
 			if (favorite.getProduct() != null && favorite.getUser() != null) {
-				Product product = ProductService.findById(favorite.getProduct().getId());
-				User user = UserService.findById(favorite.getUser().getId());
+				Product product = ProductService.findById(favorite.getProduct().getProductId());
+				User user = UserService.findById(favorite.getUser().getUserId());
 				// if it does, then make sure that the user and the tax exist in the db
 				if (product != null && user != null) {
 					favoriteId = FavoriteService.insert(favorite);
@@ -77,11 +77,11 @@ public class FavoriteWebService {
 		}
 		boolean success = false;
 		if (favorite != null) {
-			if (favorite.getId() >= 0) {
+			if (favorite.getFavoriteId() >= 0) {
 				// check if favorite has a product and a user
 				if (favorite.getProduct() != null && favorite.getUser() != null) {
-					Product product = ProductService.findById(favorite.getProduct().getId());
-					User user = UserService.findById(favorite.getUser().getId());
+					Product product = ProductService.findById(favorite.getProduct().getProductId());
+					User user = UserService.findById(favorite.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (product != null && user != null) {
 						success = FavoriteService.update(favorite);
@@ -158,11 +158,11 @@ public class FavoriteWebService {
 		}
 		boolean success = false;
 		if (favorite != null) {
-			if (favorite.getId() >= 0) {
+			if (favorite.getFavoriteId() >= 0) {
 				// check if favorite has a product and a user
 				if (favorite.getProduct() != null && favorite.getUser() != null) {
-					Product product = ProductService.findById(favorite.getProduct().getId());
-					User user = UserService.findById(favorite.getUser().getId());
+					Product product = ProductService.findById(favorite.getProduct().getProductId());
+					User user = UserService.findById(favorite.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (product != null && user != null) {
 						success = FavoriteService.update(favorite);

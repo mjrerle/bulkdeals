@@ -34,8 +34,8 @@ public class PurchaseServiceTest {
 
     Purchase p = PurchaseService.findById(id);
     Assert.assertNotNull(p);
-    Assert.assertEquals(uid, p.getUser().getId());
-    Assert.assertEquals(pid, p.getProduct().getId());
+    Assert.assertEquals(uid, p.getUser().getUserId());
+    Assert.assertEquals(pid, p.getProduct().getProductId());
     Assert.assertEquals(now, p.getDatePurchased());
     PurchaseService.deleteById(id);
     ProductService.deleteById(pid);
@@ -55,8 +55,8 @@ public class PurchaseServiceTest {
     int id = PurchaseService.insert(purchase);
 
     purchase = PurchaseService.findById(id);
-    Assert.assertTrue(purchase.getId() > -1);
-    PurchaseService.deleteById(purchase.getId());
+    Assert.assertTrue(purchase.getPurchaseId() > -1);
+    PurchaseService.deleteById(purchase.getPurchaseId());
     ProductService.deleteById(pid);
     TaxonomyService.deleteById(tid);
 
@@ -79,9 +79,9 @@ public class PurchaseServiceTest {
     updatedPurchase.setDatePurchased(threeDaysFromNow);
     Assert.assertTrue(PurchaseService.update(updatedPurchase));
     updatedPurchase.setDatePurchased(now);
-    updatedPurchase = PurchaseService.findById(updatedPurchase.getId());
+    updatedPurchase = PurchaseService.findById(updatedPurchase.getPurchaseId());
     Assert.assertTrue(updatedPurchase.getDatePurchased().equals(threeDaysFromNow));
-    PurchaseService.deleteById(updatedPurchase.getId());
+    PurchaseService.deleteById(updatedPurchase.getPurchaseId());
     ProductService.deleteById(pid);
     TaxonomyService.deleteById(tid);
 
@@ -99,7 +99,7 @@ public class PurchaseServiceTest {
     Purchase purchase = new Purchase(now, new User(uid), new Product(pid));
     int id = PurchaseService.insert(purchase);
     purchase = PurchaseService.findById(id);
-    Assert.assertTrue(PurchaseService.deleteById(purchase.getId()));
+    Assert.assertTrue(PurchaseService.deleteById(purchase.getPurchaseId()));
     ProductService.deleteById(pid);
     TaxonomyService.deleteById(tid);
 

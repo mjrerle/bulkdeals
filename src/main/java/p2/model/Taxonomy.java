@@ -32,8 +32,8 @@ public class Taxonomy {
   public Taxonomy() {
   }
 
-  public Taxonomy(int id) {
-    this.taxonomyId = id;
+  public Taxonomy(int taxonomyId) {
+    this.taxonomyId = taxonomyId;
   }
 
   public Taxonomy(String name, String type, String subType) {
@@ -49,11 +49,11 @@ public class Taxonomy {
     this.subType = subType;
   }
 
-  public int getId() {
+  public int getTaxonomyId() {
     return this.taxonomyId;
   }
 
-  public void setId(int taxonomyId) {
+  public void setTaxonomyId(int taxonomyId) {
     this.taxonomyId = taxonomyId;
   }
 
@@ -120,7 +120,7 @@ public class Taxonomy {
 
   @Override
   public String toString() {
-    return "{" + " taxonomyId='" + getId() + "'" + ", name='" + getName() + "'" + ", type='" + getType() + "'"
+    return "{" + " taxonomyId='" + getTaxonomyId() + "'" + ", name='" + getName() + "'" + ", type='" + getType() + "'"
         + ", subType='" + getSubType() + "'" + "}";
   }
 

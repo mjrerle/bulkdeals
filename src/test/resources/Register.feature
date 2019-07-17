@@ -1,5 +1,6 @@
 Feature: Register for Pretty Penny
 
+
 	Background:
 		Given I am on the register page
 		

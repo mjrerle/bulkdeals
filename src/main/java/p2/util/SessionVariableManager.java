@@ -49,7 +49,7 @@ public class SessionVariableManager {
 	public static boolean verifyLoggedInUser(int id) {
 		try {
 			User user = getLoggedInUser();
-			if ((user != null) && (id == user.getId())) {
+			if ((user != null) && (id == user.getUserId())) {
 				return true;
 			} 
 		} catch (Exception e) {

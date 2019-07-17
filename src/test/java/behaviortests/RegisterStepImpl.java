@@ -24,7 +24,7 @@ public class RegisterStepImpl {
 	
 	@Given("^I am on the register page$")
 		public void i_am_on_the_register_page() {
-			driver.get("http://ec2-13-59-19-55.us-east-2.compute.amazonaws.com:8080/project2-frontend/login");
+			driver.get("http://localhost:4200/login");
 	}
 	
 	@Given("^registration fields are correctly filled$")
@@ -34,22 +34,20 @@ public class RegisterStepImpl {
 			mainDriver.findRegisterFname().sendKeys("john");
 			mainDriver.findRegisterLname().sendKeys("doe");
 			mainDriver.findRegisterAddress().sendKeys("No ty");
-			mainDriver.findCreditCardNumber().sendKeys("1346789");
+			mainDriver.findCreditCardNumber().sendKeys("1346");
 			mainDriver.findCVV().sendKeys("123");
 			}
 	
 	@When("^I click on submit registration$")
 		public void i_click_on_submit_registration() {
 			mainDriver.requestRegistration().click();
+			User tested = useful.findByEmailAndPassword("test@test.test", "password");
+			useful.deleteById(tested.getUserId());
 		}
 
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
-			User tested = useful.findByEmailAndPassword("test@test.test", "psssword");
-			useful.deleteById(tested.getId());
 			Assert.assertEquals(driver.getTitle(), "PrettyPenny");
-			
-			
 		}
 	
 

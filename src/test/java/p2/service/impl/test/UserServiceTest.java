@@ -18,8 +18,8 @@ public class UserServiceTest {
 				new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 
 		User user = UserService.findById(id);
-		Assert.assertTrue(user.getId() >= 0);
-		UserService.deleteById(user.getId());
+		Assert.assertTrue(user.getUserId() >= 0);
+		UserService.deleteById(user.getUserId());
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class UserServiceTest {
 		Assert.assertTrue(UserService.update(user));
 		Assert.assertEquals(UserService.findById(id).getCreditCardNumber(), 0);
 
-		UserService.deleteById(user.getId());
+		UserService.deleteById(user.getUserId());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class UserServiceTest {
 				new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
 
 		User user = UserService.findById(id);
-		Assert.assertTrue(UserService.deleteById(user.getId()));
+		Assert.assertTrue(UserService.deleteById(user.getUserId()));
 	}
 
 	@Test
