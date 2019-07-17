@@ -41,7 +41,7 @@ public class InterestWebService {
 		if (interest != null) {
 			// check if interest has a product and a user
 			if (interest.getProduct() != null && interest.getUser() != null) {
-				Product product = ProductService.findById(interest.getProduct().getId());
+				Product product = ProductService.findById(interest.getProduct().getProductId());
 				User user = UserService.findById(interest.getUser().getUserId());
 				// if it does, then make sure that the user and the tax exist in the db
 				if (product != null && user != null) {
@@ -78,10 +78,10 @@ public class InterestWebService {
 		}
 		boolean success = false;
 		if (interest != null) {
-			if (interest.getId() >= 0) {
+			if (interest.getInterestId() >= 0) {
 				// check if interest has a product and a user
 				if (interest.getProduct() != null && interest.getUser() != null) {
-					Product product = ProductService.findById(interest.getProduct().getId());
+					Product product = ProductService.findById(interest.getProduct().getProductId());
 					User user = UserService.findById(interest.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (product != null && user != null) {
@@ -195,14 +195,14 @@ public class InterestWebService {
 		}
 		boolean success = false;
 		if (interest != null) {
-			if (interest.getId() >= 0) {
+			if (interest.getInterestId() >= 0) {
 				// check if interest has a product and a user
 				if (interest.getProduct() != null && interest.getUser() != null) {
-					Product product = ProductService.findById(interest.getProduct().getId());
+					Product product = ProductService.findById(interest.getProduct().getProductId());
 					User user = UserService.findById(interest.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (product != null && user != null) {
-						success = InterestService.deleteById(interest.getId());
+						success = InterestService.deleteById(interest.getInterestId());
 					}
 				}
 			}

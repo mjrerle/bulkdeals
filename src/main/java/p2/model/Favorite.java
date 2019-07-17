@@ -50,12 +50,12 @@ public class Favorite {
 		this.product = product;
 	}
 
-	public int getId() {
+	public int getFavoriteId() {
 		return favoriteId;
 	}
 
-	public void setId(int id) {
-		this.favoriteId = id;
+	public void setFavoriteId(int favoriteId) {
+		this.favoriteId = favoriteId;
 	}
 
 	public User getUser() {

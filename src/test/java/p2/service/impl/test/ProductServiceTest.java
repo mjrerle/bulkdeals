@@ -27,7 +27,7 @@ public class ProductServiceTest {
 				new Taxonomy(tid), new User(uid));
 		int id = ProductService.insert(product);
 		product = ProductService.findById(id);
-		Assert.assertTrue(product.getId() >= 0);
+		Assert.assertTrue(product.getProductId() >= 0);
 		ProductService.deleteById(id);
 		UserService.deleteById(uid);
 		TaxonomyService.deleteById(tid);
@@ -84,7 +84,7 @@ public class ProductServiceTest {
 				new Taxonomy(tid), new User(uid));
 		int id = ProductService.insert(product);
 		product = ProductService.findById(id);
-		Assert.assertTrue(product.getId() >= 0);
+		Assert.assertTrue(product.getProductId() >= 0);
 		ProductService.deleteById(id);
 		UserService.deleteById(uid);
 		TaxonomyService.deleteById(tid);
@@ -101,7 +101,7 @@ public class ProductServiceTest {
 
 		int id = ProductService.insert(product);
 		product = ProductService.findById(id);
-		ProductService.deleteById(product.getId());
+		ProductService.deleteById(product.getProductId());
 		UserService.deleteById(uid);
 		TaxonomyService.deleteById(tid);
 	}

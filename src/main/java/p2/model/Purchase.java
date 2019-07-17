@@ -54,11 +54,11 @@ public class Purchase {
     this.product = product;
   }
 
-  public int getId() {
+  public int getPurchaseId() {
     return this.purchaseId;
   }
 
-  public void setId(int id) {
+  public void setPurchaseId(int id) {
     this.purchaseId = id;
   }
 
@@ -125,7 +125,7 @@ public class Purchase {
 
   @Override
   public String toString() {
-    return "{" + " id='" + getId() + "'" + ", datePurchased='" + getDatePurchased() + "'" + ", user='" + getUser() + "'"
+    return "{" + " id='" + getPurchaseId() + "'" + ", datePurchased='" + getDatePurchased() + "'" + ", user='" + getUser() + "'"
         + ", product='" + getProduct() + "'" + "}";
   }
 

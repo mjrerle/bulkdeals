@@ -83,7 +83,7 @@ public class ProductWebService {
 		}
 		boolean success = false;
 		if (product != null) {
-			if (product.getId() >= 0) {
+			if (product.getProductId() >= 0) {
 				// check if product has a tax and a user
 				if (product.getTaxonomy() != null && product.getUser() != null) {
 					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
@@ -165,14 +165,14 @@ public class ProductWebService {
 		}
 		boolean success = false;
 		if (product != null) {
-			if (product.getId() >= 0) {
+			if (product.getProductId() >= 0) {
 				// check if product has a tax and a user
 				if (product.getTaxonomy() != null && product.getUser() != null) {
 					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
 					User user = UserService.findById(product.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
-						success = ProductService.deleteById(product.getId());
+						success = ProductService.deleteById(product.getProductId());
 					}
 				}
 			}
@@ -278,7 +278,7 @@ public class ProductWebService {
 		}
 		boolean success = false;
 		if (product != null) {
-			if (product.getId() >= 0) {
+			if (product.getProductId() >= 0) {
 				// check if product has a tax and a user
 				if (product.getTaxonomy() != null && product.getUser() != null) {
 					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
@@ -445,7 +445,7 @@ public class ProductWebService {
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if ((product.getUser().getId() == requestproduct.getUser().getId()) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+			if ((product.getUser().getUserId() == requestproduct.getUser().getUserId()) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
 				standardProducts.add(product);
 			}
 		}
@@ -482,7 +482,7 @@ public class ProductWebService {
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getUser().getId() == requestproduct.getUser().getId()) {
+			if (product.getUser().getUserId() == requestproduct.getUser().getUserId()) {
 
 				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
 						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {

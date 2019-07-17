@@ -22,7 +22,7 @@ public class ProductService {
 	public static List<Product> findAll() {
 		List<Product> allProducts = productDAO.findAll();
 		for (Product product : allProducts) {
-			List<Interest> interestsForProduct = InterestService.findByProductId(product.getId());
+			List<Interest> interestsForProduct = InterestService.findByProductId(product.getProductId());
 			int sum = 0;
 			for (Interest interest : interestsForProduct) {
 				sum += interest.getQuantity();
