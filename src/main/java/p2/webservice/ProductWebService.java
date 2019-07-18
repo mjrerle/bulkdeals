@@ -32,6 +32,9 @@ public class ProductWebService {
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
 		Product product = null;
+		Taxonomy tax = null;
+		User user = null;
+
 		try {
 			product = mapper.readValue(request.getInputStream(), Product.class);
 		} catch (JsonParseException e1) {
@@ -45,8 +48,14 @@ public class ProductWebService {
 		if (product != null) {
 			// check if product has a tax and a user
 			if (product.getTaxonomy() != null && product.getUser() != null) {
-				Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
-				User user = UserService.findById(product.getUser().getUserId());
+
+				if (product.getTaxonomy().getTaxonomyId() != 0)
+					tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
+				else if (product.getTaxonomy().getName() != null && product.getTaxonomy().getType() != null
+						&& product.getTaxonomy().getSubType() != null)
+					tax = TaxonomyService.findByTaxonomy(product.getTaxonomy());
+
+				user = UserService.findById(product.getUser().getUserId());
 				// if it does, then make sure that the user and the tax exist in the db
 				if (tax != null && user != null) {
 					product.setDateListed(LocalDate.now());
@@ -56,12 +65,10 @@ public class ProductWebService {
 		}
 		try {
 			response.setCharacterEncoding("UTF-8");
-			if (productId >= 0) {
 				ObjectMapper om = new ObjectMapper();
 				String json = om.writeValueAsString(productId);
 				response.setContentType("application/json");
 				response.getWriter().append(json).close();
-			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
@@ -426,7 +433,6 @@ public class ProductWebService {
 
 	public static void findPrettiesBySeller(HttpServletRequest request, HttpServletResponse response) {
 
-		
 		ObjectMapper mapper = new ObjectMapper();
 		Product requestproduct = null;
 		try {
@@ -444,7 +450,8 @@ public class ProductWebService {
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if ((product.getUser().getUserId() == requestproduct.getUser().getUserId()) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+			if ((product.getUser().getUserId() == requestproduct.getUser().getUserId())
+					&& (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
 				standardProducts.add(product);
 			}
 		}
@@ -462,7 +469,7 @@ public class ProductWebService {
 	}
 
 	public static void findPenniesBySeller(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		Product requestproduct = null;
 		try {
@@ -474,7 +481,7 @@ public class ProductWebService {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> pennisProducts = new ArrayList<>();
 		LocalDate today = LocalDate.now();
