@@ -2,6 +2,7 @@ package behaviortests;
 
 import java.io.File;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import p2.model.User;
 import p2.dao.impl.UserDAO;
@@ -41,13 +42,17 @@ public class RegisterStepImpl {
 	@When("^I click on submit registration$")
 		public void i_click_on_submit_registration() {
 			mainDriver.requestRegistration().click();
-			User tested = useful.findByEmailAndPassword("test@test.test", "password");
-			useful.deleteById(tested.getUserId());
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
-			Assert.assertEquals(driver.getTitle(), "PrettyPenny");
+			Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
 		}
 	
 

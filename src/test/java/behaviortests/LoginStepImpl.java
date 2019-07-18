@@ -1,7 +1,9 @@
 package behaviortests;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 
@@ -34,12 +36,19 @@ public class LoginStepImpl {
 	@When("^I click the login button$")
 		public void i_click_the_login_button() {
 			mainDriver.requestLogin().click();
+//			try {
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+			driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
+
 		}
 	
 	
 	@Then("^I am redirected to home$")
 		public void i_am_redirected_to_home() {
-			Assert.assertEquals(driver.getTitle(), "PrettyPenny");
+		Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
 		}
 	
 }
