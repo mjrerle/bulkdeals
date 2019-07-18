@@ -65,10 +65,10 @@ public class ProductWebService {
 		}
 		try {
 			response.setCharacterEncoding("UTF-8");
-				ObjectMapper om = new ObjectMapper();
-				String json = om.writeValueAsString(productId);
-				response.setContentType("application/json");
-				response.getWriter().append(json).close();
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(productId);
+			response.setContentType("application/json");
+			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
@@ -433,24 +433,13 @@ public class ProductWebService {
 
 	public static void findPrettiesBySeller(HttpServletRequest request, HttpServletResponse response) {
 
-		ObjectMapper mapper = new ObjectMapper();
-		Product requestproduct = null;
-		try {
-			requestproduct = mapper.readValue(request.getInputStream(), Product.class);
-		} catch (JsonParseException e1) {
-			e1.printStackTrace();
-		} catch (JsonMappingException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
+		int sellerId = Integer.parseInt(request.getParameter("sellerId"));
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> standardProducts = new ArrayList<Product>();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if ((product.getUser().getUserId() == requestproduct.getUser().getUserId())
+			if ((product.getUser().getUserId() == sellerId)
 					&& (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
 				standardProducts.add(product);
 			}
@@ -470,25 +459,14 @@ public class ProductWebService {
 
 	public static void findPenniesBySeller(HttpServletRequest request, HttpServletResponse response) {
 
-		ObjectMapper mapper = new ObjectMapper();
-		Product requestproduct = null;
-		try {
-			requestproduct = mapper.readValue(request.getInputStream(), Product.class);
-		} catch (JsonParseException e1) {
-			e1.printStackTrace();
-		} catch (JsonMappingException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
+		int sellerId = Integer.parseInt(request.getParameter("sellerId"));
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> pennisProducts = new ArrayList<>();
 		LocalDate today = LocalDate.now();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getUser().getUserId() == requestproduct.getUser().getUserId()) {
+			if (product.getUser().getUserId() == sellerId) {
 
 				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
 						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
