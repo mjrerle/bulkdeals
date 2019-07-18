@@ -17,17 +17,26 @@ public class TaxonomyDAO extends GenericDAO<Taxonomy> implements ITaxonomyDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Taxonomy> findByTaxonomy(Taxonomy taxonomy) {
+	public Taxonomy findByTaxonomy(Taxonomy taxonomy) {
 		Session session = HibernateUtil.getSession();
 		List<Taxonomy> result = null;
 
 		try {
-			Query query = session.createQuery("from Taxonomy where name like :name and type like :type and subType like :subType");
+			Query query = session
+					.createQuery("from Taxonomy where name like :name and type like :type and subType like :subType");
 			query.setParameter("name", taxonomy.getName());
 			query.setParameter("type", taxonomy.getType());
 			query.setParameter("subType", taxonomy.getSubType());
 			result = query.list();
-			return result;
+			if (result.size() == 0) {
+				taxonomy.setTaxonomyId(insert(taxonomy));
+				if (taxonomy.getTaxonomyId() == -1)
+					return null;
+				else
+					return taxonomy;
+			} else {
+				return result.get(0);
+			}
 		} catch (HibernateException e) {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
