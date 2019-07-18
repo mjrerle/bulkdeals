@@ -87,26 +87,6 @@ public class Interest {
 		this.quantity = quantity;
 	}
 
-	public Interest id(int id) {
-		this.interestId = id;
-		return this;
-	}
-
-	public Interest user(User user) {
-		this.user = user;
-		return this;
-	}
-
-	public Interest product(Product product) {
-		this.product = product;
-		return this;
-	}
-
-	public Interest quantity(int quantity) {
-		this.quantity = quantity;
-		return this;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)

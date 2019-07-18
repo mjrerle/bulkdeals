@@ -24,10 +24,12 @@ public class ProductService {
 		for (Product product : allProducts) {
 			List<Interest> interestsForProduct = InterestService.findByProductId(product.getProductId());
 			int sum = 0;
-			for (Interest interest : interestsForProduct) {
-				sum += interest.getQuantity();
+			if(interestsForProduct != null) {
+				for (Interest interest : interestsForProduct) {
+					sum += interest.getQuantity();
+				}
+				product.setGeneratedInterest(sum);
 			}
-			product.setGeneratedInterest(sum);
 		}
 		return allProducts;
 	}
