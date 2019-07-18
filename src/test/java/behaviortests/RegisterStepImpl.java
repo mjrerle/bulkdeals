@@ -4,12 +4,12 @@ import java.io.File;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
-import p2.model.User;
-import p2.dao.impl.UserDAO;
+import org.testng.Assert;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.testng.Assert;
+import p2.dao.impl.UserDAO;
 import pages.MainDriver;
 
 public class RegisterStepImpl {

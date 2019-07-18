@@ -17,88 +17,89 @@ import p2.util.Roles;
 
 public class InterestServiceTest {
 
-  // @Test
-  // public void anInterestCanBeInserted() {
-  //   LocalDate now = LocalDate.now();
-  //   int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
-  //   int uid = UserService.insert(
-  //       new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
-  //   int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
-  //       0, new Taxonomy(tid), new User(uid)));
+  @Test
+  public void anInterestCanBeInserted() {
+    LocalDate now = LocalDate.now();
+    int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+    int uid = UserService.insert(
+        new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+    int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
+        0, new Taxonomy(tid), new User(uid)));
 
-  //   int id = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
+    int id = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
 
-  //   Interest interest = InterestService.findById(id);
-  //   Assert.assertTrue(interest.getId() >= 0);
-  //   InterestService.deleteById(id);
+    Interest interest = InterestService.findById(id);
+    InterestService.deleteById(id);
 
-  //   ProductService.deleteById(pid);
-  //   UserService.deleteById(uid);
-  //   TaxonomyService.deleteById(tid);
-  // }
+    ProductService.deleteById(pid);
+    UserService.deleteById(uid);
+    TaxonomyService.deleteById(tid);
+    Assert.assertTrue(interest.getInterestId() >= 0);
 
-  // @Test
-  // public void anInterestCanBeUpdate() {
-  //   LocalDate now = LocalDate.now();
-  //   int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
-  //   int uid = UserService.insert(
-  //       new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
-  //   int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
-  //       0, new Taxonomy(tid), new User(uid)));
+  }
 
-  //   int id = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
+  @Test
+  public void anInterestCanBeUpdate() {
+    LocalDate now = LocalDate.now();
+    int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+    int uid = UserService.insert(
+        new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+    int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
+        0, new Taxonomy(tid), new User(uid)));
 
-  //   Interest interest = InterestService.findById(id);
+    int id = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
 
-  //   interest.setQuantity(400);
-  //   Assert.assertTrue(InterestService.update(interest));
-  //   Assert.assertEquals(InterestService.findById(interest.getId()).getQuantity(), 400);
-  //   InterestService.deleteById(interest.getId());
+    Interest interest = InterestService.findById(id);
 
-  //   ProductService.deleteById(pid);
-  //   UserService.deleteById(uid);
-  //   TaxonomyService.deleteById(tid);
-  // }
+    interest.setQuantity(400);
+    Assert.assertTrue(InterestService.update(interest));
+    Assert.assertEquals(InterestService.findById(interest.getInterestId()).getQuantity(), 400);
+    InterestService.deleteById(interest.getInterestId());
 
-  // @Test
-  // public void anInterestCanBeDeleted() {
-  //   LocalDate now = LocalDate.now();
-  //   int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
-  //   int uid = UserService.insert(
-  //       new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
-  //   int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
-  //       0, new Taxonomy(tid), new User(uid)));
+    ProductService.deleteById(pid);
+    UserService.deleteById(uid);
+    TaxonomyService.deleteById(tid);
+  }
 
-  //   int id = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
+  @Test
+  public void anInterestCanBeDeleted() {
+    LocalDate now = LocalDate.now();
+    int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+    int uid = UserService.insert(
+        new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+    int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
+        0, new Taxonomy(tid), new User(uid)));
 
-  //   Interest interest = InterestService.findById(id);
-  //   Assert.assertTrue(InterestService.deleteById(interest.getId()));
+    int id = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
 
-  //   ProductService.deleteById(pid);
-  //   UserService.deleteById(uid);
-  //   TaxonomyService.deleteById(tid);
-  // }
+    Interest interest = InterestService.findById(id);
+    Assert.assertTrue(InterestService.deleteById(interest.getInterestId()));
 
-  // @Test
-  // public void allInterestsCanBeFound() {
-  //   LocalDate now = LocalDate.now();
-  //   int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
-  //   int uid = UserService.insert(
-  //       new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
-  //   int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
-  //       0, new Taxonomy(tid), new User(uid)));
+    ProductService.deleteById(pid);
+    UserService.deleteById(uid);
+    TaxonomyService.deleteById(tid);
+  }
 
-  //   int id1 = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
-  //   int id2 = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
-  //   int id3 = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
+  @Test
+  public void allInterestsCanBeFound() {
+    LocalDate now = LocalDate.now();
+    int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
+    int uid = UserService.insert(
+        new User("vajira", "Hapu Arachchige", "sfasda@gmail.com", "abc123", Roles.ADMIN.value, "abc", 123466, 322));
+    int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
+        0, new Taxonomy(tid), new User(uid)));
 
-  //   Assert.assertEquals(InterestService.findAll().size(), 3);
-  //   InterestService.deleteById(id1);
-  //   InterestService.deleteById(id2);
-  //   InterestService.deleteById(id3);
+    int id1 = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
+    int id2 = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
+    int id3 = InterestService.insert(new Interest(new User(uid), new Product(pid), 300));
 
-  //   ProductService.deleteById(pid);
-  //   UserService.deleteById(uid);
-  //   TaxonomyService.deleteById(tid);
-  // }
+    Assert.assertEquals(InterestService.findAll().size(), 3);
+    InterestService.deleteById(id1);
+    InterestService.deleteById(id2);
+    InterestService.deleteById(id3);
+
+    ProductService.deleteById(pid);
+    UserService.deleteById(uid);
+    TaxonomyService.deleteById(tid);
+  }
 }

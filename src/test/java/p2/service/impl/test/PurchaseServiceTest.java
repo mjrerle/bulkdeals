@@ -29,7 +29,7 @@ public class PurchaseServiceTest {
     int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
     int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
         0, new Taxonomy(tid), new User(uid)));
-    Purchase purchase = new Purchase(now, new User(uid), new Product(pid));
+    Purchase purchase =  new Purchase(now, 0, new User(uid), new Product(pid));
     int id = PurchaseService.insert(purchase);
 
     Purchase p = PurchaseService.findById(id);
@@ -51,7 +51,7 @@ public class PurchaseServiceTest {
     int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
     int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
         0, new Taxonomy(tid), new User(uid)));
-    Purchase purchase = new Purchase(now, new User(uid), new Product(pid));
+    Purchase purchase = new Purchase(now, 0, new User(uid), new Product(pid));
     int id = PurchaseService.insert(purchase);
 
     purchase = PurchaseService.findById(id);
@@ -71,7 +71,7 @@ public class PurchaseServiceTest {
     int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
     int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
         0, new Taxonomy(tid), new User(uid)));
-    Purchase purchase = new Purchase(now, new User(uid), new Product(pid));
+    Purchase purchase =  new Purchase(now, 0, new User(uid), new Product(pid));
     int id = PurchaseService.insert(purchase);
 
     Purchase updatedPurchase = PurchaseService.findById(id);
@@ -96,7 +96,7 @@ public class PurchaseServiceTest {
     int tid = TaxonomyService.insert(new Taxonomy("Samsung", "Electronics", "Phones"));
     int pid = ProductService.insert(new Product("name", "description", 190, 190, 0, 0, "url", now, "Within Threshold",
         0, new Taxonomy(tid), new User(uid)));
-    Purchase purchase = new Purchase(now, new User(uid), new Product(pid));
+    Purchase purchase =  new Purchase(now, 0, new User(uid), new Product(pid));
     int id = PurchaseService.insert(purchase);
     purchase = PurchaseService.findById(id);
     Assert.assertTrue(PurchaseService.deleteById(purchase.getPurchaseId()));
