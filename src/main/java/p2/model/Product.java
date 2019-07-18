@@ -25,7 +25,7 @@ public class Product {
 	@Column(name = "product_name")
 	private String productName;
 
-	@Column(name = "description")
+	@Column(name = "description", length=511)
 	private String description;
 
 	@Column(name = "price")
@@ -208,71 +208,6 @@ public class Product {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public Product productId(int productId) {
-		this.productId = productId;
-		return this;
-	}
-
-	public Product productName(String productName) {
-		this.productName = productName;
-		return this;
-	}
-
-	public Product description(String description) {
-		this.description = description;
-		return this;
-	}
-
-	public Product price(double price) {
-		this.price = price;
-		return this;
-	}
-
-	public Product salePrice(double salePrice) {
-		this.salePrice = salePrice;
-		return this;
-	}
-
-	public Product onSale(int onSale) {
-		this.onSale = onSale;
-		return this;
-	}
-
-	public Product generatedInterest(int generatedInterest) {
-		this.generatedInterest = generatedInterest;
-		return this;
-	}
-
-	public Product imageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-		return this;
-	}
-
-	public Product dateListed(LocalDate dateListed) {
-		this.dateListed = dateListed;
-		return this;
-	}
-
-	public Product status(String status) {
-		this.status = status;
-		return this;
-	}
-
-	public Product interestThreshold(int interestThreshold) {
-		this.interestThreshold = interestThreshold;
-		return this;
-	}
-
-	public Product taxonomy(Taxonomy taxonomy) {
-		this.taxonomy = taxonomy;
-		return this;
-	}
-
-	public Product user(User user) {
-		this.user = user;
-		return this;
 	}
 
 	@Override

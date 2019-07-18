@@ -1,6 +1,7 @@
 package p2.webservice;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +40,14 @@ public class PurchaseWebService {
     }
     int purchaseId = -1;
     if (purchase != null) {
-      // check if favorite has a product and a user
+      // check if purchase has a product and a user
       if (purchase.getProduct() != null && purchase.getUser() != null) {
         Product product = ProductService.findById(purchase.getProduct().getProductId());
         User user = UserService.findById(purchase.getUser().getUserId());
         // if it does, then make sure that the user and the tax exist in the db
         if (product != null && user != null) {
+          LocalDate now = LocalDate.now();
+          purchase.setDatePurchased(now);
           purchaseId = PurchaseService.insert(purchase);
         }
       }
@@ -53,9 +56,9 @@ public class PurchaseWebService {
       response.setContentType("text/html");
       response.setCharacterEncoding("UTF-8");
       if (purchaseId >= 0) {
-        response.getWriter().append("Purchase Added").close();
+        response.getWriter().append("true").close();
       } else {
-        response.getWriter().append("Purchase Add Failed").close();
+        response.getWriter().append("false").close();
       }
 
     } catch (IOException e) {

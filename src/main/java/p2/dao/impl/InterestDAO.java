@@ -19,8 +19,8 @@ public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 		List<Interest> list = null;
 
 		try {
-			Query query = session.createQuery("FROM Interests WHERE product_id = :product_id");
-			query.setParameter("product_id", productId);
+			Query query = session.createQuery("FROM Interest WHERE product.productId = :productId");
+			query.setParameter("productId", productId);
 			list = query.list();
 		} catch (HibernateException e) {
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class InterestDAO extends GenericDAO<Interest> implements IInterestDAO {
 		List<Interest> list = null;
 
 		try {
-			Query query = session.createQuery("FROM Interests WHERE user_id = :user_id");
+			Query query = session.createQuery("FROM Interest WHERE user.userId = :userId");
 			query.setParameter("user_id", userId);
 			list = query.list();
 		} catch (HibernateException e) {

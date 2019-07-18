@@ -1,5 +1,6 @@
 package p2.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import p2.dao.impl.ProductDAO;
@@ -21,13 +22,19 @@ public class ProductService {
 
 	public static List<Product> findAll() {
 		List<Product> allProducts = productDAO.findAll();
-		for (Product product : allProducts) {
-			List<Interest> interestsForProduct = InterestService.findByProductId(product.getProductId());
-			int sum = 0;
-			for (Interest interest : interestsForProduct) {
-				sum += interest.getQuantity();
+		if (allProducts != null) {
+			for (Product product : allProducts) {
+				List<Interest> interestsForProduct = InterestService.findByProductId(product.getProductId());
+				int sum = 0;
+				if (interestsForProduct != null) {
+					for (Interest interest : interestsForProduct) {
+						sum += interest.getQuantity();
+					}
+					product.setGeneratedInterest(sum);
+				}
 			}
-			product.setGeneratedInterest(sum);
+		} else {
+			allProducts = new ArrayList<>();
 		}
 		return allProducts;
 	}

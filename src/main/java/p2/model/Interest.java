@@ -2,7 +2,6 @@ package p2.model;
 
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,11 +22,11 @@ public class Interest {
 	@Column(name = "interest_id", unique = true, nullable = false)
 	private int interestId;
 
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
 
@@ -85,26 +84,6 @@ public class Interest {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
-	}
-
-	public Interest id(int id) {
-		this.interestId = id;
-		return this;
-	}
-
-	public Interest user(User user) {
-		this.user = user;
-		return this;
-	}
-
-	public Interest product(Product product) {
-		this.product = product;
-		return this;
-	}
-
-	public Interest quantity(int quantity) {
-		this.quantity = quantity;
-		return this;
 	}
 
 	@Override
