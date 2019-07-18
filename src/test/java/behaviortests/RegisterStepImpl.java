@@ -11,7 +11,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.testng.Assert;
 import pages.MainDriver;
-
+import org.openqa.selenium.support.ui.Select;
 public class RegisterStepImpl {
 	
 	static {
@@ -36,6 +36,7 @@ public class RegisterStepImpl {
 			mainDriver.findRegisterLname().sendKeys("doe");
 			mainDriver.findRegisterAddress().sendKeys("No ty");
 			mainDriver.findCreditCardNumber().sendKeys("1346");
+			driver.findElement(By.id("user")).clear();
 			mainDriver.findCVV().sendKeys("123");
 			}
 	
