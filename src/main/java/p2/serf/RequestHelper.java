@@ -105,9 +105,6 @@ public class RequestHelper {
       case API.user + "/login":
         UserWebService.login(request, response);
         break;
-      //case API.user + "/logout":
-        //UserWebService.logout(request, response);
-        //break;
       case API.favorite:
         FavoriteWebService.insert(request, response);
         break;
