@@ -7,7 +7,7 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(
 
-	features = {"src/test/resources/Login.feature", "src/test/resources/Register.feature"},
+	features = {"src/test/resources/Login.feature", "src/test/resources/Register.feature", "src/test/resources/AddProduct.feature"},
 	glue = {"behaviortests"}
 	
 )
