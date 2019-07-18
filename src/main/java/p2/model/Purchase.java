@@ -26,6 +26,9 @@ public class Purchase {
   @Column(name = "date_purchased")
   private LocalDate datePurchased;
 
+  @Column(name = "cost")
+  private long cost;
+
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
@@ -41,15 +44,17 @@ public class Purchase {
     this.purchaseId = id;
   }
 
-  public Purchase(LocalDate datePurchased, User user, Product product) {
+  public Purchase(LocalDate datePurchased, long cost, User user, Product product) {
     this.datePurchased = datePurchased;
+    this.cost = cost;
     this.user = user;
     this.product = product;
   }
 
-  public Purchase(int id, LocalDate datePurchased, User user, Product product) {
-    this.purchaseId = id;
+  public Purchase(int purchaseId, LocalDate datePurchased, long cost, User user, Product product) {
+    this.purchaseId = purchaseId;
     this.datePurchased = datePurchased;
+    this.cost = cost;
     this.user = user;
     this.product = product;
   }
@@ -58,8 +63,8 @@ public class Purchase {
     return this.purchaseId;
   }
 
-  public void setPurchaseId(int id) {
-    this.purchaseId = id;
+  public void setPurchaseId(int purchaseId) {
+    this.purchaseId = purchaseId;
   }
 
   public LocalDate getDatePurchased() {
@@ -68,6 +73,14 @@ public class Purchase {
 
   public void setDatePurchased(LocalDate datePurchased) {
     this.datePurchased = datePurchased;
+  }
+
+  public long getCost() {
+    return this.cost;
+  }
+
+  public void setCost(long cost) {
+    this.cost = cost;
   }
 
   public User getUser() {
@@ -86,26 +99,6 @@ public class Purchase {
     this.product = product;
   }
 
-  public Purchase id(int id) {
-    this.purchaseId = id;
-    return this;
-  }
-
-  public Purchase datePurchased(LocalDate datePurchased) {
-    this.datePurchased = datePurchased;
-    return this;
-  }
-
-  public Purchase user(User user) {
-    this.user = user;
-    return this;
-  }
-
-  public Purchase product(Product product) {
-    this.product = product;
-    return this;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (o == this)
@@ -115,18 +108,18 @@ public class Purchase {
     }
     Purchase purchase = (Purchase) o;
     return purchaseId == purchase.purchaseId && Objects.equals(datePurchased, purchase.datePurchased)
-        && Objects.equals(user, purchase.user) && Objects.equals(product, purchase.product);
+        && cost == purchase.cost && Objects.equals(user, purchase.user) && Objects.equals(product, purchase.product);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(purchaseId, datePurchased, user, product);
+    return Objects.hash(purchaseId, datePurchased, cost, user, product);
   }
 
   @Override
   public String toString() {
-    return "{" + " id='" + getPurchaseId() + "'" + ", datePurchased='" + getDatePurchased() + "'" + ", user='" + getUser() + "'"
-        + ", product='" + getProduct() + "'" + "}";
+    return "{" + " purchaseId='" + getPurchaseId() + "'" + ", datePurchased='" + getDatePurchased() + "'" + ", cost='"
+        + getCost() + "'" + ", user='" + getUser() + "'" + ", product='" + getProduct() + "'" + "}";
   }
 
 }
