@@ -50,13 +50,13 @@ public class AddProductStepImpl {
 	@When("^I submit the product at standard sale$")
 	public void i_submit_the_product_at_standard_price() {
 		driver.findElement(By.className("btn btn-primary")).click();
-		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
 	}
 	
 	@Then("^I receive a product added notification$")
 	public void i_receive_a_product_added_notification() {
 		//placeholder until i know how it works
-		Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
+		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
+		Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Successfully Added.");
 	}
 
 

@@ -52,7 +52,12 @@ public class RegisterStepImpl {
 
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
+		if (driver.findElement(By.tagName("h1")).getText().equals("Welcome to PrettyPenny")){
 			Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
+		}
+		else {
+			Assert.assertEquals(driver.findElement(By.id("passer")).getText(), "Invalid Entry/Email Taken");
+		}
 		}
 	
 
