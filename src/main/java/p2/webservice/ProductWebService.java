@@ -123,10 +123,13 @@ public class ProductWebService {
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
 		List<Product> list = new ArrayList<>();
-		for (Product product : ProductService.findAll()) {
-			if ((!product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value))
-					&& (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value))) {
-				list.add(product);
+		List<Product> allProducts = ProductService.findAll();
+		if(allProducts != null) {
+			for (Product product : allProducts) {
+				if ((!product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value))
+						&& (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value))) {
+					list.add(product);
+				}
 			}
 		}
 		try {

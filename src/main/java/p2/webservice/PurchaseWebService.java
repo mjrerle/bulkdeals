@@ -46,6 +46,7 @@ public class PurchaseWebService {
         User user = UserService.findById(purchase.getUser().getUserId());
         // if it does, then make sure that the user and the tax exist in the db
         if (product != null && user != null) {
+          
           LocalDate now = LocalDate.now();
           purchase.setDatePurchased(now);
           purchaseId = PurchaseService.insert(purchase);

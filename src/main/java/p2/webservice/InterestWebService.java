@@ -1,6 +1,8 @@
 package p2.webservice;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,17 +49,33 @@ public class InterestWebService {
 				// if it does, then make sure that the user and the tax exist in the db
 				if (product != null && user != null) {
 					int amountOfInterest = product.getGeneratedInterest();
+					//if the product is pretty, we use generated interest as a quantity available
 					if (product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
+						//do not surpass the amount available
 						if (amountOfInterest + interest.getQuantity() <= product.getInterestThreshold()) {
 							product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
 							ProductService.update(product);
 							interestId = InterestService.insert(interest);
 						}
-					} else if (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value)
-							|| !product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value)) {
+					} else if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
+							|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
 						product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
 						ProductService.update(product);
 						interestId = InterestService.insert(interest);
+						LocalDate today = LocalDate.now();
+						int maximumThresholdDays = 7;
+						LocalDate dayMade = product.getDateListed();
+						long difference = ChronoUnit.DAYS.between(dayMade, today);
+
+						if (difference <= maximumThresholdDays) {
+							if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
+								product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
+								ProductService.update(product);
+							}
+						} else if (product.getGeneratedInterest() < product.getInterestThreshold()) {
+								product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
+								ProductService.update(product);
+						}
 					}
 				}
 			}
