@@ -36,12 +36,12 @@ public class LoginStepImpl {
 	@When("^I click the login button$")
 		public void i_click_the_login_button() {
 			mainDriver.requestLogin().click();
-//			try {
-//				Thread.sleep(5000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			//driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
 
 		}
 	

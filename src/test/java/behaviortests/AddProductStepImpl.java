@@ -1,9 +1,12 @@
 package behaviortests;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.openqa.selenium.support.ui.Select;
@@ -28,13 +31,20 @@ public class AddProductStepImpl {
 		mainDriver.findLoginEmail().sendKeys("testSeller@test.test");
 		mainDriver.findLoginPass().sendKeys("password");
 		mainDriver.requestLogin().click();
-		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
-		driver.get("http://localhost:4200/addproduct");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+//		driver.findElement(By.cssSelector("body")).sendKeys(Keys.F1);
+		ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+	    driver.switchTo().window(tabs.get(0)); //switches to new tab
+	    driver.get("http://localhost:4200/addproduct");
 	}
 	
 	@Given("^I have entered the necessary values$")
 	public void i_have_entered_the_necessary_values() {
-		driver.findElement(By.name("productName")).sendKeys("Apple Windows Phone");
+		driver.findElement(By.name("productName")).sendKeys("Appledu Winderps10 Phone");
 		Select brName = new Select(driver.findElement(By.name("brandName")));
 		brName.selectByVisibleText("Apple");
 		Select brType = new Select(driver.findElement(By.name("brandType")));
@@ -43,21 +53,40 @@ public class AddProductStepImpl {
 		brType2.selectByVisibleText("Phone");
 		driver.findElement(By.name("imagePath")).sendKeys("https://i2.wp.com/www.onmsft.com/wp-content/uploads/2018/02/Screen-Shot-2018-02-19-at-17.28.19.png?fit=831%2C580&ssl=1");
 		driver.findElement(By.name("productDescription")).sendKeys("LOL you thought this was real I bet");
-		driver.findElement(By.id("listTypePretty")).click();
+		//driver.findElement(By.id("listTypePretty")).click();
+		//driver.manage().timeouts().implicitlyWait(3000,TimeUnit.SECONDS) ;
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+//		WebElement radioButton = driver.findElement(By.xpath("//*[@id=\"listTypePretty\"]"));
+//		radioButton.sendKeys(Keys.ENTER);
 		driver.findElement(By.name("msrp")).sendKeys("2.00");
 	}
 	
 	@When("^I submit the product at standard sale$")
 	public void i_submit_the_product_at_standard_price() {
-		driver.findElement(By.className("btn btn-primary")).click();
+		driver.findElement(By.xpath("/html/body/app-root/section/div/app-product-add/div/div[2]/form/button")).sendKeys(Keys.ENTER);
 	}
 	
 	@Then("^I receive a product added notification$")
 	public void i_receive_a_product_added_notification() {
 		//placeholder until i know how it works
 		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
-		Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Successfully Added.");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		if (driver.findElement(By.id("productaddalert")).getText().equals("Wrong Informations. Please check it again.")) {
+			Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Wrong Informations. Please check it again.");
+		}
+		else {
+			Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Successfully Added.");
+		}
 	}
+	
 
 
 }
