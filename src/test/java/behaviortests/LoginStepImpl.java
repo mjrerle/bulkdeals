@@ -48,7 +48,12 @@ public class LoginStepImpl {
 	
 	@Then("^I am redirected to home$")
 		public void i_am_redirected_to_home() {
-		Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
+			if (driver.findElement(By.tagName("h1")).getText().equals("Welcome to PrettyPenny")){
+				Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
+			}
+			else {
+				Assert.assertEquals(driver.findElement(By.id("credible")).getText(), "Invalid Credentials");
+			}
 		}
 	
 }
