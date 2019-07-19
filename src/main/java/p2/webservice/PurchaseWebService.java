@@ -50,7 +50,7 @@ public class PurchaseWebService {
 				if (product != null && user != null) {
 
 					if (product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
-						purchaseQuantity = (int) (purchase.getCost() / purchase.getCost());
+						purchaseQuantity = (int) (purchase.getCost() / product.getSalePrice());
 						product.setInterestThreshold(product.getInterestThreshold() - purchaseQuantity);
 					}
 
