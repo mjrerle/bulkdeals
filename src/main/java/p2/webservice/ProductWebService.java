@@ -2,6 +2,7 @@ package p2.webservice;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,10 +125,27 @@ public class ProductWebService {
 
 		List<Product> list = new ArrayList<>();
 		List<Product> allProducts = ProductService.findAll();
-		if(allProducts != null) {
+		if (allProducts != null) {
 			for (Product product : allProducts) {
-				if ((!product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value))
-						&& (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value))) {
+				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)) {
+					// update the status of product
+					LocalDate today = LocalDate.now();
+					int maximumThresholdDays = 7;
+					LocalDate dayMade = product.getDateListed();
+					long difference = ChronoUnit.DAYS.between(dayMade, today);
+
+					if (difference <= maximumThresholdDays) {
+						if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
+							product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
+							ProductService.update(product);
+						}
+					} else {
+						if (product.getGeneratedInterest() < product.getInterestThreshold()) {
+							product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
+							ProductService.update(product);
+						}
+					}
+
 					list.add(product);
 				}
 			}
@@ -431,8 +449,7 @@ public class ProductWebService {
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if ((product.getUser().getUserId() == sellerId)
-					&& (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+			if ((product.getUser().getUserId() == sellerId) && (product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
 				standardProducts.add(product);
 			}
 		}
@@ -457,8 +474,7 @@ public class ProductWebService {
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if ((product.getUser().getUserId() == sellerId)
-					&& (!product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+			if ((product.getUser().getUserId() == sellerId) && (!product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
 				pennyProducts.add(product);
 			}
 		}

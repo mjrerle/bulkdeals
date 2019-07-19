@@ -1,8 +1,6 @@
 package p2.webservice;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,20 +60,6 @@ public class InterestWebService {
 						product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
 						ProductService.update(product);
 						interestId = InterestService.insert(interest);
-						LocalDate today = LocalDate.now();
-						int maximumThresholdDays = 7;
-						LocalDate dayMade = product.getDateListed();
-						long difference = ChronoUnit.DAYS.between(dayMade, today);
-
-						if (difference <= maximumThresholdDays) {
-							if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
-								product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
-								ProductService.update(product);
-							}
-						} else if (product.getGeneratedInterest() < product.getInterestThreshold()) {
-								product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
-								ProductService.update(product);
-						}
 					}
 				}
 			}
