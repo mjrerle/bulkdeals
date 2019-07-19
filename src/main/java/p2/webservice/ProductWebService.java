@@ -450,19 +450,19 @@ public class ProductWebService {
 
 		int sellerId = Integer.parseInt(request.getParameter("sellerId"));
 		List<Product> allProducts = ProductService.findAll();
-		List<Product> pennisProducts = new ArrayList<>();
+		List<Product> pennyProducts = new ArrayList<>();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
 			if ((product.getUser().getUserId() == sellerId)
 					&& (!product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
-				pennisProducts.add(product);
+				pennyProducts.add(product);
 			}
 		}
 
 		try {
 			ObjectMapper om = new ObjectMapper();
-			String json = om.writeValueAsString(pennisProducts);
+			String json = om.writeValueAsString(pennyProducts);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().append(json).close();
