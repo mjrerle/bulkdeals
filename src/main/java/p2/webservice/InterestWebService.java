@@ -42,26 +42,20 @@ public class InterestWebService {
 		if (interest != null) {
 			// check if interest has a product and a user
 			if (interest.getProduct() != null && interest.getUser() != null) {
+
 				Product product = ProductService.findById(interest.getProduct().getProductId());
 				User user = UserService.findById(interest.getUser().getUserId());
-				// if it does, then make sure that the user and the tax exist in the db
+
 				if (product != null && user != null) {
-					int amountOfInterest = product.getGeneratedInterest();
-					//if the product is pretty, we use generated interest as a quantity available
-					if (product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
-						//do not surpass the amount available
-						if (amountOfInterest + interest.getQuantity() <= product.getInterestThreshold()) {
-							product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
-							ProductService.update(product);
-							interestId = InterestService.insert(interest);
-						}
-					} else if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
-							|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
-						product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
+					if (!product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
+						product.setGeneratedInterest(product.getGeneratedInterest() + interest.getQuantity());
 						ProductService.update(product);
-						interestId = InterestService.insert(interest);
 					}
+					interest.setProduct(product);
+					interest.setUser(user);
+					interestId = InterestService.insert(interest);
 				}
+
 			}
 		}
 
