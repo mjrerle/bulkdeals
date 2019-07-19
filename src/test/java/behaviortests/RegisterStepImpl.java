@@ -1,6 +1,7 @@
 package behaviortests;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,7 +37,8 @@ public class RegisterStepImpl {
 			mainDriver.findRegisterLname().sendKeys("doe");
 			mainDriver.findRegisterAddress().sendKeys("No ty");
 			mainDriver.findCreditCardNumber().sendKeys("1346");
-			driver.findElement(By.id("user")).clear();
+			Select role = new Select(driver.findElement(By.name("role")));
+			role.selectByVisibleText("USER");
 			mainDriver.findCVV().sendKeys("123");
 			}
 	
