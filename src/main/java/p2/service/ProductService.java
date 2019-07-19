@@ -30,16 +30,7 @@ public class ProductService {
 
 		if (allProducts != null) {
 			for (Product product : allProducts) {
-				// update the number of interest
-				List<Interest> interestsForProduct = InterestService.findByProductId(product.getProductId());
-				int sum = 0;
-				if (interestsForProduct != null) {
-					for (Interest interest : interestsForProduct) {
-						sum += interest.getQuantity();
-					}
-					product.setGeneratedInterest(sum);
-				}
-
+			
 				// update the status of product
 				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
 						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
