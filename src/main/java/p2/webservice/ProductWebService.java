@@ -145,7 +145,10 @@ public class ProductWebService {
 							ProductService.update(product);
 						}
 					}
-
+				}
+				// check here because above code have changed the status
+				if (!product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
+						&& !product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value)) {
 					list.add(product);
 				}
 			}
