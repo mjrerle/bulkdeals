@@ -2,7 +2,6 @@ package p2.webservice;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,6 @@ import p2.util.ValidationUtilities;
 
 public class ProductWebService {
 	private static Logger logger = Glogger.logger;
-	private static final int maximumThresholdDays = 7;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -77,9 +75,10 @@ public class ProductWebService {
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
-		Product product = null;
+		Product oldProduct = null;
+		Product updatedProduct = null;
 		try {
-			product = mapper.readValue(request.getInputStream(), Product.class);
+			updatedProduct = mapper.readValue(request.getInputStream(), Product.class);
 		} catch (JsonParseException e1) {
 			e1.printStackTrace();
 		} catch (JsonMappingException e1) {
@@ -88,15 +87,21 @@ public class ProductWebService {
 			e1.printStackTrace();
 		}
 		boolean success = false;
-		if (product != null) {
-			if (product.getProductId() >= 0) {
+		if (updatedProduct != null) {
+			if (updatedProduct.getProductId() >= 0) {
 				// check if product has a tax and a user
-				if (product.getTaxonomy() != null && product.getUser() != null) {
-					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
-					User user = UserService.findById(product.getUser().getUserId());
+				if (updatedProduct.getTaxonomy() != null && updatedProduct.getUser() != null) {
+					Taxonomy tax = TaxonomyService.findByTaxonomy(updatedProduct.getTaxonomy());
+					User user = UserService.findById(updatedProduct.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
-						success = ProductService.update(product);
+						oldProduct = ProductService.findById(updatedProduct.getProductId());
+						if (oldProduct.getStatus().equals(updatedProduct.getStatus())) {
+							updatedProduct.setDateListed(oldProduct.getDateListed());
+						} else {
+							updatedProduct.setDateListed(LocalDate.now());
+						}
+						success = ProductService.update(updatedProduct);
 					}
 				}
 			}
@@ -117,12 +122,18 @@ public class ProductWebService {
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> product = ProductService.findAll();
+		List<Product> list = new ArrayList<>();
+		for (Product product : ProductService.findAll()) {
+			if ((!product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value))
+					&& (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value))) {
+				list.add(product);
+			}
+		}
 		try {
 			ObjectMapper om = new ObjectMapper();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			String json = om.writeValueAsString(product);
+			String json = om.writeValueAsString(list);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
@@ -227,34 +238,12 @@ public class ProductWebService {
 
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> penniesProducts = new ArrayList<>();
-		LocalDate today = LocalDate.now();
-		// Populating list of those gaining interest
-		// this can be optimized by having a sql/hql query to search by "Within
-		// Threshold"
+
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
 			if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
 					|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
-
-				LocalDate dayMade = product.getDateListed();
-				long difference = ChronoUnit.DAYS.between(dayMade, today);
-
-				if (difference <= maximumThresholdDays) {
-					if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
-						product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
-						ProductService.update(product);
-					}
-					penniesProducts.add(product);
-				} else {
-					if (product.getGeneratedInterest() < product.getInterestThreshold()) {
-						product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
-						ProductService.update(product);
-					} else {
-						penniesProducts.add(product);
-					}
-
-				}
-
+				penniesProducts.add(product);
 			}
 		}
 
@@ -461,42 +450,19 @@ public class ProductWebService {
 
 		int sellerId = Integer.parseInt(request.getParameter("sellerId"));
 		List<Product> allProducts = ProductService.findAll();
-		List<Product> pennisProducts = new ArrayList<>();
-		LocalDate today = LocalDate.now();
+		List<Product> pennyProducts = new ArrayList<>();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getUser().getUserId() == sellerId) {
-
-				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
-						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
-
-					LocalDate dayMade = product.getDateListed();
-					long difference = ChronoUnit.DAYS.between(dayMade, today);
-
-					if (difference <= maximumThresholdDays) {
-						if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
-							product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
-							ProductService.update(product);
-						}
-						pennisProducts.add(product);
-					} else {
-						if (product.getGeneratedInterest() < product.getInterestThreshold()) {
-							product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
-							ProductService.update(product);
-						} else {
-							pennisProducts.add(product);
-						}
-
-					}
-
-				}
+			if ((product.getUser().getUserId() == sellerId)
+					&& (!product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+				pennyProducts.add(product);
 			}
 		}
 
 		try {
 			ObjectMapper om = new ObjectMapper();
-			String json = om.writeValueAsString(pennisProducts);
+			String json = om.writeValueAsString(pennyProducts);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().append(json).close();
