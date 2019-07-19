@@ -2,7 +2,6 @@ package p2.webservice;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,6 @@ import p2.util.ValidationUtilities;
 
 public class ProductWebService {
 	private static Logger logger = Glogger.logger;
-	private static final int maximumThresholdDays = 7;
 
 	public static void insert(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -98,7 +96,11 @@ public class ProductWebService {
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
 						oldProduct = ProductService.findById(updatedProduct.getProductId());
-						updatedProduct.setDateListed(oldProduct.getDateListed());
+						if (oldProduct.getStatus().equals(updatedProduct.getStatus())) {
+							updatedProduct.setDateListed(oldProduct.getDateListed());
+						} else {
+							updatedProduct.setDateListed(LocalDate.now());
+						}
 						success = ProductService.update(updatedProduct);
 					}
 				}
@@ -120,12 +122,18 @@ public class ProductWebService {
 
 	public static void findAll(HttpServletRequest request, HttpServletResponse response) {
 
-		List<Product> product = ProductService.findAll();
+		List<Product> list = new ArrayList<>();
+		for (Product product : ProductService.findAll()) {
+			if ((!product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value))
+					&& (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value))) {
+				list.add(product);
+			}
+		}
 		try {
 			ObjectMapper om = new ObjectMapper();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			String json = om.writeValueAsString(product);
+			String json = om.writeValueAsString(list);
 			response.getWriter().append(json).close();
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
@@ -230,34 +238,12 @@ public class ProductWebService {
 
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> penniesProducts = new ArrayList<>();
-		LocalDate today = LocalDate.now();
-		// Populating list of those gaining interest
-		// this can be optimized by having a sql/hql query to search by "Within
-		// Threshold"
+
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
 			if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
 					|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
-
-				LocalDate dayMade = product.getDateListed();
-				long difference = ChronoUnit.DAYS.between(dayMade, today);
-
-				if (difference <= maximumThresholdDays) {
-					if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
-						product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
-						ProductService.update(product);
-					}
-					penniesProducts.add(product);
-				} else {
-					if (product.getGeneratedInterest() < product.getInterestThreshold()) {
-						product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
-						ProductService.update(product);
-					} else {
-						penniesProducts.add(product);
-					}
-
-				}
-
+				penniesProducts.add(product);
 			}
 		}
 
@@ -465,35 +451,12 @@ public class ProductWebService {
 		int sellerId = Integer.parseInt(request.getParameter("sellerId"));
 		List<Product> allProducts = ProductService.findAll();
 		List<Product> pennisProducts = new ArrayList<>();
-		LocalDate today = LocalDate.now();
 
 		for (int i = 0; i < allProducts.size(); i++) {
 			Product product = allProducts.get(i);
-			if (product.getUser().getUserId() == sellerId) {
-
-				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
-						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
-
-					LocalDate dayMade = product.getDateListed();
-					long difference = ChronoUnit.DAYS.between(dayMade, today);
-
-					if (difference <= maximumThresholdDays) {
-						if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
-							product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
-							ProductService.update(product);
-						}
-						pennisProducts.add(product);
-					} else {
-						if (product.getGeneratedInterest() < product.getInterestThreshold()) {
-							product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
-							ProductService.update(product);
-						} else {
-							pennisProducts.add(product);
-						}
-
-					}
-
-				}
+			if ((product.getUser().getUserId() == sellerId)
+					&& (!product.getStatus().equals(ThresholdStatus.PRETTY.value))) {
+				pennisProducts.add(product);
 			}
 		}
 
