@@ -11,7 +11,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import p2.dao.impl.UserDAO;
 import pages.MainDriver;
-
+import org.openqa.selenium.support.ui.Select;
 public class RegisterStepImpl {
 	
 	static {
@@ -36,6 +36,7 @@ public class RegisterStepImpl {
 			mainDriver.findRegisterLname().sendKeys("doe");
 			mainDriver.findRegisterAddress().sendKeys("No ty");
 			mainDriver.findCreditCardNumber().sendKeys("1346");
+			driver.findElement(By.id("user")).clear();
 			mainDriver.findCVV().sendKeys("123");
 			}
 	
@@ -52,7 +53,12 @@ public class RegisterStepImpl {
 
 	@Then("^I am redirected home or given an email taken error$")
 		public void i_am_redirected_home_or_given_an_email_taken_error() {
+		if (driver.findElement(By.tagName("h1")).getText().equals("Welcome to PrettyPenny")){
 			Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
+		}
+		else {
+			Assert.assertEquals(driver.findElement(By.id("passer")).getText(), "Invalid Entry/Email Taken");
+		}
 		}
 	
 
