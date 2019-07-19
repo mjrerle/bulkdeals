@@ -6,6 +6,7 @@ import java.util.List;
 import p2.dao.impl.ProductDAO;
 import p2.model.Interest;
 import p2.model.Product;
+import p2.util.ThresholdStatus;
 
 public class ProductService {
 	private static ProductDAO productDAO = new ProductDAO();
@@ -31,6 +32,9 @@ public class ProductService {
 						sum += interest.getQuantity();
 					}
 					product.setGeneratedInterest(sum);
+					if(product.getGeneratedInterest() > product.getInterestThreshold()) {
+						product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
+					}
 				}
 			}
 		} else {

@@ -19,6 +19,7 @@ import p2.service.InterestService;
 import p2.service.ProductService;
 import p2.service.UserService;
 import p2.util.Glogger;
+import p2.util.ThresholdStatus;
 import p2.util.ValidationUtilities;
 
 public class InterestWebService {
@@ -45,7 +46,19 @@ public class InterestWebService {
 				User user = UserService.findById(interest.getUser().getUserId());
 				// if it does, then make sure that the user and the tax exist in the db
 				if (product != null && user != null) {
-					interestId = InterestService.insert(interest);
+					int amountOfInterest = product.getGeneratedInterest();
+					if (product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
+						if (amountOfInterest + interest.getQuantity() <= product.getInterestThreshold()) {
+							product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
+							ProductService.update(product);
+							interestId = InterestService.insert(interest);
+						}
+					} else if (!product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value)
+							|| !product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value)) {
+						product.setGeneratedInterest(amountOfInterest + interest.getQuantity());
+						ProductService.update(product);
+						interestId = InterestService.insert(interest);
+					}
 				}
 			}
 		}
