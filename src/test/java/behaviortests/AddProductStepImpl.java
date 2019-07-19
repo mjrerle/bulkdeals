@@ -55,14 +55,16 @@ public class AddProductStepImpl {
 		driver.findElement(By.name("productDescription")).sendKeys("LOL you thought this was real I bet");
 		//driver.findElement(By.id("listTypePretty")).click();
 		//driver.manage().timeouts().implicitlyWait(3000,TimeUnit.SECONDS) ;
+
+		WebElement radioButton = driver.findElement(By.xpath("//*[@id=\"listTypePretty\"]"));
+		
+		radioButton.sendKeys(Keys.ENTER);
+		driver.findElement(By.name("msrp")).sendKeys("2.00");
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-//		WebElement radioButton = driver.findElement(By.xpath("//*[@id=\"listTypePretty\"]"));
-//		radioButton.sendKeys(Keys.ENTER);
-		driver.findElement(By.name("msrp")).sendKeys("2.00");
 	}
 	
 	@When("^I submit the product at standard sale$")
@@ -79,8 +81,8 @@ public class AddProductStepImpl {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if (driver.findElement(By.id("productaddalert")).getText().equals("Wrong Informations. Please check it again.")) {
-			Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Wrong Informations. Please check it again.");
+		if (driver.findElement(By.id("productaddalert")).getText().equals("Please enter all relevant information.")) {
+			Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Please enter all relevant information.");
 		}
 		else {
 			Assert.assertEquals(driver.findElement(By.id("productaddalert")).getText(), "Successfully Added.");
