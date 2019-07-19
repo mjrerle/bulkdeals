@@ -77,9 +77,10 @@ public class ProductWebService {
 
 	public static void update(HttpServletRequest request, HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
-		Product product = null;
+		Product oldProduct = null;
+		Product updatedProduct = null;
 		try {
-			product = mapper.readValue(request.getInputStream(), Product.class);
+			updatedProduct = mapper.readValue(request.getInputStream(), Product.class);
 		} catch (JsonParseException e1) {
 			e1.printStackTrace();
 		} catch (JsonMappingException e1) {
@@ -88,15 +89,17 @@ public class ProductWebService {
 			e1.printStackTrace();
 		}
 		boolean success = false;
-		if (product != null) {
-			if (product.getProductId() >= 0) {
+		if (updatedProduct != null) {
+			if (updatedProduct.getProductId() >= 0) {
 				// check if product has a tax and a user
-				if (product.getTaxonomy() != null && product.getUser() != null) {
-					Taxonomy tax = TaxonomyService.findById(product.getTaxonomy().getTaxonomyId());
-					User user = UserService.findById(product.getUser().getUserId());
+				if (updatedProduct.getTaxonomy() != null && updatedProduct.getUser() != null) {
+					Taxonomy tax = TaxonomyService.findByTaxonomy(updatedProduct.getTaxonomy());
+					User user = UserService.findById(updatedProduct.getUser().getUserId());
 					// if it does, then make sure that the user and the tax exist in the db
 					if (tax != null && user != null) {
-						success = ProductService.update(product);
+						oldProduct = ProductService.findById(updatedProduct.getProductId());
+						updatedProduct.setDateListed(oldProduct.getDateListed());
+						success = ProductService.update(updatedProduct);
 					}
 				}
 			}
