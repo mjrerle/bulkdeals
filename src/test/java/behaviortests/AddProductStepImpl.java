@@ -56,9 +56,11 @@ public class AddProductStepImpl {
 		//driver.findElement(By.id("listTypePretty")).click();
 		//driver.manage().timeouts().implicitlyWait(3000,TimeUnit.SECONDS) ;
 
-		WebElement radioButton = driver.findElement(By.xpath("//*[@id=\"listTypePretty\"]"));
-		
-		radioButton.sendKeys(Keys.ENTER);
+//		WebElement radioButton = driver.findElement(By.xpath("//*[@id=\"listTypePretty\"]"));
+//		
+//		radioButton.sendKeys(Keys.ENTER);
+		Select liType = new Select(driver.findElement(By.name("listType")));
+		liType.selectByVisibleText("Pretty");
 		driver.findElement(By.name("msrp")).sendKeys("2.00");
 		try {
 			Thread.sleep(5000);
