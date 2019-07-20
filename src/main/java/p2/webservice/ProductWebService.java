@@ -111,9 +111,9 @@ public class ProductWebService {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
 			if (success) {
-				response.getWriter().append("Product Updated");
+				response.getWriter().append('1');
 			} else {
-				response.getWriter().append("Product Update Failed");
+				response.getWriter().append('0');
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
