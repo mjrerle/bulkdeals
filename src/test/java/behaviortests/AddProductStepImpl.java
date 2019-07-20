@@ -44,7 +44,7 @@ public class AddProductStepImpl {
 	
 	@Given("^I have entered the necessary values$")
 	public void i_have_entered_the_necessary_values() {
-		driver.findElement(By.name("productName")).sendKeys("Appledu Winderps10 Phone");
+		driver.findElement(By.name("productName")).sendKeys("Appled Winderps10 Phone");
 		Select brName = new Select(driver.findElement(By.name("brandName")));
 		brName.selectByVisibleText("Apple");
 		Select brType = new Select(driver.findElement(By.name("brandType")));
