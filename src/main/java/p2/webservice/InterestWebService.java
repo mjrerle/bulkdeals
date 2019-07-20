@@ -42,10 +42,10 @@ public class InterestWebService {
 		if (interest != null) {
 			// check if interest has a product and a user
 			if (interest.getProduct() != null && interest.getUser() != null) {
-				
+
 				Product product = ProductService.findById(interest.getProduct().getProductId());
 				User user = UserService.findById(interest.getUser().getUserId());
-				
+
 				if (product != null && user != null) {
 					if (!product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
 						product.setGeneratedInterest(product.getGeneratedInterest() + interest.getQuantity());
