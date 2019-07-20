@@ -1,13 +1,9 @@
 package p2.service;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 import p2.dao.impl.ProductDAO;
 import p2.model.Product;
-import p2.util.ThresholdStatus;
 
 public class ProductService {
 	private static ProductDAO productDAO = new ProductDAO();
