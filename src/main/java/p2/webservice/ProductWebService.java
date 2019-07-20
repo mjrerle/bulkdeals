@@ -137,6 +137,7 @@ public class ProductWebService {
 					if (difference <= maximumThresholdDays) {
 						if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
 							product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
+							
 							ProductService.update(product);
 						}
 					} else {
@@ -147,7 +148,7 @@ public class ProductWebService {
 					}
 				}
 				// check here because above code have changed the status
-				if (!product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
+				if (!product.getStatus().equals(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value)
 						&& !product.getStatus().equals(ThresholdStatus.CANCELLED_BY_SELLER.value)) {
 					list.add(product);
 				}
