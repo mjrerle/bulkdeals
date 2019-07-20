@@ -125,12 +125,13 @@ public class ProductWebService {
 
 		List<Product> list = new ArrayList<>();
 		List<Product> allProducts = ProductService.findAll();
+		int maximumThresholdDays = 7;
+		LocalDate today = LocalDate.now();
+
 		if (allProducts != null) {
 			for (Product product : allProducts) {
 				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)) {
 					// update the status of product
-					LocalDate today = LocalDate.now();
-					int maximumThresholdDays = 7;
 					LocalDate dayMade = product.getDateListed();
 					long difference = ChronoUnit.DAYS.between(dayMade, today);
 
@@ -153,6 +154,8 @@ public class ProductWebService {
 					list.add(product);
 				}
 			}
+		} else {
+			allProducts = new ArrayList<>();
 		}
 		try {
 			ObjectMapper om = new ObjectMapper();

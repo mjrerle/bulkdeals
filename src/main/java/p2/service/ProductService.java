@@ -23,38 +23,8 @@ public class ProductService {
 	}
 
 	public static List<Product> findAll() {
-		List<Product> allProducts = productDAO.findAll();
-		LocalDate today = LocalDate.now();
-		int maximumThresholdDays = 7;
-
-		if (allProducts != null) {
-			for (Product product : allProducts) {
-			
-				// update the status of product
-				if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)
-						|| product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
-
-					LocalDate dayMade = product.getDateListed();
-					long difference = ChronoUnit.DAYS.between(dayMade, today);
-
-					if (difference <= maximumThresholdDays) {
-						if (product.getGeneratedInterest() >= product.getInterestThreshold()) {
-							product.setStatus(ThresholdStatus.SURPASSED_THRESHOLD.value);
-							ProductService.update(product);
-						}
-					} else {
-						if (product.getGeneratedInterest() < product.getInterestThreshold()) {
-							product.setStatus(ThresholdStatus.NEVER_SURPASSED_THRESHOLD.value);
-							ProductService.update(product);
-						}
-
-					}
-				}
-			}
-		} else {
-			allProducts = new ArrayList<>();
-		}
-		return allProducts;
+	
+		return productDAO.findAll();
 	}
 
 	public static Product findById(int id) {
