@@ -1,6 +1,7 @@
 package p2.webservice;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +15,11 @@ import org.apache.log4j.Logger;
 
 import p2.model.Interest;
 import p2.model.Product;
+import p2.model.Purchase;
 import p2.model.User;
 import p2.service.InterestService;
 import p2.service.ProductService;
+import p2.service.PurchaseService;
 import p2.service.UserService;
 import p2.util.Glogger;
 import p2.util.ThresholdStatus;
@@ -42,18 +45,52 @@ public class InterestWebService {
 		if (interest != null) {
 			// check if interest has a product and a user
 			if (interest.getProduct() != null && interest.getUser() != null) {
-				
+
 				Product product = ProductService.findById(interest.getProduct().getProductId());
 				User user = UserService.findById(interest.getUser().getUserId());
-				
+
 				if (product != null && user != null) {
 					if (!product.getStatus().equals(ThresholdStatus.PRETTY.value)) {
+						// if the product is a penny
+						if (product.getStatus().equals(ThresholdStatus.WITHIN_THRESHOLD.value)) {
+							// and the products current generated interest is below the threshold
+							interest.setProduct(product);
+							interest.setUser(user);
+							interestId = InterestService.insert(interest);
+							if (product.getGeneratedInterest() < product.getInterestThreshold()) {
+								// and the new quantity will make the generated interest surpass the threshold
+								if (product.getGeneratedInterest() + interest.getQuantity() >= product.getInterestThreshold()) {
+
+									// make purchase histories for all interested customers
+									List<Interest> interests = InterestService.findByProductId(product.getProductId());
+
+									for (Interest i : interests) {
+										Purchase purchase = new Purchase(LocalDate.now(),
+												(long) Math.floor(product.getSalePrice() * i.getQuantity()), i.getUser(), product);
+										PurchaseService.insert(purchase);
+									}
+								}
+							}
+							// buy outright if the product surpassed threshold
+						} else if (product.getStatus().equals(ThresholdStatus.SURPASSED_THRESHOLD.value)) {
+							interest.setProduct(product);
+							interest.setUser(user);
+							interestId = InterestService.insert(interest);
+							Purchase purchase = new Purchase(LocalDate.now(), (long) Math.floor(product.getSalePrice()),
+									interest.getUser(), product);
+							PurchaseService.insert(purchase);
+						}
 						product.setGeneratedInterest(product.getGeneratedInterest() + interest.getQuantity());
+
 						ProductService.update(product);
+						// simple pretty product
+					} else {
+						product.setInterestThreshold(product.getInterestThreshold() - interest.getQuantity());
+						ProductService.update(product);
+						interest.setProduct(product);
+						interest.setUser(user);
+						interestId = InterestService.insert(interest);
 					}
-					interest.setProduct(product);
-					interest.setUser(user);
-					interestId = InterestService.insert(interest);
 				}
 
 			}
