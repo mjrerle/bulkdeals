@@ -1,9 +1,15 @@
 Feature: Buy a product
 
-	Background:
-		Given I am logged in as a buyer and on the products page
+  Scenario: Filter Sumsung brand product
+    Given I am on products page
+    When I click samung fliter by brand name
+    Then I shoud see only Samsung produts
 
-  Scenario: Title of your scenario
-    Given I have bought a product
-    When I go to my purchase history
-    Then I see my recent purchase
+  Scenario: Add to card Sumsung brand product
+    When I click add to card on product
+    Then Product should be on cart
+
+  Scenario: Chekout the Cart
+    Given I am on cart page
+    When I click checkout button
+    Then Cart shoud be empty
