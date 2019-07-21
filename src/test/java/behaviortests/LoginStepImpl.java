@@ -52,7 +52,7 @@ public class LoginStepImpl {
 				Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
 			}
 			else {
-				Assert.assertEquals(driver.findElement(By.id("credible")).getText(), "Invalid Credentials");
+				Assert.assertEquals(driver.findElement(By.id("genAlert")).getText(), "Invalid Credentials.");
 			}
 		}
 	

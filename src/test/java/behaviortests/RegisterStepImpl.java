@@ -31,14 +31,14 @@ public class RegisterStepImpl {
 	
 	@Given("^registration fields are correctly filled$")
 		public void registration_fields_are_correctly_filled() {
-			mainDriver.findRegisterEmail().sendKeys("test@test.test");
+			mainDriver.findRegisterEmail().sendKeys("testSeller@test.test");
 			mainDriver.findRegisterPass().sendKeys("password");	
 			mainDriver.findRegisterFname().sendKeys("john");
 			mainDriver.findRegisterLname().sendKeys("doe");
 			mainDriver.findRegisterAddress().sendKeys("No ty");
 			mainDriver.findCreditCardNumber().sendKeys("1346");
 			Select role = new Select(driver.findElement(By.name("role")));
-			role.selectByVisibleText("USER");
+			role.selectByVisibleText("SELLER");
 			mainDriver.findCVV().sendKeys("123");
 			}
 	
@@ -59,7 +59,7 @@ public class RegisterStepImpl {
 			Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
 		}
 		else {
-			Assert.assertEquals(driver.findElement(By.id("passer")).getText(), "Invalid Entry/Email Taken");
+			Assert.assertEquals(driver.findElement(By.id("genAlert")).getText(), "Invalid entries or email taken.");
 		}
 		}
 	
