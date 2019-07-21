@@ -27,7 +27,7 @@ public class AddProductStepImpl {
 	
 	@Given("^I am logged in as a seller and on the add product page$")
 	public void i_am_logged_in_as_a_seller_and_on_the_add_product_page() {
-		driver.get("http://localhost:4200/login");
+		driver.get("http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/login");
 		mainDriver.findLoginEmail().sendKeys("testSeller@test.test");
 		mainDriver.findLoginPass().sendKeys("password");
 		mainDriver.requestLogin().click();
@@ -39,7 +39,7 @@ public class AddProductStepImpl {
 //		driver.findElement(By.cssSelector("body")).sendKeys(Keys.F1);
 		ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
 	    driver.switchTo().window(tabs.get(0)); //switches to new tab
-	    driver.get("http://localhost:4200/addproduct");
+	    driver.get("http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/addproduct");
 	}
 	
 	@Given("^I have entered the necessary values$")
