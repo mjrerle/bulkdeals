@@ -31,14 +31,14 @@ public class RegisterStepImpl {
 
 	@Given("^registration fields are correctly filled$")
 	public void registration_fields_are_correctly_filled() {
-		mainDriver.findRegisterEmail().sendKeys("testss@test.test");
+		mainDriver.findRegisterEmail().sendKeys("testSeller@test.test");
 		mainDriver.findRegisterPass().sendKeys("password");
 		mainDriver.findRegisterFname().sendKeys("john");
 		mainDriver.findRegisterLname().sendKeys("doe");
 		mainDriver.findRegisterAddress().sendKeys("No ty");
 		mainDriver.findCreditCardNumber().sendKeys("1346");
 		Select role = new Select(driver.findElement(By.name("role")));
-		role.selectByVisibleText("USER");
+		role.selectByVisibleText("SELLER");
 		mainDriver.findCVV().sendKeys("123");
 	}
 
@@ -50,7 +50,6 @@ public class RegisterStepImpl {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Then("^I am redirected home or given an email taken error$")

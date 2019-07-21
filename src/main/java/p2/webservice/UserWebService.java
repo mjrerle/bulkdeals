@@ -46,9 +46,15 @@ public class UserWebService {
 				//SessionVariableManager.addLoggedInUser(request, user);
 				logger.info("User " + user.getEmail() + " logged into the system");
 				ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(user);
-        response.setContentType("application/json");
-        response.getWriter().append(json).close();
+		        String json = om.writeValueAsString(user);
+		        response.setContentType("application/json");
+		        response.getWriter().append(json).close();
+			}
+			else {
+				ObjectMapper om = new ObjectMapper();
+		        String json = om.writeValueAsString(null);
+		        response.setContentType("application/json");
+		        response.getWriter().append(json).close();
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());

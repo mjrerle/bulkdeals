@@ -39,7 +39,7 @@ public class AddProductStepImpl {
 //		driver.findElement(By.cssSelector("body")).sendKeys(Keys.F1);
 		ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
 		driver.switchTo().window(tabs.get(0)); // switches to new tab
-		driver.get("http://localhost:4200/addproduct");
+		driver.get(MainDriver.homeUrl + "addproduct");
 	}
 
 	@Given("^I have entered the necessary values$")

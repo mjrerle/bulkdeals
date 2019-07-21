@@ -26,7 +26,10 @@ public class UserDAO extends GenericDAO<User> implements IUserDAO {
 		} catch (HibernateException e) {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
-		} finally {
+		} catch (IndexOutOfBoundsException o){
+			return null;
+		}
+		  finally {
 			session.close();
 		}
 		return user;
