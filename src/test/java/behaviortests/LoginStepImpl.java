@@ -23,7 +23,7 @@ public class LoginStepImpl {
 	
 	@Given("^I am on the login page$")
 		public void i_am_on_the_login_page() {
-			driver.get("http://localhost:4200/login");
+			driver.get("http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/login");
 	}
 	
 	@Given("^email and password are entered$")
@@ -51,7 +51,7 @@ public class LoginStepImpl {
 				Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Welcome to PrettyPenny");
 			}
 			else {
-				Assert.assertEquals(driver.findElement(By.id("credible")).getText(), "Invalid Credentials");
+				Assert.assertEquals(driver.findElement(By.id("genAlert")).getText(), "Invalid Credentials.");
 			}
 		}
 	
