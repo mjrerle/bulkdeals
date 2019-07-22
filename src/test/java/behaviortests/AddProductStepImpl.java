@@ -28,7 +28,7 @@ public class AddProductStepImpl {
 	@Given("^I am logged in as a seller and on the add product page$")
 	public void i_am_logged_in_as_a_seller_and_on_the_add_product_page() {
 		driver.get(MainDriver.homeUrl + "login");
-		mainDriver.findLoginEmail().sendKeys("testSeller@test.test");
+		mainDriver.findLoginEmail().sendKeys("seller@example.com");
 		mainDriver.findLoginPass().sendKeys("password");
 		mainDriver.requestLogin().click();
 		try {
@@ -50,7 +50,7 @@ public class AddProductStepImpl {
 		Select brType = new Select(driver.findElement(By.name("brandType")));
 		brType.selectByVisibleText("Electronics");
 		Select brType2 = new Select(driver.findElement(By.name("brandSubType")));
-		brType2.selectByVisibleText("Phone");
+		brType2.selectByVisibleText("Phones");
 		driver.findElement(By.name("imagePath")).sendKeys(
 				"https://i2.wp.com/www.onmsft.com/wp-content/uploads/2018/02/Screen-Shot-2018-02-19-at-17.28.19.png?fit=831%2C580&ssl=1");
 		driver.findElement(By.name("productDescription")).sendKeys("LOL you thought this was real I bet");
@@ -61,8 +61,10 @@ public class AddProductStepImpl {
 //		
 //		radioButton.sendKeys(Keys.ENTER);
 		Select liType = new Select(driver.findElement(By.name("listType")));
-		liType.selectByVisibleText("Pretty");
+		liType.selectByVisibleText("Pretty (Just listing for sale)");
 		driver.findElement(By.name("msrp")).sendKeys("2.00");
+		driver.findElement(By.name("quantity")).sendKeys("10");
+		driver.findElement(By.name("salePrice")).sendKeys("1.98");
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {

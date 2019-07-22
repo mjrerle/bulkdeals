@@ -7,8 +7,8 @@ import org.openqa.selenium.WebElement;
 public class MainDriver {
 
 	public WebDriver driver;
-	// public static String homeUrl = "http://localhost:4200/";
-	public static String homeUrl = "http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/";
+	public static String homeUrl = "http://localhost:4200/";
+	//public static String homeUrl = "http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/";
 
 	public MainDriver(WebDriver driver) {
 		this.driver = driver;
