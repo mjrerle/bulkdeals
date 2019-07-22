@@ -7,8 +7,8 @@ import org.openqa.selenium.WebElement;
 public class MainDriver {
 
 	public WebDriver driver;
-	public static String homeUrl = "http://localhost:4200/";
-	//public static String homeUrl = "http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/";
+	//public static String homeUrl = "http://localhost:4200/";
+	public static String homeUrl = "http://ec2-18-221-142-60.us-east-2.compute.amazonaws.com:8080/project2-frontend/";
 
 	public MainDriver(WebDriver driver) {
 		this.driver = driver;
@@ -59,7 +59,7 @@ public class MainDriver {
 	}
 
 	public WebElement findSamsungFilter() {
-		return driver.findElement(By.linkText("Samsung"));
+		return driver.findElement(By.xpath("/html/body/app-root/section/div/app-products/div/aside/app-filters/div/div/div/nav/div[3]/div[2]/a[1]"));
 	}
 
 	public WebElement findFirstProduct() {

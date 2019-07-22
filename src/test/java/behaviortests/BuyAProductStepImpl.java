@@ -27,6 +27,15 @@ public class BuyAProductStepImpl {
 
 	@Given("^I am on products page$")
 	public void i_am_on_products_page() throws Throwable {
+		driver.get("http://localhost:4200/login");
+		mainDriver.findLoginEmail().sendKeys("user@example.com");
+		mainDriver.findLoginPass().sendKeys("password");	
+		mainDriver.requestLogin().click();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		driver.get(MainDriver.homeUrl + "products");
 	}
 
@@ -48,6 +57,11 @@ public class BuyAProductStepImpl {
 
 	@When("^I click add to card on product$")
 	public void when_I_click_add_to_card() throws Throwable {
+		try {
+			Thread.sleep(20000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		mainDriver.findFirstProductAddCart().click();
 		sleep();
 	}
